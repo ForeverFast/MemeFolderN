@@ -1,0 +1,16 @@
+/.vs
+/MemeFolderN/bin
+/MemeFolderN/obj
+/MemeFolderN.Console/bin
+/MemeFolderN.Console/obj
+/MemeFolderN.Core/bin
+/MemeFolderN.Core/obj
+/MemeFolderN.EntityFramework/bin
+/MemeFolderN.EntityFramework/obj
+/MemeFolderN.MFModels/bin
+/MemeFolderN.MFModels/obj
+/MemeFolderN.Navigation/bin
+/MemeFolderN.Navigation/obj
+/MemeFolderN.UnitTests/bin
+/MemeFolderN.UnitTests/obj
+/Temp
