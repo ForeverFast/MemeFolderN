@@ -7,8 +7,12 @@
 /MemeFolderN.Core/obj
 /MemeFolderN.EntityFramework/bin
 /MemeFolderN.EntityFramework/obj
+/MemeFolderN.Extentions/bin
+/MemeFolderN.Extentions/obj
 /MemeFolderN.MFModels/bin
 /MemeFolderN.MFModels/obj
+/MemeFolderN.MFViewModel/bin
+/MemeFolderN.MFViewModel/obj
 /MemeFolderN.Navigation/bin
 /MemeFolderN.Navigation/obj
 /MemeFolderN.UnitTests/bin
