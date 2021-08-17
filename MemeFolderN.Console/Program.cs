@@ -11,20 +11,20 @@ namespace MemeFolderN.Console
 
         static void Main(string[] args)
         {
-            using (MemeFolderNDbContext context = memeFolderNDbContextFactory.CreateDbContext(null))
-            {
+            //using (MemeFolderNDbContext context = memeFolderNDbContextFactory.CreateDbContext(null))
+            //{
 
-                MemeDataService memeDataService = new MemeDataService();
-                Meme newMeme = new Meme()
-                {
-                    Title = "test1",
-                    ImagePath = "test1Path"
-                };
+            //    MemeDataService memeDataService = new MemeDataService();
+            //    Meme newMeme = new Meme()
+            //    {
+            //        Title = "test1",
+            //        ImagePath = "test1Path"
+            //    };
 
-                // Act
-                Meme dbCreatedMeme = memeDataService.Create(newMeme).Result;
+            //    // Act
+            //    Meme dbCreatedMeme = memeDataService.Create(newMeme).Result;
 
-            }
+            //}
 
         }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MemeFolderN.Core.DTOClasses
 {
-    public class MemeDTO : FolderObject
+    public class MemeDTO : FolderObjectDTO
     {
         public DateTime AddingDate { get; set; }
 
@@ -11,7 +11,7 @@ namespace MemeFolderN.Core.DTOClasses
 
         public string MiniImagePath { get; set; }
 
-        public IEnumerable<MemeTagNodeDTO> Tags { get; set; }
+        public List<MemeTagNodeDTO> Tags { get; set; }
 
         public MemeDTO() : base()
         {

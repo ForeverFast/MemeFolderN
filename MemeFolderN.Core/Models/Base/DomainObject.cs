@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MemeFolderN.Core
+namespace MemeFolderN.Core.Models
 {
     public abstract class DomainObject
     {

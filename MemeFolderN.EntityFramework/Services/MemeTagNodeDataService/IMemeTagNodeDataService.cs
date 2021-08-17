@@ -1,7 +1,7 @@
-﻿using MemeFolderN.Core.Models;
+﻿using MemeFolderN.Core.DTOClasses;
 
 namespace MemeFolderN.EntityFramework.Services
 {
-    public interface IMemeTagNodeDataService : IDataService<MemeTagNode>
+    public interface IMemeTagNodeDataService : IDataService<MemeTagNodeDTO>
     { }
 }

@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "MemeFolderN.Extentions/1.0.0": {
+        "runtime": {
+          "MemeFolderN.Extentions.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "MemeFolderN.Extentions/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

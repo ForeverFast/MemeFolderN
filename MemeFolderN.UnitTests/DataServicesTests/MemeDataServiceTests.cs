@@ -1,7 +1,9 @@
-﻿using MemeFolderN.Core.Models;
+﻿using MemeFolderN.Core.DTOClasses;
+using MemeFolderN.Core.Models;
 using MemeFolderN.EntityFramework.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,10 +19,10 @@ namespace MemeFolderN.UnitTests.DataServicesTests
         public async void AddAndGetNewMeme()
         {
             // Arrange
-            Meme newMeme = GetSingleMeme();
+            MemeDTO newMeme = GetSingleMeme();
 
             // Act
-            Meme dbCreatedMeme = await memeDataService.Create(newMeme);
+            MemeDTO dbCreatedMeme = await memeDataService.Add(newMeme);
 
             // Assert
             Assert.NotNull(dbCreatedMeme);
@@ -33,7 +35,7 @@ namespace MemeFolderN.UnitTests.DataServicesTests
         public async void DeleteMeme()
         {
             // Arrange
-            Meme dbCreatedMeme = await memeDataService.Create(GetSingleMeme());
+            MemeDTO dbCreatedMeme = await memeDataService.Add(GetSingleMeme());
             Guid guid = dbCreatedMeme.Id;
 
             // Act
@@ -41,7 +43,16 @@ namespace MemeFolderN.UnitTests.DataServicesTests
 
             // Assert
             Assert.True(result);
-            Assert.Null(await memeDataService.GetById(guid));
+            try
+            {
+                MemeDTO memeDTO = await memeDataService.GetById(guid);
+                Assert.Null(memeDTO);
+            }
+            catch (NullReferenceException)
+            {
+                Assert.True(true);
+            }
+           
 
             _ = await memeDataService.DeleteAllMemes();
         }
@@ -50,13 +61,13 @@ namespace MemeFolderN.UnitTests.DataServicesTests
         public async void UpdateMeme()
         {
             // Arrange
-            Meme newMeme = GetSingleMeme();
-            Meme dbCreatedMeme = await memeDataService.Create(newMeme);
+            MemeDTO newMeme = GetSingleMeme();
+            MemeDTO dbCreatedMeme = await memeDataService.Add(newMeme);
 
             // Act
             string newPropValue = "test2";
             dbCreatedMeme.Title = newPropValue;
-            Meme dbUpdatedMeme = await memeDataService.Update(dbCreatedMeme.Id, dbCreatedMeme);
+            MemeDTO dbUpdatedMeme = await memeDataService.Update(dbCreatedMeme.Id, dbCreatedMeme);
 
             // Assert
             Assert.NotNull(dbUpdatedMeme);
@@ -70,10 +81,10 @@ namespace MemeFolderN.UnitTests.DataServicesTests
         public async void CreateMultipleMemes()
         {
             // Arrange
-            List<Meme> memes = GetMultupleMemes();
+            List<MemeDTO> memes = GetMultupleMemes();
 
             // Act
-            IEnumerable<Meme> dbCreatedMemes = await memeDataService.CreateRange(memes.ToArray());
+            IEnumerable<MemeDTO> dbCreatedMemes = await memeDataService.AddRangeMemes(memes);
 
             // Assert
             Assert.True(memes.Count == dbCreatedMemes.Count());
@@ -85,11 +96,11 @@ namespace MemeFolderN.UnitTests.DataServicesTests
         public async void DeleteMultipleMemes()
         {
             // Arrange
-            List<Meme> memes = GetMultupleMemes();
-            IEnumerable<Meme> dbCreatedMemes = await memeDataService.CreateRange(memes.ToArray());
+            List<MemeDTO> memes = GetMultupleMemes();
+            IEnumerable<MemeDTO> dbCreatedMemes = await memeDataService.AddRangeMemes(memes);
 
             // Act
-            bool result = await memeDataService.DeleteRange(memes.ToArray());
+            bool result = await memeDataService.DeleteRangeMemes(dbCreatedMemes.ToList());
 
             // Assert
             Assert.True(result);
@@ -99,9 +110,9 @@ namespace MemeFolderN.UnitTests.DataServicesTests
 
         #region Вспомогательные методы
 
-        private Meme GetSingleMeme()
+        private MemeDTO GetSingleMeme()
         {
-            Meme memeEntity = new Meme()
+            MemeDTO memeEntity = new MemeDTO()
             {
                 Title = "test1",
                 ImagePath = "test1Path"
@@ -110,16 +121,17 @@ namespace MemeFolderN.UnitTests.DataServicesTests
             return memeEntity;
         }
 
-        private List<Meme> GetMultupleMemes()
+        private List<MemeDTO> GetMultupleMemes()
         {
-            List<Meme> memes = new List<Meme>();
+            List<MemeDTO> memes = new List<MemeDTO>();
             for (int i = 0; i < 15; i++)
             {
-                Meme memeEntity = new Meme()
+                MemeDTO memeEntity = new MemeDTO()
                 {
                     Title = $"test{i + 1}",
                     ImagePath = $"test{i + 1}Path"
                 };
+                memes.Add(memeEntity);
             }
             return memes;
         }

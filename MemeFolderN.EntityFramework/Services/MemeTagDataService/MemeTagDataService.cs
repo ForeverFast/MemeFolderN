@@ -1,4 +1,5 @@
-﻿using MemeFolderN.Core.Models;
+﻿using MemeFolderN.Core.DTOClasses;
+using MemeFolderN.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NLog;
@@ -8,95 +9,76 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using MemeFolderN.Core.Converters;
 
 namespace MemeFolderN.EntityFramework.Services
 {
     public class MemeTagDataService : IMemeTagDataService
     {
         protected readonly MemeFolderNDbContextFactory _contextFactory;
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+       
+       
+        public virtual async Task<MemeTagDTO> GetById(Guid guid)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                MemeTag entity = await context.MemeTags.FirstOrDefaultAsync(e => e.Id == guid);
+                return entity.ConvertMemeTag();
+            }
+        }
 
+        public virtual async Task<IEnumerable<MemeTagDTO>> GetTags()
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                IEnumerable<MemeTag> memeTags = await Task.FromResult(context.MemeTags.ToList());
+                return memeTags.Select(mt => mt.ConvertMemeTag());
+            }
+        }
+
+        public virtual async Task<MemeTagDTO> Add(MemeTagDTO memeTagDTO)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                MemeTag memeTag = memeTagDTO.ConvertMemeTagDTO();
+
+                EntityEntry<MemeTag> createdResult = await context.MemeTags.AddAsync(memeTag);
+                await context.SaveChangesAsync();
+
+                return createdResult.Entity.ConvertMemeTag();
+            }
+        }
+
+        public virtual async Task<MemeTagDTO> Update(Guid guid, MemeTagDTO memeTagDTO)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                MemeTag memeTag = memeTagDTO.ConvertMemeTagDTO();
+
+                var original = await context.MemeTags.FirstOrDefaultAsync(e => e.Id == guid);
+
+                foreach (PropertyInfo propertyInfo in original.GetType().GetProperties())
+                {
+                    if (propertyInfo.GetValue(memeTag, null) == null)
+                        propertyInfo.SetValue(memeTag, propertyInfo.GetValue(original, null), null);
+                }
+                context.Entry(original).CurrentValues.SetValues(memeTag);
+                await context.SaveChangesAsync();
+
+                return memeTag.ConvertMemeTag();
+            }
+        }
+     
         public virtual async Task<bool> Delete(Guid guid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                try
-                {
-                    MemeTag entity = await context.MemeTags.FirstOrDefaultAsync(e => e.Id == guid);
-                    context.MemeTags.Remove(entity);
+                MemeTag entity = await context.MemeTags.FirstOrDefaultAsync(e => e.Id == guid);
+                context.MemeTags.Remove(entity);
 
-                    await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
 
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, "Ошибка удаления");
-                    return false;
-                }
-            }
-        }
-
-        public virtual async Task<MemeTag> GetById(Guid guid)
-        {
-            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
-            {
-                try
-                {
-                    MemeTag entity = await context.MemeTags.FirstOrDefaultAsync(e => e.Id == guid);
-                    return entity;
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, "Ошибка получения данных");
-                    return null;
-                }
-            }
-        }
-
-        public virtual async Task<MemeTag> Create(MemeTag meme)
-        {
-            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
-            {
-                try
-                {
-                    EntityEntry<MemeTag> createdResult = await context.MemeTags.AddAsync(meme);
-                    await context.SaveChangesAsync();
-
-                    return createdResult.Entity;
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, "Ошибка создания");
-                    return null;
-                }
-            }
-        }
-
-        public virtual async Task<MemeTag> Update(Guid guid, MemeTag memeTag)
-        {
-            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
-            {
-                try
-                {
-                    var original = await context.MemeTags.FirstOrDefaultAsync(e => e.Id == guid);
-
-                    foreach (PropertyInfo propertyInfo in original.GetType().GetProperties())
-                    {
-                        if (propertyInfo.GetValue(memeTag, null) == null)
-                            propertyInfo.SetValue(memeTag, propertyInfo.GetValue(original, null), null);
-                    }
-                    context.Entry(original).CurrentValues.SetValues(memeTag);
-                    await context.SaveChangesAsync();
-
-                    return memeTag;
-
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, "Ошибка обновления");
-                    return null;
-                }
+                return true;
             }
         }
 

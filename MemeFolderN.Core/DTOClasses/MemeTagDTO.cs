@@ -1,6 +1,6 @@
 ﻿namespace MemeFolderN.Core.DTOClasses
 {
-    public class MemeTagDTO : DomainObject
+    public class MemeTagDTO : DomainObjectDTO
     {
         public string Title { get; set; }
 

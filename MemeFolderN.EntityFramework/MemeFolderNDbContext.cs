@@ -6,7 +6,7 @@ namespace MemeFolderN.EntityFramework
 {
     public class MemeFolderNDbContext : DbContext
     {
-        public Guid RootGuid { get; } = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        //public Guid RootGuid { get; } = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
         public DbSet<Meme> Memes { get; set; }
         public DbSet<Folder> Folders { get; set; }
@@ -34,8 +34,6 @@ namespace MemeFolderN.EntityFramework
                 entity.HasOne(m => m.MemeTag);
                 entity.HasOne(m => m.Meme);
             });
-
-            modelBuilder.Entity<Folder>().HasData(new Folder() { Id = RootGuid, Title = "root" });
         }
 
         public MemeFolderNDbContext(DbContextOptions options) : base(options)

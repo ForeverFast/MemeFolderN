@@ -1,4 +1,5 @@
-﻿using MemeFolderN.Core.Models;
+﻿using MemeFolderN.Core.DTOClasses;
+using MemeFolderN.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NLog;
@@ -6,58 +7,85 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using MemeFolderN.Core.Converters;
+using System.Collections.Generic;
 
 namespace MemeFolderN.EntityFramework.Services
 {
     public class FolderDataService : IFolderDataService
     {
         private readonly MemeFolderNDbContextFactory _contextFactory;
-        private static Logger logger = LogManager.GetCurrentClassLogger();
-
-        public virtual async Task<Folder> GetById(Guid guid)
+        
+        public virtual async Task<FolderDTO> GetById(Guid guid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                try
-                {
-                    Folder entity = await Task.FromResult(context.Folders
-                        .Include(f => f.Memes)
-                        .Include(f => f.Folders)
-                        .FirstOrDefault(e => e.Id == guid));
-                    return entity;
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, "Ошибка получения данных");
-                    return null;
-                }
-
+                Folder entity = await Task.FromResult(context.Folders
+                    .Include(f => f.Memes)
+                    .Include(f => f.Folders)
+                    .FirstOrDefault(e => e.Id == guid));
+                return entity.ConvertFolder();
             }
         }
 
-        public virtual async Task<Folder> Create(Folder folder)
+        public virtual async Task<IEnumerable<FolderDTO>> GetRootFolders()
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                try
-                {
-                    if (folder.Title == "root")
-                        throw new Exception("Fig tebe, a ne root folder");
+                IEnumerable<Folder> folders = await Task.FromResult(context.Folders
+                    .Include(m => m.Folders)
+                    .Where(e => e.ParentFolder == null).ToList());
+                return folders.Select(f => f.ConvertFolder());
+            }
+        }
 
-                    Folder parentFolder = await context.Folders
-                        .FirstOrDefaultAsync(x => x.Id == folder.ParentFolder.Id);
-                    if (parentFolder != null)
-                        folder.ParentFolder = parentFolder;
+        public virtual async Task<IEnumerable<FolderDTO>> GetFoldersByFolderID(Guid guid)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                IEnumerable<Folder> folders = await Task.FromResult(context.Folders
+                 .Include(m => m.Folders)
+                 .Where(e => e.ParentFolder.Id == guid).ToList());
 
-                    EntityEntry<Folder> createdResult = await context.Folders.AddAsync(folder);
-                    await context.SaveChangesAsync();
-                    return createdResult.Entity;
-                }
-                catch (Exception ex)
+                return folders.Select(f => f.ConvertFolder());
+            }
+        }
+
+        public virtual async Task<FolderDTO> Add(FolderDTO folderDTO)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                Folder folder = folderDTO.ConvertFolderDTO();
+
+                Folder parentFolder = await context.Folders
+                    .FirstOrDefaultAsync(x => x.Id == folder.ParentFolder.Id);
+                if (parentFolder != null)
+                    folder.ParentFolder = parentFolder;
+
+                EntityEntry<Folder> createdResult = await context.Folders.AddAsync(folder);
+                await context.SaveChangesAsync();
+
+                return createdResult.Entity.ConvertFolder();
+            }
+        }
+
+        public virtual async Task<FolderDTO> Update(Guid guid, FolderDTO folderDTO)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                Folder folder = folderDTO.ConvertFolderDTO();
+
+                var original = await context.Memes.FirstOrDefaultAsync(e => e.Id == guid);
+
+                foreach (PropertyInfo propertyInfo in original.GetType().GetProperties())
                 {
-                    logger.Error(ex, "Ошибка создания");
-                    return null;
+                    if (propertyInfo.GetValue(folder, null) == null)
+                        propertyInfo.SetValue(folder, propertyInfo.GetValue(original, null), null);
                 }
+                context.Entry(original).CurrentValues.SetValues(folder);
+                await context.SaveChangesAsync();
+
+                return folder.ConvertFolder();
             }
         }
 
@@ -65,52 +93,20 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                try
-                {
-                    Folder folder = await context.Folders
-                        .Include(f => f.Folders)
-                        .FirstOrDefaultAsync(x => x.Id == guid);
-                    if (folder != null)
-                    {
-                        RemoveAllData(folder, context);
-                        context.Folders.Remove(folder);
-                        await context.SaveChangesAsync();
-                        return true;
-                    }
-                    else
-                        throw new ArgumentNullException($"Не существует папки с guid({guid})");
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, "Ошибка удаления");
-                    return false;
-                }
-            }
-        }
 
-        public virtual async Task<Folder> Update(Guid guid, Folder folder)
-        {
-            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
-            {
-                try
+                Folder folder = await context.Folders
+                    .Include(f => f.Folders)
+                    .FirstOrDefaultAsync(x => x.Id == guid);
+                if (folder != null)
                 {
-                    var original = await context.Memes.FirstOrDefaultAsync(e => e.Id == guid);
-
-                    foreach (PropertyInfo propertyInfo in original.GetType().GetProperties())
-                    {
-                        if (propertyInfo.GetValue(folder, null) == null)
-                            propertyInfo.SetValue(folder, propertyInfo.GetValue(original, null), null);
-                    }
-                    context.Entry(original).CurrentValues.SetValues(folder);
+                    RemoveAllData(folder, context);
+                    context.Folders.Remove(folder);
                     await context.SaveChangesAsync();
+                    return true;
+                }
+                else
+                    throw new ArgumentNullException($"Не существует папки с guid({guid})");
 
-                    return folder;
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, "Ошибка обновления");
-                    return null;
-                }
             }
         }
 

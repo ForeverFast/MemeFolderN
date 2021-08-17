@@ -114,8 +114,6 @@ namespace MemeFolderN.Navigation
         public void Register<TView>([NotNull] string navigationKey, object viewModel)
           where TView : class, new()
         {
-            
-
             object t = Activator.CreateInstance<TView>();
             Func<object> getView = () => t;
             this.Register(navigationKey, () => viewModel, getView);

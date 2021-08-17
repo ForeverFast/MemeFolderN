@@ -1,8 +1,9 @@
-﻿using System;
+﻿
+using System;
 
-namespace MemeFolderN.MFModels.Abstractions
+namespace MemeFolderN.MFModel.Abstractions
 {
-    public interface IAbstractModel : IDisposable
+    public interface IMFModel : IFolderModel, IMemeModel, IMemeTagModel, IDisposable
     {
         /// <summary>Модель недоступна</summary>
         bool IsDisposable { get; }

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using MemeFolderN.Core.DTOClasses;
+using System;
 using System.Threading.Tasks;
 
 namespace MemeFolderN.EntityFramework
 {
     public interface IDataService<T>
+        where T : DomainObjectDTO
     {
         /// <summary>
         /// Получение сущности по Guid
@@ -16,7 +18,7 @@ namespace MemeFolderN.EntityFramework
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        Task<T> Create(T entity);
+        Task<T> Add(T entity);
         /// <summary>
         /// Обновление сущности
         /// </summary>

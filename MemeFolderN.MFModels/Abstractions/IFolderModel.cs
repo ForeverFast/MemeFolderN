@@ -3,19 +3,19 @@ using MemeFolderN.MFModels.Extentions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFModels.Abstractions
+namespace MemeFolderN.MFModel.Abstractions
 {
-    public delegate void ChangedFoldersHandler(object sender, ActionType action, List<FolderDTO> folders);
+    public delegate void ChangedFoldersHandler(object sender, ActionType action, List<FolderDTO> foldersDTO);
 
-    public interface IFolderModel : IAbstractModel
+    public interface IFolderModel
     {
-        Task<List<FolderDTO>> GetFoldersAsync(FolderDTO folder);
+        Task<List<FolderDTO>> GetFoldersByFolderAsync(FolderDTO folderDTO);
 
-        Task DeleteFolderAsync(FolderDTO folder);
+        Task DeleteFolderAsync(FolderDTO folderDTO);
 
-        Task AddFolderAsync(FolderDTO folder);
+        Task AddFolderAsync(FolderDTO folderDTO);
 
-        Task ChangeFolderAsync(FolderDTO folder);
+        Task ChangeFolderAsync(FolderDTO folderDTO);
 
         event ChangedFoldersHandler ChangedFoldersEvent;
     }

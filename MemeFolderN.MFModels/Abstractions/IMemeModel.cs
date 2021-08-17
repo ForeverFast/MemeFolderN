@@ -1,16 +1,15 @@
 ﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFModels.Abstractions;
 using MemeFolderN.MFModels.Extentions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.Models.Abstractions
+namespace MemeFolderN.MFModel.Abstractions
 {
-    public delegate void ChangedMemesHandler(object sender, ActionType action, List<MemeDTO> folders);
+    public delegate void ChangedMemesHandler(object sender, ActionType action, List<MemeDTO> memesDTO);
 
-    public interface IMemeModel : IAbstractModel
+    public interface IMemeModel
     {
-        Task<List<MemeDTO>> GetMemesAsync();
+        Task<List<MemeDTO>> GetMemesByFolderAsync(FolderDTO folder);
 
         Task DeleteMemeAsync(MemeDTO meme);
 

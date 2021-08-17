@@ -1,16 +1,19 @@
-﻿using MemeFolderN.Core.Models;
+﻿using MemeFolderN.Core.DTOClasses;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MemeFolderN.EntityFramework.Services
 {
-    public interface IMemeDataService : IDataService<Meme>
+    public interface IMemeDataService : IDataService<MemeDTO>
     {
-        Task<IEnumerable<Meme>> FindMemesByTitle(string title);
+        Task<IEnumerable<MemeDTO>> GetMemesByFolderId(Guid guid);
 
-        Task<IEnumerable<Meme>> CreateRange(params Meme[] memes);
+        Task<IEnumerable<MemeDTO>> GetMemesByTitle(string title);
 
-        Task<bool> DeleteRange(params Meme[] memes);
+        Task<IEnumerable<MemeDTO>> AddRangeMemes(List<MemeDTO> memes);
+
+        Task<bool> DeleteRangeMemes(List<MemeDTO> memes);
 
         Task<bool> DeleteAllMemes();
     }
