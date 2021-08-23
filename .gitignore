@@ -9,10 +9,14 @@
 /MemeFolderN.EntityFramework/obj
 /MemeFolderN.Extentions/bin
 /MemeFolderN.Extentions/obj
+/MemeFolderN.MFModel.Default/bin
+/MemeFolderN.MFModel.Default/obj
 /MemeFolderN.MFModels/bin
 /MemeFolderN.MFModels/obj
 /MemeFolderN.MFViewModel/bin
 /MemeFolderN.MFViewModel/obj
+/MemeFolderN.MFViewModels.Default/bin
+/MemeFolderN.MFViewModels.Default/obj
 /MemeFolderN.Navigation/bin
 /MemeFolderN.Navigation/obj
 /MemeFolderN.UnitTests/bin
