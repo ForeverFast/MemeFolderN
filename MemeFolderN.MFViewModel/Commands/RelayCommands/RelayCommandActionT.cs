@@ -16,12 +16,18 @@
         /// <summary>Конструктор с передачей только исполняющего метода</summary>
         /// <param name="execute">Исполняющий метод с одним параметром типа <typeparamref name="T"/></param>
         public RelayCommandAction(ExecuteActionHandler<T> execute)
-                : base(p => execute(p is T t ? t : default)) { }
+                : base(p => execute(p is T t ? t : default))
+        { }
 
         /// <summary>Конструктор с передачей обоих методов</summary>
         /// <param name="execute">Исполняющий метод с одним параметром типа <typeparamref name="T"/></param>
         /// <param name="canExecute">Проверяющий метод с одним параметром типа <typeparamref name="T"/></param>
         public RelayCommandAction(ExecuteActionHandler<T> execute, CanExecuteActionHandler<T> canExecute)
-                : base(p => execute(p is T t ? t : default), canExecute == null ? ((CanExecuteHandler)null) : p => p is T t && canExecute(t)) { }
+            : base
+            (
+                p => execute(p is T t ? t : default),
+                canExecute == null ? null : p => p is T t && canExecute(t)
+            )
+        { }
     }
 }

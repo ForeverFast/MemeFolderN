@@ -13,11 +13,17 @@
         /// <summary>Конструктор с передачей только исполняющего метода</summary>
         /// <param name="execute">Исполняющий безпараметрический метод</param>
         public RelayCommandAction(ExecuteActionHandler execute)
-                : base(_ => execute()) { }
+                : base(_ => execute())
+        { }
         /// <summary>Конструктор с передачей обоих методов</summary>
         /// <param name="execute">Исполняющий безпараметрический метод</param>
         /// <param name="canExecute">Проверяющий безпараметрический метод</param>
         public RelayCommandAction(ExecuteActionHandler execute, CanExecuteActionHandler canExecute)
-                : base(_ => execute(), canExecute == null ? (CanExecuteHandler)null : _ => canExecute()) { }
+            : base
+            (
+                _ => execute(),
+                canExecute == null ? null : _ => canExecute()
+            )
+        { }
     }
 }
