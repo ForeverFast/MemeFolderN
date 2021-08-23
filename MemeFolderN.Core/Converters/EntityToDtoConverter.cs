@@ -1,116 +1,74 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.Core.Models;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MemeFolderN.Core.Converters
 {
     public static class EntityToDtoConverter
     {
-        private static FolderDTO ConvertFolderBase(this Folder folder)
+        private static FolderDTO ConvertFolder(this Folder folder, Guid parentGuid)
         {
-            FolderDTO folderDTO = new FolderDTO()
-            {
-                Id = folder.Id,
-                Title = folder.Title,
-                FolderPath = folder.FolderPath,
-                CreatingDate = folder.CreatingDate,
-                Description = folder.Description,
-                Position = folder.Position,
-            };
-
-            return folderDTO;
-        }
-
-        private static FolderDTO ConvertFolder(this Folder folder, FolderDTO parentFolderDTO)
-        {
-            FolderDTO folderDTO = folder.ConvertFolderBase();
-
-            folderDTO.ParentFolder = parentFolderDTO;
-            folderDTO.Folders = folder.Folders.Select(f => f.ConvertFolder(folderDTO)).ToList();
-            folderDTO.Memes = folder.Memes.Select(m => m.ConvertMeme(folderDTO)).ToList();
+            List<FolderDTO> folderDTOs = folder.Folders?.Select(f => f.ConvertFolder(folder.Id)).ToList();
+            List<MemeDTO> memeDTOs = folder.Memes?.Select(f => f.ConvertMeme(folder.Id)).ToList();
+            FolderDTO folderDTO = new FolderDTO(folder.Id, folder.Position, folder.Title, folder.Description, parentGuid, null,
+                folder.FolderPath, folder.CreatingDate, folderDTOs, memeDTOs);
 
             return folderDTO;
         }
 
         public static FolderDTO ConvertFolder(this Folder folder)
         {
-            FolderDTO folderDTO = folder.ConvertFolderBase();
+            if (folder == null)
+                return null;
 
-            folderDTO.ParentFolder = folder.ParentFolder != null ? folder.ParentFolder.ConvertFolderBase() : null;
-            folderDTO.Folders = folder.Folders.Select(f => f.ConvertFolder(folderDTO)).ToList();
-            folderDTO.Memes = folder.Memes.Select(m => m.ConvertMeme(folderDTO)).ToList();
-
+            List<FolderDTO> folderDTOs = folder.Folders?.Select(f => f.ConvertFolder(folder.Id)).ToList();
+            List<MemeDTO> memeDTOs = folder.Memes?.Select(f => f.ConvertMeme(folder.Id)).ToList();
+            FolderDTO folderDTO = new FolderDTO(folder.Id, folder.Position, folder.Title, folder.Description, folder.ParentFolderId, null,
+               folder.FolderPath, folder.CreatingDate, folderDTOs, memeDTOs);
 
             return folderDTO;
         }
 
-        private static MemeDTO ConvertMemeBase(this Meme meme)
+
+        private static MemeDTO ConvertMeme(this Meme meme, Guid parentGuid)
         {
-            MemeDTO memeDTO = new MemeDTO()
-            {
-                Id = meme.Id,
-                Title = meme.Title,
-                ImagePath = meme.ImagePath,
-                MiniImagePath = meme.MiniImagePath,
-                Description = meme.Description,
-                Position = meme.Position,
-                AddingDate = meme.AddingDate,
-            };
-
-            return memeDTO;
-        }
-
-        private static MemeDTO ConvertMeme(this Meme meme, FolderDTO parentFolderDTO)
-        {
-            MemeDTO memeDTO = meme.ConvertMemeBase();
-
-            memeDTO.ParentFolder = parentFolderDTO;
-            memeDTO.Tags = meme.Tags.ToList().Select(mtn => mtn.ConvertMemeTagNode(memeDTO)).ToList();
+            List<MemeTagNodeDTO> memeTagNodeDTOs = meme.Tags?.Select(mtn => mtn.ConvertMemeTagNode()).ToList();
+            MemeDTO memeDTO = new MemeDTO(meme.Id, meme.Position, meme.Title, meme.Description, parentGuid, null,
+                meme.AddingDate, meme.ImagePath, meme.MiniImagePath, memeTagNodeDTOs);
 
             return memeDTO;
         }
 
         public static MemeDTO ConvertMeme(this Meme meme)
         {
-            MemeDTO memeDTO = meme.ConvertMemeBase();
+            if (meme == null)
+                return null;
 
-            memeDTO.ParentFolder = memeDTO.ParentFolder != null ? meme.ParentFolder.ConvertFolderBase() : null;
-            memeDTO.Tags = meme.Tags.ToList().Select(mtn => mtn.ConvertMemeTagNode(memeDTO)).ToList();
+            List<MemeTagNodeDTO> memeTagNodeDTOs = meme.Tags?.Select(mtn => mtn.ConvertMemeTagNode()).ToList();
+            MemeDTO memeDTO = new MemeDTO(meme.Id, meme.Position, meme.Title, meme.Description, meme.ParentFolderId, null,
+                meme.AddingDate, meme.ImagePath, meme.MiniImagePath, memeTagNodeDTOs);
 
             return memeDTO;
         }
 
         public static MemeTagDTO ConvertMemeTag(this MemeTag memeTag)
         {
-            MemeTagDTO memeTagDTO = new MemeTagDTO()
-            {
-                Id = memeTag.Id,
-                Title = memeTag.Title,          
-            };
+            if (memeTag == null)
+                return null;
+
+            MemeTagDTO memeTagDTO = new MemeTagDTO(memeTag.Id, memeTag.Title);
 
             return memeTagDTO;
         }
 
         public static MemeTagNodeDTO ConvertMemeTagNode(this MemeTagNode memeTagNode)
         {
-            MemeTagNodeDTO memeTagNodeDTO = new MemeTagNodeDTO()
-            {
-                Id = memeTagNode.Id,
-                Meme = memeTagNode.Meme.ConvertMeme(),
-                MemeTag = memeTagNode.MemeTag.ConvertMemeTag()
-            };
+            if (memeTagNode == null)
+                return null;
 
-            return memeTagNodeDTO;
-        }
-
-        public static MemeTagNodeDTO ConvertMemeTagNode(this MemeTagNode memeTagNode, MemeDTO memeDTO)
-        {
-            MemeTagNodeDTO memeTagNodeDTO = new MemeTagNodeDTO()
-            {
-                Id = memeTagNode.Id,
-                Meme = memeDTO,
-                MemeTag = memeTagNode.MemeTag.ConvertMemeTag()
-            };
+            MemeTagNodeDTO memeTagNodeDTO = new MemeTagNodeDTO(memeTagNode.Id, memeTagNode.MemeTag.Id, memeTagNode.Meme.Id);
 
             return memeTagNodeDTO;
         }

@@ -1,4 +1,4 @@
-﻿namespace MemeFolderN.MFModels.Extentions
+﻿namespace MemeFolderN.MFModelBase.Extentions
 {
     public enum ActionType
     {

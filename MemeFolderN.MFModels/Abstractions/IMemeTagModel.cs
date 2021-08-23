@@ -1,9 +1,9 @@
 ﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFModels.Extentions;
+using MemeFolderN.MFModelBase.Extentions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFModel.Abstractions
+namespace MemeFolderN.MFModelBase.Abstractions
 {
     public delegate void ChangedMemeTagsHandler(object sender, ActionType action, List<MemeTagDTO> memeTagsDTO);
 

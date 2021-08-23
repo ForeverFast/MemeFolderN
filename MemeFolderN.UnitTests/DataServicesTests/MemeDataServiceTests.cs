@@ -14,6 +14,10 @@ namespace MemeFolderN.UnitTests.DataServicesTests
     public class MemeDataServiceTests
     {
         private readonly IMemeDataService memeDataService;
+        private readonly IFolderDataService folderDataService;
+
+        public Guid RootGuid { get; } = Guid.Parse("00000000-0000-0000-0000-000000000001");
+
 
         [Fact]
         public async void AddAndGetNewMeme()
@@ -66,12 +70,12 @@ namespace MemeFolderN.UnitTests.DataServicesTests
 
             // Act
             string newPropValue = "test2";
-            dbCreatedMeme.Title = newPropValue;
-            MemeDTO dbUpdatedMeme = await memeDataService.Update(dbCreatedMeme.Id, dbCreatedMeme);
+            MemeDTO proccesedMemeDTO = new MemeDTO(dbCreatedMeme.Id, newPropValue, dbCreatedMeme.ImagePath);
+            MemeDTO dbUpdatedMeme = await memeDataService.Update(proccesedMemeDTO.Id, proccesedMemeDTO);
 
             // Assert
             Assert.NotNull(dbUpdatedMeme);
-            Assert.True(dbUpdatedMeme.Id == dbCreatedMeme.Id);
+            Assert.True(dbUpdatedMeme.Id == proccesedMemeDTO.Id);
             Assert.True(dbUpdatedMeme.Title == newPropValue);
 
             _ = await memeDataService.DeleteAllMemes();
@@ -112,11 +116,7 @@ namespace MemeFolderN.UnitTests.DataServicesTests
 
         private MemeDTO GetSingleMeme()
         {
-            MemeDTO memeEntity = new MemeDTO()
-            {
-                Title = "test1",
-                ImagePath = "test1Path"
-            };
+            MemeDTO memeEntity = new MemeDTO("test1", "test1Path", RootGuid);
 
             return memeEntity;
         }
@@ -126,11 +126,7 @@ namespace MemeFolderN.UnitTests.DataServicesTests
             List<MemeDTO> memes = new List<MemeDTO>();
             for (int i = 0; i < 15; i++)
             {
-                MemeDTO memeEntity = new MemeDTO()
-                {
-                    Title = $"test{i + 1}",
-                    ImagePath = $"test{i + 1}Path"
-                };
+                MemeDTO memeEntity = new MemeDTO($"test{i + 1}", $"test{i + 1}Path", RootGuid);
                 memes.Add(memeEntity);
             }
             return memes;
@@ -141,6 +137,12 @@ namespace MemeFolderN.UnitTests.DataServicesTests
         public MemeDataServiceTests()
         {
             memeDataService = new MemeDataService();
+            folderDataService = new FolderDataService();
+
+            FolderDTO folder = folderDataService.GetById(RootGuid).Result;
+            if (folder == null)
+                folderDataService.Add(new FolderDTO(RootGuid));
+
         }
     }
 }

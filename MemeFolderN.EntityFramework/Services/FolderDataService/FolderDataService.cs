@@ -1,14 +1,13 @@
-﻿using MemeFolderN.Core.DTOClasses;
+﻿using MemeFolderN.Core.Converters;
+using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using NLog;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using MemeFolderN.Core.Converters;
-using System.Collections.Generic;
 
 namespace MemeFolderN.EntityFramework.Services
 {
@@ -56,12 +55,16 @@ namespace MemeFolderN.EntityFramework.Services
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
                 Folder folder = folderDTO.ConvertFolderDTO();
+                folder.ParentFolder = null;
 
-                Folder parentFolder = await context.Folders
-                    .FirstOrDefaultAsync(x => x.Id == folder.ParentFolder.Id);
-                if (parentFolder != null)
-                    folder.ParentFolder = parentFolder;
-
+                //if (folder.ParentFolderId == null && folder.ParentFolder != null)
+                //{
+                //    Folder parentFolder = await context.Folders
+                //        .FirstOrDefaultAsync(x => x.Id == folder.ParentFolder.Id);
+                //    if (parentFolder != null)
+                //        folder.ParentFolder = parentFolder;
+                //}
+                
                 EntityEntry<Folder> createdResult = await context.Folders.AddAsync(folder);
                 await context.SaveChangesAsync();
 

@@ -1,14 +1,6 @@
-﻿
-using System;
-
-namespace MemeFolderN.MFModel.Abstractions
+﻿namespace MemeFolderN.MFModelBase.Abstractions
 {
-    public interface IMFModel : IFolderModel, IMemeModel, IMemeTagModel, IDisposable
+    public interface IMFModel : IFolderModel, IMemeModel, IMemeTagModel
     {
-        /// <summary>Модель недоступна</summary>
-        bool IsDisposable { get; }
-
-        /// <summary>Данные загружены</summary>
-        bool IsLoaded { get; }
     }
 }

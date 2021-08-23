@@ -5,18 +5,31 @@ namespace MemeFolderN.Core.DTOClasses
 {
     public class MemeDTO : FolderObjectDTO
     {
-        public DateTime AddingDate { get; set; }
+        public DateTime AddingDate { get; }
 
-        public string ImagePath { get; set; }
+        public string ImagePath { get; }
 
-        public string MiniImagePath { get; set; }
+        public string MiniImagePath { get; }
 
-        public List<MemeTagNodeDTO> Tags { get; set; }
+        public List<MemeTagNodeDTO> Tags { get; }
 
-        public MemeDTO() : base()
+        public MemeDTO(Guid id, string title, string imagePath) : base(id, title)
         {
-            AddingDate = DateTime.Now;
-            Tags = new List<MemeTagNodeDTO>();
+            ImagePath = imagePath;
+        }
+
+        public MemeDTO(string title, string imagePath, Guid? parentFolderId) : base(title, parentFolderId)
+        {
+            ImagePath = imagePath;
+        }
+
+        public MemeDTO(Guid id, uint position, string title, string description, Guid? parentId, FolderDTO parentFolder,
+            DateTime addingDate, string imagePath, string miniImagePath, List<MemeTagNodeDTO> tags) : base(id, position, title, description, parentId, parentFolder)
+        {
+            AddingDate = addingDate;
+            ImagePath = imagePath;
+            MiniImagePath = miniImagePath;
+            Tags = tags;
         }
     }
 }

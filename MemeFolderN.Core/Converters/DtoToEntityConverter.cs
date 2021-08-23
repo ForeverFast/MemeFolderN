@@ -25,9 +25,10 @@ namespace MemeFolderN.Core.Converters
         {
             Folder folder = folderDTO.ConvertFolderDTOBase();
 
+            folder.ParentFolderId = folderDTO.ParentFolderId;
             folder.ParentFolder = parentFolder;
-            folder.Folders = folderDTO.Folders.Select(f => f.ConvertFolderDTO(folder));
-            folder.Memes = folderDTO.Memes.Select(m => m.ConvertMemeDTO(folder));
+            folder.Folders = folderDTO.Folders?.Select(f => f.ConvertFolderDTO(folder));
+            folder.Memes = folderDTO.Memes?.Select(m => m.ConvertMemeDTO(folder));
 
             return folder;
         }
@@ -36,11 +37,11 @@ namespace MemeFolderN.Core.Converters
         {
             Folder folder = folderDTO.ConvertFolderDTOBase();
 
+            folder.ParentFolderId = folderDTO.ParentFolderId;
             folder.ParentFolder = folderDTO.ParentFolder != null ? folderDTO.ParentFolder.ConvertFolderDTOBase() : null;
-            folder.Folders = folderDTO.Folders.Select(f => f.ConvertFolderDTO(folder));
-            folder.Memes = folderDTO.Memes.Select(m => m.ConvertMemeDTO(folder));
+            folder.Folders = folderDTO.Folders?.Select(f => f.ConvertFolderDTO(folder));
+            folder.Memes = folderDTO.Memes?.Select(m => m.ConvertMemeDTO(folder));
             
-
             return folder;
         }
 
@@ -64,8 +65,9 @@ namespace MemeFolderN.Core.Converters
         {
             Meme meme = memeDTO.ConvertMemeDTOBase();
 
+            meme.ParentFolderId = parentFolder.ParentFolderId;
             meme.ParentFolder = parentFolder;
-            meme.Tags = memeDTO.Tags.ToList().Select(mtn => mtn.ConvertMemeTagNodeDTO(meme));
+            meme.Tags = memeDTO.Tags?.ToList().Select(mtn => mtn.ConvertMemeTagNodeDTO(meme));
 
             return meme;
         }
@@ -74,8 +76,9 @@ namespace MemeFolderN.Core.Converters
         {
             Meme meme = memeDTO.ConvertMemeDTOBase();
 
+            meme.ParentFolderId = memeDTO.ParentFolderId;
             meme.ParentFolder = memeDTO.ParentFolder != null ? memeDTO.ParentFolder.ConvertFolderDTOBase() : null;
-            meme.Tags = memeDTO.Tags.ToList().Select(mtn => mtn.ConvertMemeTagNodeDTO(meme));
+            meme.Tags = memeDTO.Tags?.ToList().Select(mtn => mtn.ConvertMemeTagNodeDTO(meme));
 
             return meme;
         }
