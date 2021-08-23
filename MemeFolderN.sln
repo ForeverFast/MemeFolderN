@@ -21,13 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemeFolderN.Extentions", "M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemeFolderN.MFViewModelsBase", "MemeFolderN.MFViewModel\MemeFolderN.MFViewModelsBase.csproj", "{A33B1A10-2427-45E0-BB46-728C1511F55E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MFModels", "MFModels", "{AF0F519E-5F99-4700-94D9-961A54239DAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemeFolderN.MFModel.Default", "MemeFolderN.MFModel.Default\MemeFolderN.MFModel.Default.csproj", "{31C8C7CA-EFAE-4CEA-B057-826B207ECDF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemeFolderN.MFModel.Default", "MemeFolderN.MFModel.Default\MemeFolderN.MFModel.Default.csproj", "{31C8C7CA-EFAE-4CEA-B057-826B207ECDF2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MFViewModels", "MFViewModels", "{28F9BF92-9C75-41AC-8AA6-5B5C1AC56EB8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemeFolderN.MFViewModels.Default", "MemeFolderN.MFViewModels.Default\MemeFolderN.MFViewModels.Default.csproj", "{12A49E9B-AB83-4826-A2AE-99405802BE84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemeFolderN.MFViewModels.Default", "MemeFolderN.MFViewModels.Default\MemeFolderN.MFViewModels.Default.csproj", "{12A49E9B-AB83-4826-A2AE-99405802BE84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,12 +78,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{71A44625-FF58-4220-8D8C-4836B773C3F3} = {AF0F519E-5F99-4700-94D9-961A54239DAE}
-		{A33B1A10-2427-45E0-BB46-728C1511F55E} = {28F9BF92-9C75-41AC-8AA6-5B5C1AC56EB8}
-		{31C8C7CA-EFAE-4CEA-B057-826B207ECDF2} = {AF0F519E-5F99-4700-94D9-961A54239DAE}
-		{12A49E9B-AB83-4826-A2AE-99405802BE84} = {28F9BF92-9C75-41AC-8AA6-5B5C1AC56EB8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BEE8FF04-6B78-42CA-A5F9-826481447E98}
