@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="Views\" />
+    <Compile Remove="Services\**" />
+    <Compile Remove="Views\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <EmbeddedResource Remove="Views\**" />
+    <None Remove="Services\**" />
+    <None Remove="Views\**" />
+    <Page Remove="Services\**" />
+    <Page Remove="Views\**" />
   </ItemGroup>
 
   <ItemGroup>
