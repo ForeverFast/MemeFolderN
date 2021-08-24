@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MemeFolderN.Core.DTOClasses;
+using System;
 using System.Collections.ObjectModel;
 
 namespace MemeFolderN.MFViewModelsBase.Abstractions
 {
-    public interface IFolder : IFolderObject
+    public interface IFolder : IFolderObject, ICopyDTO<FolderDTO>
     {
         string FolderPath { get; set; }
 

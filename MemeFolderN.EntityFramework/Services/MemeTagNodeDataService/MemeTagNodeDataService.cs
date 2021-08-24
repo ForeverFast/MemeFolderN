@@ -58,7 +58,7 @@ namespace MemeFolderN.EntityFramework.Services
             {
                 MemeTagNode memeTagNode = memeTagNodeDTO.ConvertMemeTagNodeDTO();
 
-                var original = await context.MemeTags.FirstOrDefaultAsync(e => e.Id == guid);
+                var original = await context.MemeTagNodes.FirstOrDefaultAsync(e => e.Id == guid);
 
                 foreach (PropertyInfo propertyInfo in original.GetType().GetProperties())
                 {

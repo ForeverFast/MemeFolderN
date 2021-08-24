@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MemeFolderN.Core.DTOClasses;
 
 namespace MemeFolderN.MFViewModelsBase.Abstractions
 {
-    public interface IMemeTag : IDomainObject
+    public interface IMemeTag : IDomainObject, ICopyDTO<MemeTagDTO>
     {
         public string Title { get; set; }
     }

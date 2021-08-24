@@ -8,7 +8,7 @@ namespace MemeFolderN.MFViewModelsBase
 {
     public abstract partial class FolderVMBase : BasePageViewModel, IFolderVM, IFolder
     {
-        public IMFModel model { get; }
+        private readonly IMFModel model;
 
         public ObservableCollection<IFolder> Folders { get; } = new ObservableCollection<IFolder>();
         public ObservableCollection<IMeme> Memes { get; } = new ObservableCollection<IMeme>();
@@ -31,9 +31,6 @@ namespace MemeFolderN.MFViewModelsBase
         public Guid? ParentFolderId { get => _parentFolderId; set => SetProperty(ref _parentFolderId, value); }
 
         
-
-
-
 
         #region Поля для хранения значений свойств
         private IFolder _selectedFolder;

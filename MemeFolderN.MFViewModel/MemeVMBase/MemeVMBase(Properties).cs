@@ -1,16 +1,15 @@
-﻿using MemeFolderN.MFViewModelsBase.Abstractions;
+﻿using MemeFolderN.MFModelBase.Abstractions;
+using MemeFolderN.MFViewModelsBase.Abstractions;
 using MemeFolderN.MFViewModelsBase.BaseViewModels;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModelsBase
 {
     public abstract partial class MemeVMBase : BaseNavigationViewModel, IMemeVM, IMeme
     {
+        private readonly IMFModel model;
+
         public ObservableCollection<IMemeTag> Tags { get; } = new ObservableCollection<IMemeTag>();
 
         public Guid Id { get => _id; set => SetProperty(ref _id, value); }

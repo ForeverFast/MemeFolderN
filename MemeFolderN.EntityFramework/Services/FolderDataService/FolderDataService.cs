@@ -78,7 +78,7 @@ namespace MemeFolderN.EntityFramework.Services
             {
                 Folder folder = folderDTO.ConvertFolderDTO();
 
-                var original = await context.Memes.FirstOrDefaultAsync(e => e.Id == guid);
+                var original = await context.Folders.FirstOrDefaultAsync(e => e.Id == guid);
 
                 foreach (PropertyInfo propertyInfo in original.GetType().GetProperties())
                 {

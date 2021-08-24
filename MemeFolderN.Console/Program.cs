@@ -13,8 +13,6 @@ namespace MemeFolderN.Console
         
         static void Main(string[] args)
         {
-           
-
             using (MemeFolderNDbContext context = memeFolderNDbContextFactory.CreateDbContext(null))
             {
 
@@ -22,12 +20,16 @@ namespace MemeFolderN.Console
                 FolderDTO folder = folderDataService.GetById(context.RootGuid).Result;
                 if (folder != null)
                 {
-                    Folder folder1 = new Folder() { ParentFolderId = context.RootGuid };
+                    Folder folder1 = new Folder() { ParentFolderId = context.RootGuid, Title = "Folder1" };
+                    Folder folder2 = new Folder() { ParentFolderId = context.RootGuid, Title = "Folder2" };
 
-                    var t = folderDataService.Add(folder1.ConvertFolder()).Result;
+                    FolderDTO f1 = folderDataService.Add(folder1.ConvertFolder()).Result;
+                    FolderDTO f2 = folderDataService.Add(folder2.ConvertFolder()).Result;
+
+                    FolderDTO fRup = folderDataService.Update(folder.Id, folder).Result;
+                    FolderDTO fRget = folderDataService.GetById(context.RootGuid).Result;
                 }
                     
-
                 System.Console.ReadKey();
             }
             

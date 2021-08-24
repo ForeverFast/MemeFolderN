@@ -1,27 +1,38 @@
-﻿using MemeFolderN.MFModelBase.Abstractions;
+﻿using MemeFolderN.Core.DTOClasses;
+using MemeFolderN.MFModelBase.Abstractions;
 using MemeFolderN.MFViewModelsBase.Abstractions;
 using MemeFolderN.MFViewModelsBase.BaseViewModels;
 using MemeFolderN.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModelsBase
 {
     public abstract partial class FolderVMBase : BasePageViewModel, IFolderVM, IFolder
     {
-        protected FolderVMBase(INavigationService navigationService
-            ) : base(navigationService)
+        protected FolderVMBase(INavigationService navigationService,
+            IMFModel mFModel) : base(navigationService)
         {
+            model = mFModel;
         }
 
-      
+        public FolderDTO CopyDTO()
+            => new FolderDTO(Id, Position, Title, Description, ParentFolderId, null,
+                FolderPath, CreatingDate, null, null);
 
-       
+        public void CopyFromDTO(FolderDTO dto)
+        {
+            Id = dto.Id;
+            Position = dto.Position;
+            Title = dto.Title;
+            Description = dto.Description;
+            ParentFolderId = dto.ParentFolderId;
+            FolderPath = dto.FolderPath;
+            CreatingDate = dto.CreatingDate;
+        }
 
-        
+        public bool EqualValues(FolderDTO other) =>
+            Id == other.Id && ParentFolderId == other.ParentFolderId;
     }
 }
+
+// Не удалять!
+// Folders.Select(f => f.CopyDTO())?.ToList(), Memes.Select(m => m.CopyDTO())?.ToList()

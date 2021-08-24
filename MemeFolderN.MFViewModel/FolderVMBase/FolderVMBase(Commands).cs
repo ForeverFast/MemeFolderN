@@ -1,4 +1,5 @@
-﻿using MemeFolderN.MFViewModelsBase.Abstractions;
+﻿using MemeFolderN.Core.DTOClasses;
+using MemeFolderN.MFViewModelsBase.Abstractions;
 using MemeFolderN.MFViewModelsBase.BaseViewModels;
 using MemeFolderN.MFViewModelsBase.Commands;
 using System;
@@ -78,6 +79,8 @@ namespace MemeFolderN.MFViewModelsBase
             ShowMetod($"Вызвано добавление мема для {this.Id} / {this.Title}");
 #endif
         }
+
+      
 
         private RelayCommand _folderFolderCommand;
         private RelayCommand _folderAddCommand;
