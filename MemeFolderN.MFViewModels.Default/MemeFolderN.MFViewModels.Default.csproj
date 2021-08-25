@@ -5,4 +5,8 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MemeFolderN.MFViewModel\MemeFolderN.MFViewModelsBase.csproj" />
+  </ItemGroup>
+
 </Project>

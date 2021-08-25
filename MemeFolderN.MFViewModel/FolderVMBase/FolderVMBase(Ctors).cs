@@ -9,9 +9,9 @@ namespace MemeFolderN.MFViewModelsBase
     public abstract partial class FolderVMBase : BasePageViewModel, IFolderVM, IFolder
     {
         protected FolderVMBase(INavigationService navigationService,
-            IMFModel mFModel) : base(navigationService)
+            IMFModel model) : base(navigationService)
         {
-            model = mFModel;
+            this.model = model;
         }
 
         public FolderDTO CopyDTO()

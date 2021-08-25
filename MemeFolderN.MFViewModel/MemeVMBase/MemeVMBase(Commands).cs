@@ -49,9 +49,11 @@ namespace MemeFolderN.MFViewModelsBase
 #endif
         }
 
+        #region Поля для хранения значений свойств
         private RelayCommand _memeChangeCommand;
         private RelayCommand _memeDeleteCommand;
         private RelayCommand _memeOpenCommand;
         private RelayCommand _memeCopyCommand;
+        #endregion
     }
 }

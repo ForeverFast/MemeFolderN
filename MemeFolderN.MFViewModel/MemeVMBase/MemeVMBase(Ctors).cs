@@ -9,9 +9,9 @@ namespace MemeFolderN.MFViewModelsBase
     public abstract partial class MemeVMBase : BaseNavigationViewModel, IMemeVM, IMeme
     {
         protected MemeVMBase(INavigationService navigationService,
-            IMFModel mFModel) : base(navigationService)
+            IMFModel model) : base(navigationService)
         {
-            model = mFModel;
+            this.model = model;
         }
 
         public MemeDTO CopyDTO()

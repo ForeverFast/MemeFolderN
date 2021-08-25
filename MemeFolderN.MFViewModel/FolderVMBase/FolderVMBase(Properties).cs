@@ -8,7 +8,7 @@ namespace MemeFolderN.MFViewModelsBase
 {
     public abstract partial class FolderVMBase : BasePageViewModel, IFolderVM, IFolder
     {
-        private readonly IMFModel model;
+        protected readonly IMFModel model;
 
         public ObservableCollection<IFolder> Folders { get; } = new ObservableCollection<IFolder>();
         public ObservableCollection<IMeme> Memes { get; } = new ObservableCollection<IMeme>();

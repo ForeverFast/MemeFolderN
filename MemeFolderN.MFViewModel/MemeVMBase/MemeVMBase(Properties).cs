@@ -8,7 +8,7 @@ namespace MemeFolderN.MFViewModelsBase
 {
     public abstract partial class MemeVMBase : BaseNavigationViewModel, IMemeVM, IMeme
     {
-        private readonly IMFModel model;
+        protected readonly IMFModel model;
 
         public ObservableCollection<IMemeTag> Tags { get; } = new ObservableCollection<IMemeTag>();
 

@@ -8,15 +8,7 @@ namespace MemeFolderN.MFViewModelsBase
 {
     public abstract partial class FolderVMBase : BasePageViewModel, IFolderVM, IFolder
     {
-        //public RelayCommand FolderRootsCommand => _folderRootsCommand ?? ( _folderRootsCommand =
-        //    new RelayCommandAction(FolderRoots));
-
-//        protected virtual void FolderRoots()
-//        {
-//#if DEBUG
-//            ShowMetod($"");
-//#endif
-//        }
+        
 
         public RelayCommand FolderFoldersCommand => _folderFolderCommand ?? (_folderFolderCommand =
             new RelayCommandAction(FolderFoldersMethod));
@@ -80,8 +72,8 @@ namespace MemeFolderN.MFViewModelsBase
 #endif
         }
 
-      
 
+        #region Поля для хранения значений свойств
         private RelayCommand _folderFolderCommand;
         private RelayCommand _folderAddCommand;
         private RelayCommand _folderChangeCommand;
@@ -89,5 +81,6 @@ namespace MemeFolderN.MFViewModelsBase
 
         private RelayCommand _memeLoadCommand;
         private RelayCommand _memeAddCommand;
+        #endregion
     }
 }
