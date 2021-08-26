@@ -11,7 +11,7 @@ namespace MemeFolderN.Core.DTOClasses
 
         public string MiniImagePath { get; }
 
-        public List<MemeTagNodeDTO> Tags { get; }
+        public List<MemeTagDTO> Tags { get; }
 
         public MemeDTO(Guid id, string title, string imagePath) : base(id, title)
         {
@@ -23,8 +23,13 @@ namespace MemeFolderN.Core.DTOClasses
             ImagePath = imagePath;
         }
 
-        public MemeDTO(Guid id, uint position, string title, string description, Guid? parentId, FolderDTO parentFolder,
-            DateTime addingDate, string imagePath, string miniImagePath, List<MemeTagNodeDTO> tags) : base(id, position, title, description, parentId, parentFolder)
+        public MemeDTO(Guid id, string title, string description, Guid? parentFolderId, string imagePath) : base(id, title, description, parentFolderId)
+        {
+            ImagePath = imagePath;
+        }
+
+        public MemeDTO(Guid id, uint position, string title, string description, Guid? parentFolderId, FolderDTO parentFolder,
+            DateTime addingDate, string imagePath, string miniImagePath, List<MemeTagDTO> tags) : base(id, position, title, description, parentFolderId, parentFolder)
         {
             AddingDate = addingDate;
             ImagePath = imagePath;

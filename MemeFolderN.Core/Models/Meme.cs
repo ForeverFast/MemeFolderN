@@ -13,12 +13,16 @@ namespace MemeFolderN.Core.Models
 
         public string MiniImagePath { get; set; }
 
-        public IEnumerable<MemeTagNode> Tags { get; set; }
+        public IEnumerable<MemeTagNode> TagNodes { get; set; }
+
+        [NotMapped]
+        public IEnumerable<MemeTag> Tags { get; set; }
 
         public Meme() : base()
         {
             AddingDate = DateTime.Now;
-            Tags = new List<MemeTagNode>();
+            TagNodes = new List<MemeTagNode>();
+            Tags = new List<MemeTag>();
         }
     }
 }

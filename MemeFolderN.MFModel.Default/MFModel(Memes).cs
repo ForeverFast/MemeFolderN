@@ -28,11 +28,10 @@ namespace MemeFolderN.MFModelBase.Default
             memeDTO = MemeAddInit(memeDTO); 
 
             // Отделение тегов от исходной сущности meme
-            List<MemeTagNodeDTO> memeTagNodes = new List<MemeTagNodeDTO>();
-            foreach (MemeTagNodeDTO mtn in memeDTO.Tags.ToArray())
-            {
-                memeTagNodes.Add(mtn);
-            }
+            List<MemeTagDTO> memeTags = new List<MemeTagDTO>();
+            foreach (MemeTagDTO mtn in memeDTO.Tags.ToArray())
+                memeTags.Add(mtn);
+                
             MemeDTO proccesedMemeDTO = new MemeDTO(memeDTO.Id, memeDTO.Position, memeDTO.Title, memeDTO.Description, memeDTO.ParentFolderId, memeDTO.ParentFolder,
                 memeDTO.AddingDate, memeDTO.ImagePath, memeDTO.MiniImagePath, null);
 
@@ -40,11 +39,11 @@ namespace MemeFolderN.MFModelBase.Default
             if (createdMeme != null)
             {
                 // Добавление отделённых тегов и сохранение memeTagNodes в БД
-                memeTagNodes.ForEach(async (newMemeTagNode) =>
+                memeTags.ForEach(async (newMemeTag) =>
                 {
-                    MemeTagNodeDTO proccesedMemeDTO = new MemeTagNodeDTO(newMemeTagNode.Id, newMemeTagNode.MemeTag.Id, newMemeTagNode.Meme.Id);
+                    MemeTagNodeDTO proccesedMemeDTO = new MemeTagNodeDTO(newMemeTag.Id, newMemeTag.Id, createdMeme.Id);
                     MemeTagNodeDTO dbCreatedMemeTagNode = await memeTagNodeDataService.Add(proccesedMemeDTO);
-                    createdMeme.Tags.Append(proccesedMemeDTO);
+                    createdMeme.Tags.Append(newMemeTag);
                 });
 
                 OnAddMemesEvent(new List<MemeDTO>() { createdMeme });
@@ -76,45 +75,18 @@ namespace MemeFolderN.MFModelBase.Default
         {
             MemeDTO oldMemeData = memeDataService.GetById(memeDTO.Id).Result;
 
-            List<MemeTagNodeDTO> oldMemeTagNodesForRemove = new List<MemeTagNodeDTO>();
-            foreach (MemeTagNodeDTO memeTagNode in oldMemeData.Tags.ToArray())
+            List<MemeTagDTO> oldMemeTagForRemove = oldMemeData.Tags.Except(memeDTO.Tags).ToList();
+            foreach(MemeTagDTO memeTagDTO in oldMemeTagForRemove)
             {
-                bool flag = true;
-                foreach (MemeTagNodeDTO newMemeTagNode in memeDTO.Tags)
-                {
-                    if (memeTagNode.MemeTag.Id == newMemeTagNode.MemeTag.Id)
-                    {
-                        flag = false;
-                        break;
-                    }
-                }
-
-                if (flag)
-                {
-                    memeTagNodeDataService.Delete(memeTagNode.Id);
-                    oldMemeData.Tags.Remove(memeTagNode);
-                }
+                MemeTagNodeDTO memeTagNodeDTO = memeTagNodeDataService.GetByMemeIdAndMemeTagId(memeDTO.Id, memeTagDTO.Id).Result;
+                memeTagNodeDataService.Delete(memeTagNodeDTO.Id);
             }
 
-
-            foreach (MemeTagNodeDTO newMemeTagNode in memeDTO.Tags.ToArray())
+            List<MemeTagDTO> newMemeTagForAdd = memeDTO.Tags.Except(oldMemeData.Tags).ToList();
+            foreach (MemeTagDTO memeTagDTO in newMemeTagForAdd)
             {
-                bool flag = true;
-                foreach (MemeTagNodeDTO memeTagNode in oldMemeData.Tags)
-                {
-                    if (memeTagNode.MemeTag.Id == newMemeTagNode.MemeTag.Id)
-                    {
-                        flag = false;
-                        break;
-                    }
-                }
-
-                if (flag)
-                {
-                    MemeTagNodeDTO dbCreatedMemeTagNode = memeTagNodeDataService.Add(newMemeTagNode).Result;
-                    DataExtentions.ReplaceReference(memeDTO.Tags, dbCreatedMemeTagNode, mtn => mtn == newMemeTagNode);
-                }
-
+                MemeTagNodeDTO memeTagNodeDTO = new MemeTagNodeDTO(memeTagDTO.Id, memeDTO.Id);
+                memeTagNodeDataService.Add(memeTagNodeDTO);
             }
 
             MemeDTO updatedMeme = memeDataService.Update(memeDTO.Id, memeDTO).Result;
@@ -236,3 +208,46 @@ namespace MemeFolderN.MFModelBase.Default
         #endregion
     }
 }
+
+
+// OLD DATA (DO NOT REMOVE) 
+
+//foreach (MemeTagDTO memeTag in oldMemeData.Tags.ToArray())
+//{
+//    bool flag = true;
+//    foreach (MemeTagDTO newMemeTag in memeDTO.Tags)
+//    {
+//        if (memeTag.Id == newMemeTag.Id)
+//        {
+//            flag = false;
+//            break;
+//        }
+//    }
+
+//    if (flag)
+//    {
+//        memeTagNodeDataService.Delete(memeTag.Id);
+//        oldMemeData.Tags.Remove(memeTag);
+//    }
+//}
+
+
+//foreach (MemeTagNodeDTO newMemeTagNode in memeDTO.Tags.ToArray())
+//{
+//    bool flag = true;
+//    foreach (MemeTagNodeDTO memeTagNode in oldMemeData.Tags)
+//    {
+//        if (memeTagNode.MemeTag.Id == newMemeTagNode.MemeTag.Id)
+//        {
+//            flag = false;
+//            break;
+//        }
+//    }
+
+//    if (flag)
+//    {
+//        MemeTagNodeDTO dbCreatedMemeTagNode = memeTagNodeDataService.Add(newMemeTagNode).Result;
+//        DataExtentions.ReplaceReference(memeDTO.Tags, dbCreatedMemeTagNode, mtn => mtn == newMemeTagNode);
+//    }
+
+//}

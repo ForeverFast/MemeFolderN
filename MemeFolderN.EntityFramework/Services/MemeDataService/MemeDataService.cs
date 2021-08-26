@@ -23,7 +23,7 @@ namespace MemeFolderN.EntityFramework.Services
             {
                 Meme entity = await context.Memes
                     .Include(m => m.ParentFolder)
-                    .Include(m => m.Tags)
+                    .Include(m => m.TagNodes)
                         .ThenInclude(mtn => mtn.MemeTag)
                     .FirstOrDefaultAsync(e => e.Id == guid);
                 return entity.ConvertMeme();
@@ -36,7 +36,7 @@ namespace MemeFolderN.EntityFramework.Services
             {
                 IEnumerable<Meme> memes = await Task.FromResult(context.Memes
                      .Include(m => m.ParentFolder)
-                     .Include(m => m.Tags)
+                     .Include(m => m.TagNodes)
                          .ThenInclude(mtn => mtn.MemeTag)
                      .Where(e => e.Id == guid).ToList());
                 return memes.Select(m => m.ConvertMeme());
@@ -49,7 +49,7 @@ namespace MemeFolderN.EntityFramework.Services
             {
                 IEnumerable<Meme> memes = await Task.FromResult(context.Memes
                  .Include(m => m.ParentFolder)
-                 .Include(m => m.Tags)
+                 .Include(m => m.TagNodes)
                      .ThenInclude(mtn => mtn.MemeTag)
                  .Where(e => e.Title == title).ToList());
 

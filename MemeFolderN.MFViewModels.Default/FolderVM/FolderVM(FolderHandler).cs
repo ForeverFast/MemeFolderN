@@ -58,7 +58,7 @@ namespace MemeFolderN.MFViewModels.Default
                 if (Folders.All(r => r.Id != folder.Id))
                 {
                     /// Создание новой папки для добавления в коллекцию
-                    FolderVM newFolderVM = new FolderVM(_navigationService, model, dispatcher, folder);
+                    FolderVM newFolderVM = new FolderVM(_navigationService, dialogService, model, dispatcher, folder);
                     
                     list.Add(newFolderVM);
                     /// Удаление созданной из полученной коллекции

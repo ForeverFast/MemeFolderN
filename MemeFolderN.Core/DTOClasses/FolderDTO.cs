@@ -13,7 +13,17 @@ namespace MemeFolderN.Core.DTOClasses
 
         public List<MemeDTO> Memes { get; }
 
+        public FolderDTO() : base()
+        {
+
+        }
+
         public FolderDTO(Guid id) : base(id)
+        {
+
+        }
+
+        public FolderDTO(Guid id, string title, string description, Guid? parentFolderId) : base(id,title,description, parentFolderId)
         {
 
         }

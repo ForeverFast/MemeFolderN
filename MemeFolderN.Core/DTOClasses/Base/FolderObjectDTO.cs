@@ -12,6 +12,11 @@ namespace MemeFolderN.Core.DTOClasses
         public FolderDTO ParentFolder { get; }
         public override string ToString() => this.Title;
 
+        protected FolderObjectDTO() : base()
+        {
+            
+        }
+
         protected FolderObjectDTO(string title) : base()
         {
             Title = title;
@@ -30,6 +35,12 @@ namespace MemeFolderN.Core.DTOClasses
         protected FolderObjectDTO(Guid id, string title) : this(id)
         {
             Title = title;
+        }
+
+        protected FolderObjectDTO(Guid id, string title, string description, Guid? parentFolderId) : this(id, title)
+        {
+            Description = description;
+            ParentFolderId = parentFolderId;
         }
 
         protected FolderObjectDTO(Guid id, uint position, string title, string description, Guid? parentFolderId, FolderDTO parentFolder) : base(id)

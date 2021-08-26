@@ -30,11 +30,11 @@ namespace MemeFolderN.EntityFramework
                
             });
 
-            modelBuilder.Entity<Meme>(entity =>
+            modelBuilder.Entity<Meme>((Action<Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Meme>>)(entity =>
             {
                 entity.HasOne(m => m.ParentFolder);
-                entity.HasMany(m => m.Tags);    
-            });
+                entity.HasMany((System.Linq.Expressions.Expression<Func<Meme, System.Collections.Generic.IEnumerable<MemeTag>>>)(m => (System.Collections.Generic.IEnumerable<MemeTag>)m.TagNodes));    
+            }));
 
             modelBuilder.Entity<MemeTagNode>(entity =>
             {

@@ -14,17 +14,24 @@ namespace MemeFolderN.MFViewModels.Default
         {
             base.FolderFoldersMethod();
             FolderFoldersMethodAsync();
-        }
+        }  
 
         protected async void FolderFoldersMethodAsync()
         {
-            IEnumerable<FolderDTO> folders = await model.GetFoldersByFolderIdAsync(this.Id);
-            lock (Folders)
+            try
             {
-                foreach (FolderDTO folder in folders)
-                    Folders.Add(new FolderVM(_navigationService, model, dispatcher,folder));
-                IsBusy = false;
-                IsLoaded = true;
+                IEnumerable<FolderDTO> folders = await model.GetFoldersByFolderIdAsync(this.Id);
+                lock (Folders)
+                {
+                    foreach (FolderDTO folder in folders)
+                        Folders.Add(new FolderVM(_navigationService, dialogService, model, dispatcher, folder));
+                    IsBusy = false;
+                    IsLoaded = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                OnException(ex);
             }
         }
 
@@ -36,7 +43,14 @@ namespace MemeFolderN.MFViewModels.Default
 
         protected virtual async void FolderAddMethodAsync()
         {
+            try
+            {
 
+            }
+            catch(Exception ex)
+            {
+                OnException(ex);
+            }
         }
     }
 }

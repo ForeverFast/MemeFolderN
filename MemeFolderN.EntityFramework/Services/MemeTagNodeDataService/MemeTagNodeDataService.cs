@@ -27,19 +27,29 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
+        public virtual async Task<MemeTagNodeDTO> GetByMemeIdAndMemeTagId(Guid memeId, Guid memeTagId)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                MemeTagNode entity = await context.MemeTagNodes
+                    .FirstOrDefaultAsync(mtn => mtn.MemeId == memeId && mtn.MemeTagId == memeTagId);
+                return entity.ConvertMemeTagNode();
+            }
+        }
+
         public virtual async Task<MemeTagNodeDTO> Add(MemeTagNodeDTO memeTagNodeDTO)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
                 MemeTagNode memeTagNode = memeTagNodeDTO.ConvertMemeTagNodeDTO();
 
-                Meme meme = await context.Memes.FirstOrDefaultAsync(m => m.Id == memeTagNode.Meme.Id);
+                Meme meme = await context.Memes.FirstOrDefaultAsync(m => m.Id == memeTagNode.MemeId);
                 if (meme != null)
                     memeTagNode.Meme = meme;
                 else
                     throw new ArgumentNullException("Meme can not be null");
 
-                MemeTag memeTag = await context.MemeTags.FirstOrDefaultAsync(mt => mt.Id == memeTagNode.MemeTag.Id);
+                MemeTag memeTag = await context.MemeTags.FirstOrDefaultAsync(mt => mt.Id == memeTagNode.MemeTagId);
                 if (memeTag != null)
                     memeTagNode.MemeTag = memeTag;
                 else

@@ -34,7 +34,7 @@ namespace MemeFolderN.Core.Converters
 
         private static MemeDTO ConvertMeme(this Meme meme, Guid parentGuid)
         {
-            List<MemeTagNodeDTO> memeTagNodeDTOs = meme.Tags?.Select(mtn => mtn.ConvertMemeTagNode()).ToList();
+            List<MemeTagDTO> memeTagNodeDTOs = meme.TagNodes?.Select(mtn => mtn.ConvertMemeTagNodeToMemeTagDTO()).ToList();
             MemeDTO memeDTO = new MemeDTO(meme.Id, meme.Position, meme.Title, meme.Description, parentGuid, null,
                 meme.AddingDate, meme.ImagePath, meme.MiniImagePath, memeTagNodeDTOs);
 
@@ -46,9 +46,9 @@ namespace MemeFolderN.Core.Converters
             if (meme == null)
                 return null;
 
-            List<MemeTagNodeDTO> memeTagNodeDTOs = meme.Tags?.Select(mtn => mtn.ConvertMemeTagNode()).ToList();
+            List<MemeTagDTO> memeTagDTOs = meme.TagNodes?.Select(mtn => mtn.ConvertMemeTagNodeToMemeTagDTO()).ToList();
             MemeDTO memeDTO = new MemeDTO(meme.Id, meme.Position, meme.Title, meme.Description, meme.ParentFolderId, null,
-                meme.AddingDate, meme.ImagePath, meme.MiniImagePath, memeTagNodeDTOs);
+                meme.AddingDate, meme.ImagePath, meme.MiniImagePath, memeTagDTOs);
 
             return memeDTO;
         }
@@ -71,6 +71,16 @@ namespace MemeFolderN.Core.Converters
             MemeTagNodeDTO memeTagNodeDTO = new MemeTagNodeDTO(memeTagNode.Id, memeTagNode.MemeTag.Id, memeTagNode.Meme.Id);
 
             return memeTagNodeDTO;
+        }
+
+        public static MemeTagDTO ConvertMemeTagNodeToMemeTagDTO(this MemeTagNode memeTagNode)
+        {
+            if (memeTagNode == null)
+                return null;
+
+            MemeTagDTO memeTagDTO = new MemeTagDTO(memeTagNode.MemeTag.Id, memeTagNode.MemeTag.Title);
+
+            return memeTagDTO;
         }
     }
 }

@@ -15,28 +15,28 @@ namespace MemeFolderN.Console
         {
             //using (MemeFolderNDbContext context = memeFolderNDbContextFactory.CreateDbContext(null))
             //{
-
-            //    FolderDataService folderDataService = new FolderDataService();
-            //    FolderDTO folder = folderDataService.GetById(context.RootGuid).Result;
-            //    if (folder != null)
-            //    {
-            //        Folder folder1 = new Folder() { ParentFolderId = context.RootGuid, Title = "Folder1" };
-            //        Folder folder2 = new Folder() { ParentFolderId = context.RootGuid, Title = "Folder2" };
-
-            //        FolderDTO f1 = folderDataService.Add(folder1.ConvertFolder()).Result;
-            //        FolderDTO f2 = folderDataService.Add(folder2.ConvertFolder()).Result;
-
-            //        FolderDTO fRup = folderDataService.Update(folder.Id, folder).Result;
-            //        FolderDTO fRget = folderDataService.GetById(context.RootGuid).Result;
-            //    }
-
             //    System.Console.ReadKey();
             //}
-          
+
+            Folder folder1 = new Folder() { Id = 1, Title = "T1", Descrp = "D1" };
+            Folder folder2 = folder1 with { Title = "T2" };
+
+            Folder folder3 = folder1 with { ParentFolder = folder2, Title = "T3" };
+            folder3 = folder3 with { ParentFolder = null, Title = "T3" };
+
             System.Console.ReadKey();
         }
 
 
 
+    }
+
+
+    record Folder
+    {
+        public int Id { get; init; }
+        public string Title { get; init; }
+        public string Descrp { get; set; }
+        public Folder ParentFolder { get; init; }
     }
 }

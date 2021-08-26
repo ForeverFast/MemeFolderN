@@ -11,6 +11,12 @@ namespace MemeFolderN.Core.DTOClasses
 
         public override string ToString() => MemeTag.Title;
 
+        public MemeTagNodeDTO(Guid memeTagId, Guid memeId) : base()
+        {
+            MemeTagId = memeTagId;
+            MemeId = memeId;
+        }
+
         public MemeTagNodeDTO(Guid id, MemeTagDTO memeTag, MemeDTO meme) : base(id)
         {
             MemeTag = memeTag;
