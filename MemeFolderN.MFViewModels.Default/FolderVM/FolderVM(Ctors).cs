@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
-namespace MemeFolderN.MFViewModels.Default.FolderVM
+namespace MemeFolderN.MFViewModels.Default
 {
     public partial class FolderVM : FolderVMBase
     {
@@ -24,9 +24,18 @@ namespace MemeFolderN.MFViewModels.Default.FolderVM
             this.dispatcher = dispatcher;
 
             model.ChangedFoldersEvent += Model_ChangedFoldersEvent;
+            model.ChangedMemesEvent += Model_ChangedMemesEvent;
         }
 
-        
+        public FolderVM(INavigationService navigationService,
+            IMFModel model,
+            Dispatcher dispatcher,
+            FolderDTO folderDTO) : this(navigationService, model, dispatcher)
+        {
+            this.CopyFromDTO(folderDTO);
+        }
+
+
 
         public override void Dispose()
         {

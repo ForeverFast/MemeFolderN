@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFViewModels.Default.FolderVM
+namespace MemeFolderN.MFViewModels.Default
 {
     public partial class FolderVM : FolderVMBase
     {
@@ -19,28 +19,26 @@ namespace MemeFolderN.MFViewModels.Default.FolderVM
         {
             IEnumerable<FolderDTO> sortedFolders = foldersDTO.Where(f => f.ParentFolderId != this.ParentFolderId);
 
-            switch (action)
-            {
-                case ActionType.Add:
-                    if (sortedFolders.Any())
+            if (sortedFolders.Any())
+                switch (action)
+                {
+                    case ActionType.Add:
                         Task.Factory.StartNew(FoldersAdd, sortedFolders);
-                    break;
-                case ActionType.Changed:
-                    if (sortedFolders.Any())
+                        break;
+                    case ActionType.Changed:
                         Task.Factory.StartNew(FoldersChanged, sortedFolders);
-                    break;
-                case ActionType.Remove:
-                    if (sortedFolders.Any())
+                        break;
+                    case ActionType.Remove:
                         Task.Factory.StartNew(FoldersRemove, sortedFolders);
-                    break;
-                default:
+                        break;
+                    default:
 #if DEBUG
-                    ShowMetod($"Какой-то баг {sender}");
+                        ShowMetod($"Какой-то баг {sender}");
 #else
-                throw new Exception($"Какой-то баг {sender}");
+                        throw new Exception($"Какой-то баг {sender}");
 #endif
-                    break;
-            }
+                        break;
+                }
         }
 
         /// <summary>Добавление Папок</summary>
@@ -60,8 +58,8 @@ namespace MemeFolderN.MFViewModels.Default.FolderVM
                 if (Folders.All(r => r.Id != folder.Id))
                 {
                     /// Создание новой папки для добавления в коллекцию
-                    FolderVM newFolderVM = new FolderVM(_navigationService, model, dispatcher);
-                    newFolderVM.CopyFromDTO(folder);
+                    FolderVM newFolderVM = new FolderVM(_navigationService, model, dispatcher, folder);
+                    
                     list.Add(newFolderVM);
                     /// Удаление созданной из полученной коллекции
                     folders.Remove(folder);
@@ -85,25 +83,24 @@ namespace MemeFolderN.MFViewModels.Default.FolderVM
         }
 
 
-
-        /// <summary>Изменение Комнат</summary>
-        /// <param name="state">Изменяемые Комнаты</param>
+        /// <summary>Изменение Папок</summary>
+        /// <param name="state">Изменяемые Папки</param>
         private void FoldersChanged(object state)
         {
             /// Получение коллекции из параметра
             List<FolderDTO> folders = (List<FolderDTO>)state;
 
-            /// Создание коллекции изменяемых Комнат
+            /// Создание коллекции изменяемых Папок
             Dictionary<FolderDTO, FolderVM> list = new Dictionary<FolderDTO, FolderVM>(folders.Count);
 
             /// Цикл по полученной коллекции
             foreach (FolderDTO folder in folders.ToArray())
             {
-                /// Если в имеющейся коллекции есть Комната с таким ID
+                /// Если в имеющейся коллекции есть Папка с таким ID
                 FolderVM fvm = (FolderVM)Folders.FirstOrDefault(r => r.Id == folder.Id);
                 if (fvm != null)
                 {
-                    /// Создание новой пары Данные и Комната для изменения в коллекции
+                    /// Создание новой пары Данные и Папка для изменения в коллекции
                     list.Add(folder, fvm);
                     /// Удаление Комнаты из полученной коллекции
                     folders.Remove(folder);
@@ -117,8 +114,8 @@ namespace MemeFolderN.MFViewModels.Default.FolderVM
 
         }
 
-        /// <summary>Метод изменяющий Комнаты в коллекции  для представления</summary>
-        /// <param name="folders">DTO тип с новыми данными и Комната</param>
+        /// <summary>Метод изменяющий Папки в коллекции для представления</summary>
+        /// <param name="folders">DTO тип с новыми данными и Папками</param>
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
         private void FoldersChangedUI(Dictionary<FolderDTO, FolderVM> folders)
         {
@@ -127,25 +124,27 @@ namespace MemeFolderN.MFViewModels.Default.FolderVM
                     folder.Value.CopyFromDTO(folder.Key);
         }
 
-        /// <summary>Удаление Комнат</summary>
-        /// <param name="state">Удаляемые Комнаты</param>
+
+        /// <summary>Удаление Папок</summary>
+        /// <param name="state">Удаляемые Папки</param>
         private void FoldersRemove(object state)
         {
+            /// Получение коллекции из параметра
             List<FolderDTO> folders = (List<FolderDTO>)state;
 
-            /// Создание коллекции добавляемых папрк
+            /// Создание коллекции добавляемых Папок
             List<FolderVM> list = new List<FolderVM>(folders.Count);
 
             /// Цикл по полученной коллекции
             foreach (FolderDTO folder in folders.ToArray())
             {
-                /// Если в имеющейся коллекции есть комната с таким ID
+                /// Если в имеющейся коллекции есть Папка с таким ID
                 FolderVM rvm = (FolderVM)Folders.FirstOrDefault(r => r.Id == folder.Id);
                 if (rvm != null)
                 {
-                    /// Добавление Комнаты для удаления из коллекции
+                    /// Добавление Папки для удаления из коллекции
                     list.Add(rvm);
-                    /// Удаление Комнаты из полученной коллекции
+                    /// Удаление Папки из полученной коллекции
                     folders.Remove(folder);
                 }
             }
@@ -157,8 +156,8 @@ namespace MemeFolderN.MFViewModels.Default.FolderVM
 
         }
 
-        /// <summary>Метод удаляющий Комнаты в коллекции  для представления</summary>
-        /// <param name="folders">Удаляемые Комнаты</param>
+        /// <summary>Метод удаляющий Папки в коллекции для представления</summary>
+        /// <param name="folders">Удаляемые Папки</param>
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
         private void FoldersRemoveUI(List<FolderVM> folders)
         {

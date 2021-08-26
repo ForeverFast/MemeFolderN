@@ -8,8 +8,6 @@ namespace MemeFolderN.MFViewModelsBase
 {
     public abstract partial class FolderVMBase : BasePageViewModel, IFolderVM, IFolder
     {
-        
-
         public RelayCommand FolderFoldersCommand => _folderFolderCommand ?? (_folderFolderCommand =
             new RelayCommandAction(FolderFoldersMethod));
         protected virtual void FolderFoldersMethod()
@@ -72,6 +70,15 @@ namespace MemeFolderN.MFViewModelsBase
 #endif
         }
 
+        public RelayCommand MemeDeleteCommand => _memeDeleteCommand ?? (_memeDeleteCommand =
+    new RelayCommandAction<MemeVMBase>(MemeDeleteMethod));
+
+        protected virtual void MemeDeleteMethod(MemeVMBase memeVMBase)
+        {
+#if DEBUG
+            ShowMetod($"Вызвано удаление мема {this.Id} / {this.Title}");
+#endif
+        }
 
         #region Поля для хранения значений свойств
         private RelayCommand _folderFolderCommand;
@@ -81,6 +88,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         private RelayCommand _memeLoadCommand;
         private RelayCommand _memeAddCommand;
+        private RelayCommand _memeDeleteCommand;
         #endregion
     }
 }

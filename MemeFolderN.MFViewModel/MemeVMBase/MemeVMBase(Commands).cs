@@ -19,7 +19,7 @@ namespace MemeFolderN.MFViewModelsBase
 
 
         public RelayCommand MemeDeleteCommand => _memeDeleteCommand ?? (_memeDeleteCommand =
-            new RelayCommandAction<MemeVMBase>(MemeChangeMethod));
+            new RelayCommandAction<MemeVMBase>(MemeDeleteMethod));
 
         protected virtual void MemeDeleteMethod(MemeVMBase memeVMBase)
         {

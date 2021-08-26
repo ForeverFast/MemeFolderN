@@ -15,5 +15,6 @@ namespace MemeFolderN.MFViewModelsBase.Abstractions
 
         RelayCommand MemeLoadCommand { get; }
         RelayCommand MemeAddCommand { get; }
+        RelayCommand MemeDeleteCommand { get; }
     }
 }

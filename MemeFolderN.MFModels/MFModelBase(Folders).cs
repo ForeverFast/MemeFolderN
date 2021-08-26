@@ -2,6 +2,7 @@
 using MemeFolderN.EntityFramework.Services;
 using MemeFolderN.MFModelBase.Abstractions;
 using MemeFolderN.MFModelBase.Extentions;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,8 +20,8 @@ namespace MemeFolderN.MFModelBase
 
         protected void OnChangedFoldersEvent(List<FolderDTO> foldersDTO) => ChangedFoldersEvent?.Invoke(this, ActionType.Changed, foldersDTO);
 
-        public Task<List<FolderDTO>> GetFoldersByFolderAsync(FolderDTO foldersDTO) => Task.Factory.StartNew(() => GetFoldersByFolder(foldersDTO));
-        protected abstract List<FolderDTO> GetFoldersByFolder(FolderDTO foldersDTO);
+        public Task<List<FolderDTO>> GetFoldersByFolderIdAsync(Guid id) => Task.Factory.StartNew(() => GetFoldersByFolderId(id));
+        protected abstract List<FolderDTO> GetFoldersByFolderId(Guid id);
 
         public Task<List<FolderDTO>> GetRootFoldersAsync() => Task.Factory.StartNew(() => GetRootFolders());
         protected abstract List<FolderDTO> GetRootFolders();

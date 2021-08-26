@@ -9,9 +9,9 @@ namespace MemeFolderN.MFModelBase.Default
 {
     public partial class MFModel
     {
-        protected override List<FolderDTO> GetFoldersByFolder(FolderDTO folderDTO)
+        protected override List<FolderDTO> GetFoldersByFolderId(Guid id)
         {
-            IEnumerable<FolderDTO> foldersDTO = folderDataService.GetFoldersByFolderID(folderDTO.Id).Result;
+            IEnumerable<FolderDTO> foldersDTO = folderDataService.GetFoldersByFolderID(id).Result;
             return foldersDTO.ToList();
         }
 
