@@ -2,6 +2,7 @@
 using MemeFolderN.EntityFramework.Services;
 using MemeFolderN.MFModelBase.Abstractions;
 using MemeFolderN.MFModelBase.Extentions;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,6 +23,9 @@ namespace MemeFolderN.MFModelBase
 
         public Task<List<MemeTagDTO>> GetMemeTagsAsync() => Task.Factory.StartNew(() => GetMemeTags());
         protected abstract List<MemeTagDTO> GetMemeTags();
+
+        public Task<List<MemeTagDTO>> GetMemeTagsByMemeIdAsync(Guid id) => Task.Factory.StartNew(() => GetMemeTagsByMemeId(id));
+        protected abstract List<MemeTagDTO> GetMemeTagsByMemeId(Guid id);
 
         public Task AddMemeTagAsync(MemeTagDTO memeTag) => Task.Factory.StartNew(() => AddMemeTag(memeTag));
         protected abstract void AddMemeTag(MemeTagDTO memeTag);

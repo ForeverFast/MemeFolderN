@@ -70,7 +70,12 @@ namespace MemeFolderN.UnitTests.DataServicesTests
 
             // Act
             string newPropValue = "test2";
-            MemeDTO proccesedMemeDTO = new MemeDTO(dbCreatedMeme.Id, newPropValue, dbCreatedMeme.ImagePath);
+            MemeDTO proccesedMemeDTO = new MemeDTO
+            {
+                Id = dbCreatedMeme.Id,
+                Title = newPropValue,
+                ImagePath = dbCreatedMeme.ImagePath
+            };
             MemeDTO dbUpdatedMeme = await memeDataService.Update(proccesedMemeDTO.Id, proccesedMemeDTO);
 
             // Assert
@@ -116,7 +121,12 @@ namespace MemeFolderN.UnitTests.DataServicesTests
 
         private MemeDTO GetSingleMeme()
         {
-            MemeDTO memeEntity = new MemeDTO("test1", "test1Path", RootGuid);
+            MemeDTO memeEntity = new MemeDTO
+            {
+                Title =  "test1",
+                ImagePath = "test1Path",
+                ParentFolderId = RootGuid
+            };
 
             return memeEntity;
         }
@@ -126,7 +136,12 @@ namespace MemeFolderN.UnitTests.DataServicesTests
             List<MemeDTO> memes = new List<MemeDTO>();
             for (int i = 0; i < 15; i++)
             {
-                MemeDTO memeEntity = new MemeDTO($"test{i + 1}", $"test{i + 1}Path", RootGuid);
+                MemeDTO memeEntity = new MemeDTO
+                {
+                    Title = $"test{i + 1}",
+                    ImagePath = $"test{i + 1}Path",
+                    ParentFolderId = RootGuid 
+                };
                 memes.Add(memeEntity);
             }
             return memes;
@@ -141,7 +156,7 @@ namespace MemeFolderN.UnitTests.DataServicesTests
 
             FolderDTO folder = folderDataService.GetById(RootGuid).Result;
             if (folder == null)
-                folderDataService.Add(new FolderDTO(RootGuid));
+                folderDataService.Add(new FolderDTO { Id = RootGuid });
 
         }
     }

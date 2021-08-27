@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using MemeFolderN.Core.DTOClasses;
+using System;
+using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModelsBase.Services
 {
@@ -10,5 +12,10 @@ namespace MemeFolderN.MFViewModelsBase.Services
         void ShowFolder(string path);
         string FileBrowserDialog(string Extension = "*.jpg;*.png");
         string FolderBrowserDialog();
+
+        Task<FolderDTO> FolderDtoOpenAddDialog(Guid? parentFolderId);
+        Task<FolderDTO> FolderDtoOpenEditDialog(FolderDTO folderDTO);
+        Task<MemeDTO> MemeDtoOpenAddDialog(Guid? parentFolderId);
+        Task<MemeDTO> MemeDtoOpenEditDialog(MemeDTO memeDTO);
     }
 }

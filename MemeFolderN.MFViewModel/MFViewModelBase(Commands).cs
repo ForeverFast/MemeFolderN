@@ -12,6 +12,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void FolderRootsMethod()
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызван метод прогрузки коренных папок.");
 #endif
@@ -23,6 +24,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void MemeTagLoadMethod()
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызван метод прогрузки тегов.");
 #endif
@@ -34,6 +36,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void MemeTagAddMethod()
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызван метод добавления тега.");
 #endif
@@ -44,6 +47,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void MemeTagChangeMethod(MemeTagVMBase memeTagVMBase)
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызван метод изменения тега.");
 #endif
@@ -54,6 +58,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void MemeTagDeleteMethod(MemeTagVMBase memeTagVMBase)
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызван метод изменения тега.");
 #endif

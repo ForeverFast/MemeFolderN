@@ -2,15 +2,10 @@
 
 namespace MemeFolderN.Core.DTOClasses
 {
-    public class MemeTagDTO : DomainObjectDTO
+    public record MemeTagDTO : DomainObjectDTO
     {
-        public string Title { get; }
+        public string Title { get; init; }
 
         public override string ToString() => this.Title;
-
-        public MemeTagDTO(Guid id, string title) : base(id)
-        {
-            Title = title;
-        }
     }
 }

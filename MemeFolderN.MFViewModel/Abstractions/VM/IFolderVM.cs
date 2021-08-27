@@ -8,7 +8,7 @@ namespace MemeFolderN.MFViewModelsBase.Abstractions
         IMeme SelectedMeme { get; set; }
 
        
-        RelayCommand FolderFoldersCommand { get; }
+        RelayCommand FolderLoadCommand { get; }
         RelayCommand FolderAddCommand { get; }
         RelayCommand FolderChangeCommand { get; }
         RelayCommand FolderDeleteCommand { get; }

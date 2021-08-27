@@ -21,20 +21,15 @@ namespace MemeFolderN.EntityFramework
                 .WithMany(f => f.Folders)
                 .IsRequired(false);
                
-                
                 entity.HasMany(f => f.Folders);
-                
                 entity.HasMany(f => f.Memes);
-                //.WithOne(m => m.ParentFolder)
-                //.HasForeignKey(m => m.ParentFolderId);
-               
             });
 
-            modelBuilder.Entity<Meme>((Action<Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Meme>>)(entity =>
+            modelBuilder.Entity<Meme>(entity =>
             {
                 entity.HasOne(m => m.ParentFolder);
-                entity.HasMany((System.Linq.Expressions.Expression<Func<Meme, System.Collections.Generic.IEnumerable<MemeTag>>>)(m => (System.Collections.Generic.IEnumerable<MemeTag>)m.TagNodes));    
-            }));
+                entity.HasMany(m => m.TagNodes);
+            });
 
             modelBuilder.Entity<MemeTagNode>(entity =>
             {

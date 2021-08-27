@@ -1,5 +1,6 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.MFModelBase.Extentions;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace MemeFolderN.MFModelBase.Abstractions
 
     public interface IMemeModel
     {
-        Task<List<MemeDTO>> GetMemesByFolderAsync(FolderDTO folder);
+        Task<List<MemeDTO>> GetMemesByFolderIdAsync(Guid id);
 
         Task DeleteMemeAsync(MemeDTO meme);
 

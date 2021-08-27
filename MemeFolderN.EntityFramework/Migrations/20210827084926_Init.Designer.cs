@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemeFolderN.EntityFramework.Migrations
 {
     [DbContext(typeof(MemeFolderNDbContext))]
-    [Migration("20210820110933_Up1")]
-    partial class Up1
+    [Migration("20210827084926_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,7 +33,7 @@ namespace MemeFolderN.EntityFramework.Migrations
                     b.Property<string>("FolderPath")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ParentFolderId")
+                    b.Property<Guid?>("ParentFolderId")
                         .HasColumnType("TEXT");
 
                     b.Property<uint>("Position")
@@ -67,7 +67,7 @@ namespace MemeFolderN.EntityFramework.Migrations
                     b.Property<string>("MiniImagePath")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ParentFolderId")
+                    b.Property<Guid?>("ParentFolderId")
                         .HasColumnType("TEXT");
 
                     b.Property<uint>("Position")
@@ -122,9 +122,7 @@ namespace MemeFolderN.EntityFramework.Migrations
                 {
                     b.HasOne("MemeFolderN.Core.Models.Folder", "ParentFolder")
                         .WithMany("Folders")
-                        .HasForeignKey("ParentFolderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("ParentFolderId");
 
                     b.Navigation("ParentFolder");
                 });
@@ -133,9 +131,7 @@ namespace MemeFolderN.EntityFramework.Migrations
                 {
                     b.HasOne("MemeFolderN.Core.Models.Folder", "ParentFolder")
                         .WithMany("Memes")
-                        .HasForeignKey("ParentFolderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ParentFolderId");
 
                     b.Navigation("ParentFolder");
                 });
@@ -143,7 +139,7 @@ namespace MemeFolderN.EntityFramework.Migrations
             modelBuilder.Entity("MemeFolderN.Core.Models.MemeTagNode", b =>
                 {
                     b.HasOne("MemeFolderN.Core.Models.Meme", "Meme")
-                        .WithMany("Tags")
+                        .WithMany("TagNodes")
                         .HasForeignKey("MemeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -168,7 +164,7 @@ namespace MemeFolderN.EntityFramework.Migrations
 
             modelBuilder.Entity("MemeFolderN.Core.Models.Meme", b =>
                 {
-                    b.Navigation("Tags");
+                    b.Navigation("TagNodes");
                 });
 #pragma warning restore 612, 618
         }

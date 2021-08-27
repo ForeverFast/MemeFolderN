@@ -137,7 +137,7 @@ namespace MemeFolderN.EntityFramework.Migrations
             modelBuilder.Entity("MemeFolderN.Core.Models.MemeTagNode", b =>
                 {
                     b.HasOne("MemeFolderN.Core.Models.Meme", "Meme")
-                        .WithMany("Tags")
+                        .WithMany("TagNodes")
                         .HasForeignKey("MemeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -162,7 +162,7 @@ namespace MemeFolderN.EntityFramework.Migrations
 
             modelBuilder.Entity("MemeFolderN.Core.Models.Meme", b =>
                 {
-                    b.Navigation("Tags");
+                    b.Navigation("TagNodes");
                 });
 #pragma warning restore 612, 618
         }

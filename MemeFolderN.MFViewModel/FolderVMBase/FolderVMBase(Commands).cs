@@ -1,17 +1,16 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFViewModelsBase.Abstractions;
+﻿using MemeFolderN.MFViewModelsBase.Abstractions;
 using MemeFolderN.MFViewModelsBase.BaseViewModels;
 using MemeFolderN.MFViewModelsBase.Commands;
-using System;
 
 namespace MemeFolderN.MFViewModelsBase
 {
     public abstract partial class FolderVMBase : BasePageViewModel, IFolderVM, IFolder
     {
-        public RelayCommand FolderFoldersCommand => _folderFolderCommand ?? (_folderFolderCommand =
-            new RelayCommandAction(FolderFoldersMethod));
-        protected virtual void FolderFoldersMethod()
+        public RelayCommand FolderLoadCommand => _folderFolderCommand ?? (_folderFolderCommand =
+            new RelayCommandAction(FolderLoadMethod));
+        protected virtual void FolderLoadMethod()
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызвана прогрузка папок для {this.Id} / {this.Title}");
 #endif
@@ -23,6 +22,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void FolderAddMethod()
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызвано добавление папки для {this.Id} / {this.Title}");
 #endif
@@ -33,6 +33,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void FolderChangeMethod(FolderVMBase folderVMBase)
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызвано изменение папки {folderVMBase.Id} / {folderVMBase.Title} для {this.Id} / {this.Title}");
 #endif
@@ -44,6 +45,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void FolderDeleteMethod(FolderVMBase folderVMBase)
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызвано удаление папки {folderVMBase.Id} / {folderVMBase.Title} для {this.Id} / {this.Title}");
 #endif
@@ -55,6 +57,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void MemeLoadMethod()
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызвана прогрузка папок для {this.Id} / {this.Title}");
 #endif
@@ -65,16 +68,18 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void MemeAddMethod()
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызвано добавление мема для {this.Id} / {this.Title}");
 #endif
         }
 
         public RelayCommand MemeDeleteCommand => _memeDeleteCommand ?? (_memeDeleteCommand =
-    new RelayCommandAction<MemeVMBase>(MemeDeleteMethod));
+            new RelayCommandAction<MemeVMBase>(MemeDeleteMethod));
 
         protected virtual void MemeDeleteMethod(MemeVMBase memeVMBase)
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызвано удаление мема {this.Id} / {this.Title}");
 #endif

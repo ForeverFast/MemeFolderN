@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MemeFolderN.MFModelBase.Default
 {
-    public partial class MFModel
+    public partial class MFModel : MFModelBase
     {
         protected override List<FolderDTO> GetFoldersByFolderId(Guid id)
         {
@@ -38,8 +38,12 @@ namespace MemeFolderN.MFModelBase.Default
                 Directory.CreateDirectory(newFolderPath);
             }
 
-            FolderDTO proccesedFolderDTO = new FolderDTO(folderDTO.Id, folderDTO.Position, Path.GetFileName(newFolderPath), folderDTO.Description, folderDTO.ParentFolder.Id, parentFolder,
-                newFolderPath, folderDTO.CreatingDate, folderDTO.Folders, folderDTO.Memes);
+            FolderDTO proccesedFolderDTO = folderDTO with
+            {
+                Title = Path.GetFileName(newFolderPath),
+                ParentFolder = parentFolder,
+                FolderPath = newFolderPath
+            };
 
             FolderDTO createdFolder = folderDataService.Add(proccesedFolderDTO).Result;
             if (createdFolder != null)

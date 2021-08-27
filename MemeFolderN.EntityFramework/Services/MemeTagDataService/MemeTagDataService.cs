@@ -36,6 +36,20 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
+        public virtual async Task<IEnumerable<MemeTagDTO>> GetTagsByMemeId(Guid id)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                IEnumerable<MemeTag> memeTags = await Task.FromResult(context.MemeTagNodes
+                    .Include(mt => mt.MemeTag)
+                    .Include(mt => mt.Meme)
+                    .Where(mtn => mtn.MemeId == id)
+                    .Select(mtn => mtn.MemeTag)
+                    .ToList());
+                return memeTags.Select(mt => mt.ConvertMemeTag());
+            }
+        }
+
         public virtual async Task<MemeTagDTO> Add(MemeTagDTO memeTagDTO)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))

@@ -21,18 +21,17 @@ namespace MemeFolderN.MFViewModels.Default
                     case ActionType.Add:
                         Task.Factory.StartNew(MemesAdd, sortedMemes);
                         break;
+                    case ActionType.Changed:
+                        Task.Factory.StartNew(MemesChanged, sortedMemes);
+                        break;
                     case ActionType.Remove:
                         Task.Factory.StartNew(MemesRemove, sortedMemes);
                         break;
                     default:
-#if DEBUG
-                        ShowMetod($"Какой-то баг {sender}");
-#else
-                        throw new Exception($"Какой-то баг {sender}");
-#endif
-                        break;
+                        return;
                 }
         }
+
 
         /// <summary>Добавление Мемов</summary>
         /// <param name="state">Добавляемые Мемы</param>
@@ -51,8 +50,8 @@ namespace MemeFolderN.MFViewModels.Default
                 if (Memes.All(r => r.Id != meme.Id))
                 {
                     /// Создание нового Мема для добавления в коллекцию
-                    MemeVM newMemeVM = new MemeVM(_navigationService, model, dispatcher);
-                    newMemeVM.CopyFromDTO(meme);
+                    MemeVM newMemeVM = new MemeVM(_navigationService, dialogService, model, dispatcher, meme);
+                    
                     list.Add(newMemeVM);
                     /// Удаление Мема созданного из полученной коллекции
                     memes.Remove(meme);
@@ -76,6 +75,48 @@ namespace MemeFolderN.MFViewModels.Default
                     Memes.Add(meme);
                 IsBusy = false;
             }  
+        }
+
+
+        /// <summary>Изменение Мемов</summary>
+        /// <param name="state">Изменяемые Мемы</param>
+        private void MemesChanged(object state)
+        {
+            /// Получение коллекции из параметра
+            List<MemeDTO> memes = (List<MemeDTO>)state;
+
+            /// Создание коллекции изменяемых Мемов
+            Dictionary<MemeDTO, MemeVM> list = new Dictionary<MemeDTO, MemeVM>(memes.Count);
+
+            /// Цикл по полученной коллекции
+            foreach (MemeDTO meme in memes.ToArray())
+            {
+                /// Если в имеющейся коллекции есть Мем с таким ID
+                MemeVM mvm = (MemeVM)Memes.FirstOrDefault(r => r.Id == meme.Id);
+                if (mvm != null)
+                {
+                    /// Создание новой пары Данные и Мем для изменения в коллекции
+                    list.Add(meme, mvm);
+                    /// Удаление Мема из полученной коллекции
+                    memes.Remove(meme);
+                }
+            }
+
+            /// Если в добавляемой коллекции есть элементы
+            if (list.Count > 0)
+                /// Вызов метода добавления в коллекцию в потоке UI
+                dispatcher.BeginInvoke((Action<Dictionary<MemeDTO, MemeVM>>)MemesChangedUI, list);
+
+        }
+
+        /// <summary>Метод изменяющий Мемы в коллекции для представления</summary>
+        /// <param name="memes">DTO тип с новыми данными и Мемами</param>
+        /// <remarks>Метод должен выполняться в UI потоке</remarks>
+        private void MemesChangedUI(Dictionary<MemeDTO, MemeVM> memes)
+        {
+            lock (Memes)
+                foreach (var meme in memes)
+                    meme.Value.CopyFromDTO(meme.Key);
         }
 
 

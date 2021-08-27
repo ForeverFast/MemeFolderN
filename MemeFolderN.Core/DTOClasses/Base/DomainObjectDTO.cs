@@ -2,20 +2,11 @@
 
 namespace MemeFolderN.Core.DTOClasses
 {
-    public abstract class DomainObjectDTO
+    public abstract record DomainObjectDTO
     {
-        public Guid Id { get; }
+        public Guid Id { get; init; }
 
         public int GetHC { get => this.GetHashCode(); }
 
-        protected DomainObjectDTO()
-        {
-
-        }
-
-        protected DomainObjectDTO(Guid id)
-        {
-            Id = id;
-        }
     }
 }

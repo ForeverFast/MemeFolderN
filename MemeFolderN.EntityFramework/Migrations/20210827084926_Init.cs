@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MemeFolderN.EntityFramework.Migrations
 {
-    public partial class NewInit : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,7 @@ namespace MemeFolderN.EntityFramework.Migrations
                     Position = table.Column<uint>(type: "INTEGER", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
-                    ParentFolderId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    ParentFolderId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,7 +27,7 @@ namespace MemeFolderN.EntityFramework.Migrations
                         column: x => x.ParentFolderId,
                         principalTable: "Folders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,7 +53,7 @@ namespace MemeFolderN.EntityFramework.Migrations
                     Position = table.Column<uint>(type: "INTEGER", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
-                    ParentFolderId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    ParentFolderId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -63,7 +63,7 @@ namespace MemeFolderN.EntityFramework.Migrations
                         column: x => x.ParentFolderId,
                         principalTable: "Folders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(

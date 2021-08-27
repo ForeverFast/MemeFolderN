@@ -3,7 +3,6 @@ using MemeFolderN.MFModelBase.Abstractions;
 using MemeFolderN.MFModelBase.Extentions;
 using MemeFolderN.MFViewModels.Default.Services;
 using MemeFolderN.MFViewModelsBase;
-
 using MemeFolderN.Navigation;
 using System;
 using System.Collections.Generic;
@@ -18,7 +17,6 @@ namespace MemeFolderN.MFViewModels.Default
     {
         /// <summary>Диспетчер UI потока</summary>
         private readonly Dispatcher dispatcher;
-
         private readonly IDialogService dialogService;
 
         public FolderVM(INavigationService navigationService,
@@ -42,7 +40,37 @@ namespace MemeFolderN.MFViewModels.Default
             this.CopyFromDTO(folderDTO);
         }
 
+        public override void CopyFromDTO(FolderDTO dto)
+        {
+            base.CopyFromDTO(dto);
 
+            if (IsFoldersLoaded)
+                return;
+
+            if (dto.Folders?.Count > 0)
+            {
+                lock (Folders)
+                    foreach (FolderDTO folder in dto.Folders)
+                        Folders.Add(new FolderVM(_navigationService, dialogService, model, dispatcher, folder));
+                IsLoaded = (IsFoldersLoaded = true) && IsMemesLoaded;
+            }
+
+
+            if (IsMemesLoaded)
+                return;
+
+            if (dto.Memes?.Count > 0)
+            {
+                lock (Memes)
+                {
+                    foreach (MemeDTO meme in dto.Memes)
+                        Memes.Add(new MemeVM(_navigationService, dialogService, model, dispatcher, meme));
+
+                    IsBusy = false;
+                    IsLoaded = (IsMemesLoaded = true) && IsFoldersLoaded;
+                }
+            } 
+        }
 
         public override void Dispose()
         {
