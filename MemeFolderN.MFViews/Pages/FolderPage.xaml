@@ -1,0 +1,96 @@
+﻿<Page x:Class="MemeFolderN.MFViews.Pages.FolderPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MemeFolderN.MFViews.Pages"
+      mc:Ignorable="d" 
+      d:DataContext="{d:DesignInstance vm:FolderVM, IsDesignTimeCreatable=True}"
+      xmlns:ib="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
+      xmlns:ssc="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
+      xmlns:dd="urn:gong-wpf-dragdrop"
+      xmlns:cn="clr-namespace:MemeFolderN.MFViews.Converters"
+      xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Default;assembly=MemeFolderN.MFViewModels.Default"
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="FolderPage">
+
+    <Page.Resources>
+        <cn:ItemsCountToVisibilityConverter x:Key="ICV"/>
+    </Page.Resources>
+
+    <ScrollViewer 
+            Style="{StaticResource ContentSV}"
+            Background="{DynamicResource GrayLVL3}">
+
+        <ib:Interaction.Triggers>
+            <ib:EventTrigger EventName="Loaded">
+                <ib:InvokeCommandAction Command="{Binding PageLoadedCommand}" />
+            </ib:EventTrigger>
+        </ib:Interaction.Triggers>
+
+        <Grid Background="{StaticResource GrayLVL2}">
+
+            <Label VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Visibility="{Binding Memes.Count, Converter={StaticResource ICV}}">
+                <Label.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <md:PackIcon Kind="FolderOpen"
+                                     Width="100" Height="100"
+                                     Foreground="{DynamicResource StandartLightColor}"/>
+                        <Grid VerticalAlignment="Center"
+                              Margin="10,0,0,0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="60"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Мемчиков нема" Grid.Row="0"
+                                       FontSize="50"
+                                       Foreground="{DynamicResource StandartLightColor}"/>
+                            <TextBlock Text="Наполни меня (͡° ͜ʖ ͡°)"  Grid.Row="1"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource StandartLightColor}"
+                                       HorizontalAlignment="Center"/>
+                        </Grid>
+
+                    </StackPanel>
+                </Label.Content>
+            </Label>
+
+            <ListView ItemsSource="{Binding Memes}"
+                     Style="{StaticResource DefLB}"
+                     Background="{x:Null}"
+                    
+                     VirtualizingStackPanel.IsVirtualizing="True"
+                     VirtualizingStackPanel.VirtualizationMode="Standard"
+                
+                     VirtualizingStackPanel.CacheLength="20"
+                     VirtualizingStackPanel.CacheLengthUnit="Item"
+                 
+                     ScrollViewer.CanContentScroll="False"
+                     ScrollViewer.IsDeferredScrollingEnabled="False"
+                     
+                     PreviewMouseWheel="empListBox_PreviewMouseWheel"
+                         
+                     dd:DragDrop.IsDropTarget="True"
+                     dd:DragDrop.DropHandler="{Binding}">
+
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Создать мемчик" Command="{Binding MemeAddCommand}"/>
+                        <MenuItem Header="Создать мемчик с параметрами" Command="{Binding MemeAddNonParametersCommand}"/>
+                        <MenuItem Header="Test" Command="{Binding TestCommand}" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
+
+
+            <ssc:LoadingSpinner IsLoading="{Binding IsBusy, UpdateSourceTrigger=PropertyChanged}"
+                                Color="AliceBlue"/>
+        </Grid>
+
+    </ScrollViewer>
+</Page>

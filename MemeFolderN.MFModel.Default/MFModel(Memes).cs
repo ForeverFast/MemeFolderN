@@ -10,11 +10,11 @@ using System.Linq;
 
 namespace MemeFolderN.MFModelBase.Default
 {
-    public partial class MFModel
+    public partial class MFModel : MFModelBase
     {
-        protected override List<MemeDTO> GetMemesByFolder(FolderDTO folderDTO)
+        protected override List<MemeDTO> GetMemesByFolderId(Guid id)
         {
-            IEnumerable<MemeDTO> memesDTO = memeDataService.GetMemesByFolderId(folderDTO.Id).Result;
+            IEnumerable<MemeDTO> memesDTO = memeDataService.GetMemesByFolderId(id).Result;
             return memesDTO.ToList();
         }
         protected override List<MemeDTO> GetMemesByTitle(string title)
@@ -32,8 +32,7 @@ namespace MemeFolderN.MFModelBase.Default
             foreach (MemeTagDTO mtn in memeDTO.Tags.ToArray())
                 memeTags.Add(mtn);
                 
-            MemeDTO proccesedMemeDTO = new MemeDTO(memeDTO.Id, memeDTO.Position, memeDTO.Title, memeDTO.Description, memeDTO.ParentFolderId, memeDTO.ParentFolder,
-                memeDTO.AddingDate, memeDTO.ImagePath, memeDTO.MiniImagePath, null);
+            MemeDTO proccesedMemeDTO = memeDTO with { Tags = null };
 
             MemeDTO createdMeme = memeDataService.Add(proccesedMemeDTO).Result;
             if (createdMeme != null)
@@ -41,7 +40,11 @@ namespace MemeFolderN.MFModelBase.Default
                 // Добавление отделённых тегов и сохранение memeTagNodes в БД
                 memeTags.ForEach(async (newMemeTag) =>
                 {
-                    MemeTagNodeDTO proccesedMemeDTO = new MemeTagNodeDTO(newMemeTag.Id, newMemeTag.Id, createdMeme.Id);
+                    MemeTagNodeDTO proccesedMemeDTO = new MemeTagNodeDTO 
+                    {
+                        MemeTagId = newMemeTag.Id,
+                        MemeId = createdMeme.Id 
+                    };
                     MemeTagNodeDTO dbCreatedMemeTagNode = await memeTagNodeDataService.Add(proccesedMemeDTO);
                     createdMeme.Tags.Append(newMemeTag);
                 });
@@ -85,7 +88,11 @@ namespace MemeFolderN.MFModelBase.Default
             List<MemeTagDTO> newMemeTagForAdd = memeDTO.Tags.Except(oldMemeData.Tags).ToList();
             foreach (MemeTagDTO memeTagDTO in newMemeTagForAdd)
             {
-                MemeTagNodeDTO memeTagNodeDTO = new MemeTagNodeDTO(memeTagDTO.Id, memeDTO.Id);
+                MemeTagNodeDTO memeTagNodeDTO = new MemeTagNodeDTO
+                {
+                    MemeTagId = memeTagDTO.Id,
+                    MemeId = memeDTO.Id
+                };
                 memeTagNodeDataService.Add(memeTagNodeDTO);
             }
 
@@ -153,8 +160,12 @@ namespace MemeFolderN.MFModelBase.Default
             result.Save(newMiniImageMemePath);
             result.Dispose();
 
-            MemeDTO proccesedMemeDTO = new MemeDTO(memeDTO.Id, memeDTO.Position, newTitle, memeDTO.Description, memeDTO.ParentFolderId, memeDTO.ParentFolder,
-               memeDTO.AddingDate, newMemePath, newMiniImageMemePath, memeDTO.Tags);
+            MemeDTO proccesedMemeDTO = memeDTO with
+            {
+                Title = newTitle,
+                ImagePath = newMemePath,
+                MiniImagePath = newMiniImageMemePath
+            };
 
             return proccesedMemeDTO;
         }

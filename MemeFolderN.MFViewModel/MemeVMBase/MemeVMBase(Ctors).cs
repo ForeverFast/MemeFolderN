@@ -16,11 +16,20 @@ namespace MemeFolderN.MFViewModelsBase
             this.model = model;
         }
 
-        public MemeDTO CopyDTO()
-           => new MemeDTO(Id, Position, Title, Description, ParentFolderId, null,
-               AddingDate, ImagePath, MiniImagePath, null);
+        public virtual MemeDTO CopyDTO()
+           => new MemeDTO
+           {
+               Id = this.Id,
+               Position = this.Position,
+               Title = this.Title,
+               Description = this.Description,
+               ParentFolderId = this.ParentFolderId,
+               ImagePath = this.ImagePath,
+               MiniImagePath = this.MiniImagePath,
+               AddingDate = this.AddingDate,
+           };
 
-        public void CopyFromDTO(MemeDTO dto)
+        public virtual void CopyFromDTO(MemeDTO dto)
         {
             Id = dto.Id;
             Position = dto.Position;
@@ -32,7 +41,7 @@ namespace MemeFolderN.MFViewModelsBase
             MiniImagePath = dto.MiniImagePath;
         }
 
-        public bool EqualValues(MemeDTO other) =>
+        public virtual bool EqualValues(MemeDTO other) =>
             Id == other.Id && ParentFolderId == other.ParentFolderId;
 
         public event ExceptionHandler ExceptionEvent;

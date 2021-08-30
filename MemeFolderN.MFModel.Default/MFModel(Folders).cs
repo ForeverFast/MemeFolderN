@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MemeFolderN.MFModelBase.Default
 {
-    public partial class MFModel
+    public partial class MFModel : MFModelBase
     {
         protected override List<FolderDTO> GetFoldersByFolderId(Guid id)
         {
@@ -24,22 +24,30 @@ namespace MemeFolderN.MFModelBase.Default
         protected override void AddFolder(FolderDTO folderDTO)
         {
             FolderDTO parentFolder = folderDTO.ParentFolder;
+            string parentFolderPath = string.Empty;
+            if (parentFolder == null)
+                parentFolderPath = userSettingsService.RootFolderPath;
+
 
             string newFolderPath = string.Empty;
             if (string.IsNullOrEmpty(folderDTO.Title))
             {
-                newFolderPath = GetFolderAnotherName(parentFolder.FolderPath, "Новая папка");
+                newFolderPath = GetFolderAnotherName(parentFolderPath, "Новая папка");
             }
             else
             {
-                newFolderPath = @$"{parentFolder.FolderPath}\{folderDTO.Title}";
+                newFolderPath = @$"{parentFolderPath}\{folderDTO.Title}";
                 if (Directory.Exists(newFolderPath))
-                    newFolderPath = GetFolderAnotherName(parentFolder.FolderPath, folderDTO.Title);
+                    newFolderPath = GetFolderAnotherName(parentFolderPath, folderDTO.Title);
                 Directory.CreateDirectory(newFolderPath);
             }
 
-            FolderDTO proccesedFolderDTO = new FolderDTO(folderDTO.Id, folderDTO.Position, Path.GetFileName(newFolderPath), folderDTO.Description, folderDTO.ParentFolder.Id, parentFolder,
-                newFolderPath, folderDTO.CreatingDate, folderDTO.Folders, folderDTO.Memes);
+            FolderDTO proccesedFolderDTO = folderDTO with
+            {
+                Title = Path.GetFileName(newFolderPath),
+                ParentFolder = parentFolder,
+                FolderPath = newFolderPath
+            };
 
             FolderDTO createdFolder = folderDataService.Add(proccesedFolderDTO).Result;
             if (createdFolder != null)

@@ -14,7 +14,7 @@ namespace MemeFolderN.MFViewModelsBase
         public string Title { get => _title; set => SetProperty(ref _title, value); }
 
         public MemeTagDTO CopyDTO() =>
-            new MemeTagDTO(Id, Title);
+            new MemeTagDTO { Id = this.Id, Title = this.Title };
 
         public void CopyFromDTO(MemeTagDTO dto)
         {

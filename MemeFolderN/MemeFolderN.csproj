@@ -8,28 +8,24 @@
 
   <ItemGroup>
     <Compile Remove="Services\**" />
-    <Compile Remove="Views\**" />
     <EmbeddedResource Remove="Services\**" />
-    <EmbeddedResource Remove="Views\**" />
     <None Remove="Services\**" />
-    <None Remove="Views\**" />
     <Page Remove="Services\**" />
-    <Page Remove="Views\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="gong-wpf-dragdrop" Version="2.3.2" />
-    <PackageReference Include="LoadingSpinner.WPF" Version="1.0.0" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
-    <PackageReference Include="VirtualizingWrapPanel" Version="1.5.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MemeFolderN.Core\MemeFolderN.Core.csproj" />
     <ProjectReference Include="..\MemeFolderN.EntityFramework\MemeFolderN.EntityFramework.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFModel.Default\MemeFolderN.MFModel.Default.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFViewModels.Default\MemeFolderN.MFViewModels.Default.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFViewModel\MemeFolderN.MFViewModelsBase.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFViews\MemeFolderN.MFViews.csproj" />
+    <ProjectReference Include="..\MemeFolderN.Navigation\MemeFolderN.Navigation.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,54 +2,14 @@
 
 namespace MemeFolderN.Core.DTOClasses
 {
-    public abstract class FolderObjectDTO : DomainObjectDTO
+    public abstract record FolderObjectDTO : DomainObjectDTO
     {
-        public uint Position { get; }
-        public string Title { get; }
-        public string Description { get; }
+        public uint Position { get; init; }
+        public string Title { get; init; }
+        public string Description { get; init; }
 
-        public Guid? ParentFolderId { get; }
-        public FolderDTO ParentFolder { get; }
+        public Guid? ParentFolderId { get; init; }
+        public FolderDTO ParentFolder { get; init; }
         public override string ToString() => this.Title;
-
-        protected FolderObjectDTO() : base()
-        {
-            
-        }
-
-        protected FolderObjectDTO(string title) : base()
-        {
-            Title = title;
-        }
-
-        protected FolderObjectDTO(string title, Guid? parentFolderId) : this(title)
-        {
-            ParentFolderId = parentFolderId;
-        }
-
-        protected FolderObjectDTO(Guid id) : base(id)
-        {
-            
-        }
-
-        protected FolderObjectDTO(Guid id, string title) : this(id)
-        {
-            Title = title;
-        }
-
-        protected FolderObjectDTO(Guid id, string title, string description, Guid? parentFolderId) : this(id, title)
-        {
-            Description = description;
-            ParentFolderId = parentFolderId;
-        }
-
-        protected FolderObjectDTO(Guid id, uint position, string title, string description, Guid? parentFolderId, FolderDTO parentFolder) : base(id)
-        {
-            Position = position;
-            Title = title;
-            Description = description;
-            ParentFolderId = parentFolderId;
-            ParentFolder = parentFolder;
-        }
     }
 }

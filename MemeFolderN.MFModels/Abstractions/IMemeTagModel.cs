@@ -1,5 +1,6 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.MFModelBase.Extentions;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,6 +11,8 @@ namespace MemeFolderN.MFModelBase.Abstractions
     public interface IMemeTagModel
     {
         Task<List<MemeTagDTO>> GetMemeTagsAsync();
+
+        Task<List<MemeTagDTO>> GetMemeTagsByMemeIdAsync(Guid id);
 
         Task DeleteMemeTagAsync(MemeTagDTO memeTagDTO);
 

@@ -3,16 +3,20 @@ using MemeFolderN.MFModelBase.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MemeFolderN.MFModelBase.Default
 {
-    public partial class MFModel
+    public partial class MFModel : MFModelBase
     {
         protected override List<MemeTagDTO> GetMemeTags()
         {
             IEnumerable<MemeTagDTO> memeTagsDTO = memeTagDataService.GetTags().Result;
+            return memeTagsDTO.ToList();
+        }
+
+        protected override List<MemeTagDTO> GetMemeTagsByMemeId(Guid id)
+        {
+            IEnumerable<MemeTagDTO> memeTagsDTO = memeTagDataService.GetTagsByMemeId(id).Result;
             return memeTagsDTO.ToList();
         }
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModels.Default.Services
 {
-    public class DialogService : DialogServiceBase
+    public class DialogService : DialogServiceBase, IDialogService
     {
         public DialogService(ShowDialogDelegete showDialogDelegete) : base(showDialogDelegete)
         {

@@ -1,5 +1,4 @@
 ﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFViewModelsBase.DialogViewModels;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Diagnostics;
@@ -38,13 +37,58 @@ namespace MemeFolderN.MFViewModelsBase.Services
                 return "";
         }
 
-        public virtual async Task<FolderDTO> FolderDtoOpenDialog(Guid parentFolderId)
+        public virtual async Task<FolderDTO> FolderDtoOpenAddDialog(Guid? parentFolderId)
         {
-            DialogFolderVMBase dialogFolderVM = new DialogFolderVMBase(new FolderDTO(), "Создание папки");
+            DialogFolderVMBase dialogFolderVM = new DialogFolderVMBase(new FolderDTO { ParentFolderId = parentFolderId }, "Создание папки");
 
             FolderDTO newFolder = (FolderDTO) await showDialogDelegete(dialogFolderVM, rootDialog);
 
             return newFolder;
+        }
+
+        public virtual async Task<FolderDTO> FolderDtoOpenEditDialog(FolderDTO folderDTO)
+        {
+            DialogFolderVMBase dialogFolderVM = new DialogFolderVMBase(folderDTO, "Редактирование папки");
+
+            FolderDTO editedFolder = (FolderDTO)await showDialogDelegete(dialogFolderVM, rootDialog);
+
+            return editedFolder;
+        }
+
+        public virtual async Task<MemeDTO> MemeDtoOpenAddDialog(Guid? parentFolderId)
+        {
+            DialogMemeVMBase dialogMemeVM = new DialogMemeVMBase(new MemeDTO { ParentFolderId = parentFolderId }, "Создание папки", this);
+
+            MemeDTO newMeme = (MemeDTO)await showDialogDelegete(dialogMemeVM, rootDialog);
+
+            return newMeme;
+        }
+
+        public virtual async Task<MemeDTO> MemeDtoOpenEditDialog(MemeDTO memeDTO)
+        {
+            DialogMemeVMBase dialogMemeVM = new DialogMemeVMBase(memeDTO, "Редактирование папки", this);
+
+            MemeDTO editedMeme = (MemeDTO)await showDialogDelegete(dialogMemeVM, rootDialog);
+
+            return editedMeme;
+        }
+
+        public virtual async Task<MemeTagDTO> MemeTagDtoOpenAddDialog()
+        {
+            DialogTagVMBase dialogMemeTagVM = new DialogTagVMBase(new MemeTagDTO { }, "Создание папки");
+
+            MemeTagDTO newMemeTag = (MemeTagDTO)await showDialogDelegete(dialogMemeTagVM, rootDialog);
+
+            return newMemeTag;
+        }
+
+        public virtual async Task<MemeTagDTO> MemeTagDtoOpenEditDialog(MemeTagDTO memeDTO)
+        {
+            DialogTagVMBase dialogMemeTagVM = new DialogTagVMBase(memeDTO, "Редактирование папки");
+
+            MemeTagDTO editedMemeTag = (MemeTagDTO)await showDialogDelegete(dialogMemeTagVM, rootDialog);
+
+            return editedMemeTag;
         }
 
         public DialogServiceBase(ShowDialogDelegete showDialogDelegete)

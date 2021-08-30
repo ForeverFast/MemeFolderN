@@ -1,8 +1,18 @@
 ﻿<Application x:Class="MemeFolderN.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MemeFolderN">
+             xmlns:local="clr-namespace:MemeFolderN"
+             xmlns:srd="clr-namespace:MemeFolderN.MFViews.Extentions.Data;assembly=MemeFolderN.MFViews">
     <Application.Resources>
-         
+        <srd:SharedResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+
+                <srd:SharedResourceDictionary 
+                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Styles/Default/DefaultDictionary.xaml" />
+                <srd:SharedResourceDictionary 
+                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Brushes.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+        </srd:SharedResourceDictionary>
     </Application.Resources>
 </Application>
