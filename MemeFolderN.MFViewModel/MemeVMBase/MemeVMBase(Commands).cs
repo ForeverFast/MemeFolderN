@@ -17,6 +17,17 @@ namespace MemeFolderN.MFViewModelsBase
 #endif
         }
 
+        public RelayCommand MemeDeleteCommand => _memeDeleteCommand ?? (_memeDeleteCommand =
+            new RelayCommandAction<MemeVMBase>(MemeDeleteMethod));
+
+        protected virtual void MemeDeleteMethod(MemeVMBase memeVMBase)
+        {
+            IsBusy = true;
+#if DEBUG
+            ShowMetod($"Вызвано удаление мема {this.Id} / {this.Title}");
+#endif
+        }
+
         public RelayCommand MemeOpenCommand => _memeOpenCommand ?? (_memeOpenCommand =
             new RelayCommandAction(MemeOpenMethod, () => !string.IsNullOrEmpty(this.ImagePath)));
 
@@ -51,6 +62,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         #region Поля для хранения значений свойств
         private RelayCommand _memeChangeCommand;
+        private RelayCommand _memeDeleteCommand;
         private RelayCommand _memeOpenCommand;
         private RelayCommand _memeCopyCommand;
 

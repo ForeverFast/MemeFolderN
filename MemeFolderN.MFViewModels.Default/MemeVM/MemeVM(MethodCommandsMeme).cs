@@ -30,6 +30,18 @@ namespace MemeFolderN.MFViewModels.Default
             }
         }
 
+        protected override void MemeDeleteMethod(MemeVMBase memeVMBase)
+        {
+            base.MemeDeleteMethod(memeVMBase);
+            MemeDeleteMethodAsync(memeVMBase);
+        }
+
+        protected virtual async void MemeDeleteMethodAsync(MemeVMBase memeVMBase)
+        {
+            try { await model.DeleteMemeAsync(memeVMBase.CopyDTO()); }
+            catch (Exception ex) { OnException(ex); }
+        }
+
         protected override void MemeOpenMethod()
         {
             base.MemeOpenMethod();
@@ -44,34 +56,6 @@ namespace MemeFolderN.MFViewModels.Default
             base.MemeCopyMethod();
             Clipboard.SetImage(new BitmapImage(new Uri(this.ImagePath)));
         }
-        
-        protected override void MemeTagLoadMethod()
-        {
-            base.MemeTagLoadMethod();
-            MemeTagLoadMethodAsync();
-        }
 
-        protected virtual async void MemeTagLoadMethodAsync()
-        {
-            try
-            {
-                if (IsMemeTagsLoaded)
-                    return;
-
-                IEnumerable<MemeTagDTO> memeTags = await model.GetMemeTagsByMemeIdAsync(this.Id);
-                lock (Tags)
-                {
-                    foreach (MemeTagDTO memeTag in memeTags)
-                        Tags.Add(new MemeTagVM(memeTag));
-
-                    IsBusy = false;
-                    IsLoaded = IsMemeTagsLoaded = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                OnException(ex);
-            }
-        }
     }
 }

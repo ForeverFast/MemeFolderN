@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemeFolderN.MFModel.Default
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemeFolderN.MFViewModels.Default", "MemeFolderN.MFViewModels.Default\MemeFolderN.MFViewModels.Default.csproj", "{12A49E9B-AB83-4826-A2AE-99405802BE84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemeFolderN.MFViews", "MemeFolderN.MFViews\MemeFolderN.MFViews.csproj", "{D1549195-8A58-477A-BAA8-24BC946FFC7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{12A49E9B-AB83-4826-A2AE-99405802BE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12A49E9B-AB83-4826-A2AE-99405802BE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12A49E9B-AB83-4826-A2AE-99405802BE84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1549195-8A58-477A-BAA8-24BC946FFC7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1549195-8A58-477A-BAA8-24BC946FFC7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1549195-8A58-477A-BAA8-24BC946FFC7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1549195-8A58-477A-BAA8-24BC946FFC7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

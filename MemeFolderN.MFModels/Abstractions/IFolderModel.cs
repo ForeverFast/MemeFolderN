@@ -10,6 +10,7 @@ namespace MemeFolderN.MFModelBase.Abstractions
 
     public interface IFolderModel
     {
+        Task<List<FolderDTO>> GetRootFoldersAsync();
         Task<List<FolderDTO>> GetFoldersByFolderIdAsync(Guid id);
 
         Task DeleteFolderAsync(FolderDTO folderDTO);

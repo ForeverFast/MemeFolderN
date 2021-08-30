@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
-namespace MemeFolderN.MFViewModelsBase.DialogViewModels
+namespace MemeFolderN.MFViewModelsBase
 {
     public class DialogMemeVMBase : BaseDialogViewModel, IDisposable
     {

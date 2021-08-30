@@ -1,5 +1,4 @@
 ﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFViewModelsBase.DialogViewModels;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Diagnostics;
@@ -74,6 +73,23 @@ namespace MemeFolderN.MFViewModelsBase.Services
             return editedMeme;
         }
 
+        public virtual async Task<MemeTagDTO> MemeTagDtoOpenAddDialog()
+        {
+            DialogTagVMBase dialogMemeTagVM = new DialogTagVMBase(new MemeTagDTO { }, "Создание папки");
+
+            MemeTagDTO newMemeTag = (MemeTagDTO)await showDialogDelegete(dialogMemeTagVM, rootDialog);
+
+            return newMemeTag;
+        }
+
+        public virtual async Task<MemeTagDTO> MemeTagDtoOpenEditDialog(MemeTagDTO memeDTO)
+        {
+            DialogTagVMBase dialogMemeTagVM = new DialogTagVMBase(memeDTO, "Редактирование папки");
+
+            MemeTagDTO editedMemeTag = (MemeTagDTO)await showDialogDelegete(dialogMemeTagVM, rootDialog);
+
+            return editedMemeTag;
+        }
 
         public DialogServiceBase(ShowDialogDelegete showDialogDelegete)
         {

@@ -1,6 +1,7 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.MFModelBase.Extentions;
 using MemeFolderN.MFViewModelsBase;
+using MemeFolderN.MFViewModelsBase.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +10,11 @@ using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModels.Default
 {
-    public partial class FolderVM : FolderVMBase
+    public partial class MFViewModel : MFViewModelBase
     {
-        /// <summary>Обработчик события изменения в папке</summary>
-        /// <param name="sender">Источник события</param>
-        /// <param name="action">Действие события</param>
-        /// <param name="foldersDTO">Папки затронутые событием</param>
         private void Model_ChangedFoldersEvent(object sender, ActionType action, List<FolderDTO> foldersDTO)
         {
-            IEnumerable<FolderDTO> sortedFolders = foldersDTO.Where(f => f.ParentFolderId != this.ParentFolderId);
+            List<FolderDTO> sortedFolders = foldersDTO.Where(f => f.ParentFolderId == null).ToList();
 
             if (sortedFolders.Any())
                 switch (action)
@@ -48,6 +45,8 @@ namespace MemeFolderN.MFViewModels.Default
             /// Получение коллекции из параметра
             List<FolderDTO> folders = (List<FolderDTO>)state;
 
+            //Tuple<List<FolderDTO>, IFolder> kort = (Tuple<List<FolderDTO>, IFolder>)state;
+
             /// Создание коллекции добавляемых Папок
             List<FolderVM> list = new List<FolderVM>(folders.Count);
 
@@ -55,11 +54,11 @@ namespace MemeFolderN.MFViewModels.Default
             foreach (FolderDTO folder in folders.ToArray())
             {
                 /// Если в имеющейся коллекции нет папки с таким ID
-                if (Folders.All(r => r.Id != folder.Id))
+                if (RootFolders.All(r => r.Id != folder.Id))
                 {
                     /// Создание новой папки для добавления в коллекцию
                     FolderVM newFolderVM = new FolderVM(_navigationService, dialogService, model, dispatcher, folder);
-                    
+
                     list.Add(newFolderVM);
                     /// Удаление созданной из полученной коллекции
                     folders.Remove(folder);
@@ -77,9 +76,12 @@ namespace MemeFolderN.MFViewModels.Default
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
         private void FoldersAddUI(IEnumerable<FolderVM> folders)
         {
-            lock (Folders)
+            lock (RootFolders)
+            {
                 foreach (FolderVM folder in folders)
-                    Folders.Add(folder);
+                    RootFolders.Add(folder);
+                IsBusy = false;
+            }  
         }
 
 
@@ -97,12 +99,12 @@ namespace MemeFolderN.MFViewModels.Default
             foreach (FolderDTO folder in folders.ToArray())
             {
                 /// Если в имеющейся коллекции есть Папка с таким ID
-                FolderVM fvm = (FolderVM)Folders.FirstOrDefault(r => r.Id == folder.Id);
+                FolderVM fvm = (FolderVM)RootFolders.FirstOrDefault(r => r.Id == folder.Id);
                 if (fvm != null)
                 {
                     /// Создание новой пары Данные и Папка для изменения в коллекции
                     list.Add(folder, fvm);
-                    /// Удаление Комнаты из полученной коллекции
+                    /// Удаление Папки из полученной коллекции
                     folders.Remove(folder);
                 }
             }
@@ -119,9 +121,12 @@ namespace MemeFolderN.MFViewModels.Default
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
         private void FoldersChangedUI(Dictionary<FolderDTO, FolderVM> folders)
         {
-            lock (Folders)
+            lock (RootFolders)
+            {
                 foreach (var folder in folders)
                     folder.Value.CopyFromDTO(folder.Key);
+                IsBusy = false;
+            }
         }
 
 
@@ -139,7 +144,7 @@ namespace MemeFolderN.MFViewModels.Default
             foreach (FolderDTO folder in folders.ToArray())
             {
                 /// Если в имеющейся коллекции есть Папка с таким ID
-                FolderVM rvm = (FolderVM)Folders.FirstOrDefault(r => r.Id == folder.Id);
+                FolderVM rvm = (FolderVM)RootFolders.FirstOrDefault(r => r.Id == folder.Id);
                 if (rvm != null)
                 {
                     /// Добавление Папки для удаления из коллекции
@@ -161,9 +166,13 @@ namespace MemeFolderN.MFViewModels.Default
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
         private void FoldersRemoveUI(List<FolderVM> folders)
         {
-            lock (Folders)
+            lock (RootFolders)
+            {
                 foreach (FolderVM folder in folders)
-                    Folders.Remove(folder);
+                    RootFolders.Remove(folder);
+                IsBusy = false;
+            }
+               
         }
     }
 }

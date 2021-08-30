@@ -1,6 +1,5 @@
 ﻿using MemeFolderN.MFViewModelsBase.Commands;
 using MemeFolderN.Navigation;
-using System.Windows.Input;
 
 namespace MemeFolderN.MFViewModelsBase.BaseViewModels
 {
@@ -8,33 +7,47 @@ namespace MemeFolderN.MFViewModelsBase.BaseViewModels
     {
         protected readonly INavigationService _navigationService;
 
-        #region Навигация
-        public ICommand NavigationToCommand { get; }
-        public ICommand NavigationBackCommand { get; }
-        public ICommand NavigationForwardCommand { get; }
-        public ICommand NavigationToFolderCommand { get; set; }
+        public RelayCommand NavigationToCommand => _navigationToCommand ?? (_navigationToCommand =
+            new RelayCommandAction<string>(NavigationToExecute));
 
-        protected virtual void NavigationToExecute(object parameter)
-            => _navigationService.Navigate(parameter.ToString(), NavigationType.Default);
+        protected virtual void NavigationToExecute(string parameter)
+        {
+#if DEBUG
+            ShowMetod($"Вызван метод стандартной навигации по ключу. Ключ: {parameter}.");
+#endif
+        }
 
-        protected virtual void NavigationBackExecute()
-            => _navigationService.GoBack();
+        public RelayCommand NavigationBackCommand => _navigationBackCommand ?? (_navigationBackCommand =
+            new RelayCommandAction(NavigationBackMethod, () => _navigationService.CanGoBack()));
 
-        protected virtual void NavigationForwardExecute()
-            => _navigationService.GoForward();
+        protected virtual void NavigationBackMethod()
+        {
+#if DEBUG
+            ShowMetod($"Вызван метод навигации к предыдущей странице.");
+#endif
+        }
 
+        public RelayCommand NavigationForwardCommand => _navigationForwardCommand ?? (_navigationForwardCommand =
+            new RelayCommandAction(NavigationForwardMethod, () => _navigationService.CanGoBack()));
+
+        protected virtual void NavigationForwardMethod()
+        {
+#if DEBUG
+            ShowMetod($"Вызван метод навигации к следующей странице.");
+#endif
+        }
+
+        #region Поля для хранения значений свойств
+        private RelayCommand _navigationToCommand;
+        private RelayCommand _navigationBackCommand;
+        private RelayCommand _navigationForwardCommand;
         #endregion
-
 
         #region Конструкторы 
 
         public BaseNavigationViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
-
-            NavigationToCommand = new RelayCommand(NavigationToExecute, (o) => _navigationService.CanNavigate(o.ToString()));
-            NavigationBackCommand = new RelayCommandAction(NavigationBackExecute, () => _navigationService.CanGoBack());
-            NavigationForwardCommand = new RelayCommandAction(NavigationForwardExecute, () => _navigationService.CanGoForward());
         }
 
         #endregion

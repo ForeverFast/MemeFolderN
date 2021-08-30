@@ -8,13 +8,9 @@
 
   <ItemGroup>
     <Compile Remove="Services\**" />
-    <Compile Remove="Views\**" />
     <EmbeddedResource Remove="Services\**" />
-    <EmbeddedResource Remove="Views\**" />
     <None Remove="Services\**" />
-    <None Remove="Views\**" />
     <Page Remove="Services\**" />
-    <Page Remove="Views\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +26,10 @@
   <ItemGroup>
     <ProjectReference Include="..\MemeFolderN.Core\MemeFolderN.Core.csproj" />
     <ProjectReference Include="..\MemeFolderN.EntityFramework\MemeFolderN.EntityFramework.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFModel.Default\MemeFolderN.MFModel.Default.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFViewModels.Default\MemeFolderN.MFViewModels.Default.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFViewModel\MemeFolderN.MFViewModelsBase.csproj" />
+    <ProjectReference Include="..\MemeFolderN.Navigation\MemeFolderN.Navigation.csproj" />
   </ItemGroup>
 
 </Project>

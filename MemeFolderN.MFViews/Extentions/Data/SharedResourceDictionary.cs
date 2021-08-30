@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 
-namespace MemeFolderN.Extentions.Data
+namespace MemeFolderN.MFViews.Extentions.Data
 {
     public class SharedResourceDictionary : ResourceDictionary
     {

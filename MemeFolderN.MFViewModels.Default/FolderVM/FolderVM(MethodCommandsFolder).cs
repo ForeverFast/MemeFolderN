@@ -2,9 +2,6 @@
 using MemeFolderN.MFViewModelsBase;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModels.Default
 {
@@ -13,10 +10,10 @@ namespace MemeFolderN.MFViewModels.Default
         protected override void FolderLoadMethod()
         {
             base.FolderLoadMethod();
-            FolderFoldersMethodAsync();
+            FolderLoadMethodAsync();
         }  
 
-        protected async void FolderFoldersMethodAsync()
+        protected async void FolderLoadMethodAsync()
         {
             try
             {
@@ -89,58 +86,11 @@ namespace MemeFolderN.MFViewModels.Default
 
         protected virtual async void FolderDeleteMethodAsync(FolderVMBase folderVMBase)
         {
-            try { await model.ChangeFolderAsync(folderVMBase.CopyDTO()); }
+            try { await model.DeleteFolderAsync(folderVMBase.CopyDTO()); }
             catch (Exception ex) { OnException(ex); }
         }
 
 
-        protected override void MemeLoadMethod()
-        {
-            base.MemeLoadMethod();
-            MemeLoadMethodAsync();
-        }
-
-        protected virtual async void MemeLoadMethodAsync()
-        {
-            try
-            {
-                if (IsMemesLoaded)
-                    return;
-
-                IEnumerable<MemeDTO> memes = await model.GetMemesByFolderIdAsync(this.Id);
-                lock (Memes)
-                {
-                    foreach (MemeDTO meme in memes)
-                       Memes.Add(new MemeVM(_navigationService, dialogService, model, dispatcher, meme));
-
-                    IsBusy = false;
-                    IsLoaded = (IsMemesLoaded = true) && IsFoldersLoaded;
-                }
-            }
-            catch (Exception ex)
-            {
-                OnException(ex);
-            }
-        }
-
-        protected override void MemeAddMethod()
-        {
-            base.MemeAddMethod();
-            MemeAddMethodAsync();
-        }
-
-        protected virtual async void MemeAddMethodAsync()
-        {
-            try
-            {
-                MemeDTO notSavedMemeDTO = await dialogService.MemeDtoOpenAddDialog(this.ParentFolderId);
-                if (notSavedMemeDTO != null)
-                    await model.AddMemeAsync(notSavedMemeDTO);
-            }
-            catch (Exception ex)
-            {
-                OnException(ex);
-            }
-        }
+       
     }
 }

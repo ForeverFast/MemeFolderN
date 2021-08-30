@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModelsBase.Services
 {
+#nullable enable
     public delegate Task<object?> ShowDialogDelegete(object dialogFolderVM, object dialogId);
+#nullable disable
 
     public interface IDialogServiceBase
     {
@@ -17,5 +19,7 @@ namespace MemeFolderN.MFViewModelsBase.Services
         Task<FolderDTO> FolderDtoOpenEditDialog(FolderDTO folderDTO);
         Task<MemeDTO> MemeDtoOpenAddDialog(Guid? parentFolderId);
         Task<MemeDTO> MemeDtoOpenEditDialog(MemeDTO memeDTO);
+        Task<MemeTagDTO> MemeTagDtoOpenAddDialog();
+        Task<MemeTagDTO> MemeTagDtoOpenEditDialog(MemeTagDTO memeDTO);
     }
 }

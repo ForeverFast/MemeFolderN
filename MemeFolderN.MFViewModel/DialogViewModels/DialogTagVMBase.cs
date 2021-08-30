@@ -2,7 +2,7 @@
 using MemeFolderN.MFViewModelsBase.BaseViewModels;
 using System;
 
-namespace MemeFolderN.MFViewModelsBase.DialogViewModels
+namespace MemeFolderN.MFViewModelsBase
 {
     public class DialogTagVMBase : BaseDialogViewModel
     {

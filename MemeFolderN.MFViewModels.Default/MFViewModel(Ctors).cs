@@ -25,12 +25,7 @@ namespace MemeFolderN.MFViewModels.Default
             model.ChangedMemeTagsEvent += Model_ChangedMemeTagsEvent;
         }
 
-        
-
-        private void Model_ChangedFoldersEvent(object sender, MFModelBase.Extentions.ActionType action, System.Collections.Generic.List<Core.DTOClasses.FolderDTO> foldersDTO)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public override void Dispose()
         {

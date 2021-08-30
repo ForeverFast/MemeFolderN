@@ -2,7 +2,7 @@
 using MemeFolderN.MFViewModelsBase.BaseViewModels;
 using System;
 
-namespace MemeFolderN.MFViewModelsBase.DialogViewModels
+namespace MemeFolderN.MFViewModelsBase
 {
     public class DialogFolderVMBase : BaseDialogViewModel
     {
@@ -47,7 +47,10 @@ namespace MemeFolderN.MFViewModelsBase.DialogViewModels
         protected override void PropertyNewValue<T>(ref T fieldProperty, T newValue, string propertyName)
         {
             base.PropertyNewValue(ref fieldProperty, newValue, propertyName);
-            
+
+            if (SaveDataFolder == null)
+                return;
+
             if (propertyName == nameof(Title))
                 SaveDataFolder = SaveDataFolder with { Title = newValue as string };
 

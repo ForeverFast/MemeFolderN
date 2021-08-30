@@ -18,7 +18,7 @@ namespace MemeFolderN.MFViewModels.Default
                     case ActionType.Changed:
                         Task.Factory.StartNew(MemeTagsChanged, memeTagsDTO);
                         break;
-                    default:
+                    default:    
                         return;
                 }
         }
@@ -38,7 +38,7 @@ namespace MemeFolderN.MFViewModels.Default
             foreach (MemeTagDTO memeTag in memeTags.ToArray())
             {
                 /// Если в имеющейся коллекции есть Тег с таким ID
-                MemeTagVM mtvm = (MemeTagVM)Tags.FirstOrDefault(r => r.Id == memeTag.Id);
+                MemeTagVM mtvm = (MemeTagVM)Tags.FirstOrDefault(mt => mt.Id == memeTag.Id);
                 if (mtvm != null)
                 {
                     /// Создание новой пары Данные и Тег для изменения в коллекции

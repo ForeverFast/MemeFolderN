@@ -1,0 +1,353 @@
+﻿<Window x:Class="MemeFolderN.Views.MFWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:MemeFolderN.Views"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:MFViewModel, IsDesignTimeCreatable=True}"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:ib="http://schemas.microsoft.com/xaml/behaviors"  
+        xmlns:ssc="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
+        xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Default;assembly=MemeFolderN.MFViewModels.Default"
+        Title="MFWindow"
+        x:Name="MFWindowElement"
+        Height="800" Width="1500"
+        MinHeight="600" MinWidth="822"
+        WindowStyle="SingleBorderWindow"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.Style>
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="WindowChrome.WindowChrome">
+                <Setter.Value>
+                    <WindowChrome CaptionHeight="35"
+                                  CornerRadius="0"
+                                  
+                                  GlassFrameThickness="0"
+                                  NonClientFrameEdges="None"
+                                  ResizeBorderThickness="3"
+                                  UseAeroCaptionButtons="True">
+
+                    </WindowChrome>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Window}">
+                        <Border BorderThickness="0,0,0,0">
+                            <ContentPresenter x:Name="CP" Content="{TemplateBinding Content}" Grid.Row="1"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="WindowState" Value="Normal">
+                                <Setter Property="Margin" TargetName="CP" Value="0"/>
+                            </Trigger>
+                            <Trigger Property="WindowState" Value="Maximized">
+                                <Setter Property="Margin" TargetName="CP" Value="8,10,10,10"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+    </Window.Style>
+
+    <!--<ib:Interaction.Triggers>
+        <ib:EventTrigger EventName="DataContextLoaded">
+            <ib:InvokeCommandAction Command="{Binding MemeTagLoadCommand}" />
+            <ib:InvokeCommandAction Command="{Binding FolderRootsCommand}" />
+        </ib:EventTrigger>
+    </ib:Interaction.Triggers>-->
+
+    <Grid Background="{DynamicResource DimColor}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid x:Name="ContentGrid" Grid.Row="1" Grid.Column="1"
+              Background="{DynamicResource GrayLVL3}">
+
+            <ssc:LoadingSpinner IsLoading="{Binding IsBusy, UpdateSourceTrigger=PropertyChanged}"
+                                Color="AliceBlue"/>
+
+            <Frame x:Name="FrameContent" Margin="0,0,0,0" 
+                   BorderThickness="0,0,0,0"
+                   NavigationUIVisibility="Hidden"/>
+        </Grid>
+
+        <Border x:Name="HeaderGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                BorderBrush="{DynamicResource GrayLVL0}"
+                BorderThickness="0,0,0,0.25">
+
+            <Grid Background="{DynamicResource GrayLVL4}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="500"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Background="{x:Null}">
+                    <!--<TextBox Text="{Binding SystemMessage, StringFormat=Системное сообщение: {0}}" x:Name="SM"
+                             Foreground="{DynamicResource StandartLightColor2}"
+                             FontSize="12"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             Opacity="0">
+
+                        <TextBox.Triggers>
+                            <EventTrigger RoutedEvent="{x:Static TextBox.TextChangedEvent}">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:0.25" Value="1"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:2" Value="1"/>
+                                            <EasingDoubleKeyFrame KeyTime="0:0:3" Value="0"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBox.Triggers>
+                    </TextBox>-->
+
+                </Grid>
+
+                <Grid Grid.Column="1" Background="{x:Null}">
+                    <StackPanel Orientation="Horizontal">
+                        <Button WindowChrome.IsHitTestVisibleInChrome="True"                                            
+                            Command="{Binding NavigationBackCommand}"
+                            Style="{StaticResource NavigationBack}"/>
+
+                        <Button WindowChrome.IsHitTestVisibleInChrome="True"      
+                            Command="{Binding NavigationForwardCommand}"
+                            Style="{StaticResource NavigationForward}"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="2">
+                    <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Left">
+                        <TextBox x:Name="SearchTB"
+                                 Style="{StaticResource TB_Search}"
+                                 Margin="10,0"
+                                 WindowChrome.IsHitTestVisibleInChrome="True"   
+                                 Height="28" Width="280">
+
+                            <!--<ib:Interaction.Triggers>
+                                <ib:EventTrigger EventName="TextChanged">
+                                    <ib:InvokeCommandAction Command="{Binding EmptySearchTextCheckCommand}"
+                                                        CommandParameter="{Binding ElementName=SearchTB,
+                                                                                   Path=Text}"/>
+                                </ib:EventTrigger>
+                            </ib:Interaction.Triggers>-->
+
+                        </TextBox>
+                        <!--<Button Style="{DynamicResource SearchButton}"
+                            Command="{Binding SearchCommand}"
+                            CommandParameter="{Binding ElementName=SearchTB,
+                                                       Path=Text}"
+                            WindowChrome.IsHitTestVisibleInChrome="True"   />-->
+                    </StackPanel>
+
+
+                </Grid>
+
+                <Grid Grid.Column="3" Background="{x:Null}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Button x:Name="SettingsButton"
+                            WindowChrome.IsHitTestVisibleInChrome="True"      
+                            
+                            Background="{StaticResource GrayLVL4}"
+                            Style="{StaticResource SettingsButton}"/>
+                        <!--Command="{Binding OpenSettingsCommand}"-->
+                        <Button x:Name="MinimizeButton"
+                            WindowChrome.IsHitTestVisibleInChrome="True"      
+                            Command="{Binding MinimizedWindowCommand}"
+                            Background="{StaticResource GrayLVL4}"
+                            Style="{StaticResource MinimizeWindowButton}"/>
+
+                        <Button x:Name="ResizeButton"
+                            WindowChrome.IsHitTestVisibleInChrome="True"      
+                            Command="{Binding ResizeWindowCommand}"
+                            Background="{DynamicResource GrayLVL4}"
+                            Style="{StaticResource ResizeWindowButton}"/>
+
+                        <Button x:Name="CloseButton"
+                            WindowChrome.IsHitTestVisibleInChrome="True"      
+                            Command="{Binding CloseWindowCommand}"
+                            Background="{DynamicResource GrayLVL4}"
+                            Style="{StaticResource CloseWindowButton}"/>
+                    </StackPanel>
+                </Grid>
+
+            </Grid>
+
+        </Border>
+
+        <Border x:Name="MenuGrid" Grid.Row="1" Grid.Column="0"
+                BorderBrush="{DynamicResource GrayLVL0}"
+                BorderThickness="0,0,0.25,0">
+
+            <Grid Background="{StaticResource GrayLVL3}">
+
+                <TreeView ItemsSource="{Binding RootFolders, UpdateSourceTrigger=PropertyChanged}"
+                          Foreground="{DynamicResource StandartLightColor2}"
+                          ItemContainerStyle="{DynamicResource TreeViewItemStyle}"
+                          Margin="10">
+
+                    <TreeView.Resources>
+
+                        <HierarchicalDataTemplate DataType="{x:Type vm:FolderVM}"
+                                                  ItemsSource="{Binding Folders, UpdateSourceTrigger=PropertyChanged}">
+                            <Border Height="25">
+
+                                <Border.InputBindings>
+                                    <MouseBinding Gesture="LeftDoubleClick"
+                                                  CommandParameter="{Binding}"
+                                                  Command="{Binding NavigationByFolderCommand}"/>
+                                </Border.InputBindings>
+
+                                <Border.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Открыть"
+                                                  CommandParameter="{Binding}"
+                                                  Command="{Binding NavigationByFolderCommand}" />
+                                        <MenuItem Header="Создать папку"
+                                                  CommandParameter="{Binding}"
+                                                  Command="{Binding FolderAddNonParametersCommand}"/>
+                                        <MenuItem Header="Создать папку с параметрами"
+                                                  CommandParameter="{Binding}"
+                                                  Command="{Binding FolderAddCommand}"/>
+                                        <MenuItem Header="Изменить"
+                                                  CommandParameter="{Binding}"
+                                                  Command="{Binding FolderChangeCommand}"/>
+                                        <MenuItem Header="Удалить" 
+                                                  CommandParameter="{Binding}"
+                                                  Command="{Binding FolderDeleteCommand}"/>
+                                    </ContextMenu>
+                                </Border.ContextMenu>
+
+                                <TextBlock Text="{Binding Title}"
+                                           FontSize="14"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+
+
+                        </HierarchicalDataTemplate>
+
+                    </TreeView.Resources>
+
+                    <TreeView.Template>
+                        <ControlTemplate TargetType="ItemsControl">
+
+                            <ScrollViewer Style="{DynamicResource ContentSV}"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+
+                        </ControlTemplate>
+                    </TreeView.Template>
+
+                    <TreeView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Создать папку" Command="{Binding FolderAddNonParametersCommand}"/>
+                            <MenuItem Header="Создать папку с параметрами" Command="{Binding FolderAddCommand}"/>
+                        </ContextMenu>
+                    </TreeView.ContextMenu>
+                    
+                </TreeView>
+
+            </Grid>
+
+        </Border>
+
+        <Border x:Name="FooterGrid" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                Background="{StaticResource GrayLVL4}"
+                BorderBrush="{DynamicResource GrayLVL0}"
+                BorderThickness="0,0.25,0,0">
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="1">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Style="{DynamicResource AddNewTagButton}" Grid.Column="0"
+                            Command="{Binding MemeTagAddCommand}"/>
+
+                    <ListBox ItemsSource="{Binding MemeTags}" Grid.Column="1"
+                             Style="{DynamicResource TagLB}"
+                             Background="{DynamicResource GrayLVL4}">
+
+                        <ListBox.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <Grid>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Column="0" 
+                                            CommandTarget="{Binding ElementName=ScrollElem}"
+                                            Command="{x:Static ScrollBar.LineLeftCommand}"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource NavigationBack2}"/>
+
+                                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" x:Name="ScrollElem"
+                                                  CanContentScroll="True"
+                                                  PreviewMouseWheel="empListBox_PreviewMouseWheel"
+                                                  Grid.Column="1">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+
+                                    <Button Grid.Column="2"                 
+                                            CommandTarget="{Binding ElementName=ScrollElem}"
+                                            Command="{x:Static ScrollBar.LineRightCommand}"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource NavigationForward2}"/>
+                                </Grid>
+
+
+
+                            </ControlTemplate>
+                        </ListBox.Template>
+
+                    </ListBox>
+
+                </Grid>
+            </Grid>
+
+        </Border>
+
+
+
+
+        <md:DialogHost Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3"
+                       CloseOnClickAway="False"
+                       Identifier="RootDialog"/>
+
+
+    </Grid>
+</Window>
