@@ -5,7 +5,7 @@ namespace MemeFolderN.MFViewModelsBase.BaseViewModels
 {
     public abstract class BaseNavigationViewModel : BaseViewModel
     {
-        protected readonly INavigationService _navigationService;
+        protected readonly INavigationService navigationService;
 
         public RelayCommand NavigationToCommand => _navigationToCommand ?? (_navigationToCommand =
             new RelayCommandAction<string>(NavigationToExecute));
@@ -18,7 +18,7 @@ namespace MemeFolderN.MFViewModelsBase.BaseViewModels
         }
 
         public RelayCommand NavigationBackCommand => _navigationBackCommand ?? (_navigationBackCommand =
-            new RelayCommandAction(NavigationBackMethod, () => _navigationService.CanGoBack()));
+            new RelayCommandAction(NavigationBackMethod, () => navigationService.CanGoBack()));
 
         protected virtual void NavigationBackMethod()
         {
@@ -28,7 +28,7 @@ namespace MemeFolderN.MFViewModelsBase.BaseViewModels
         }
 
         public RelayCommand NavigationForwardCommand => _navigationForwardCommand ?? (_navigationForwardCommand =
-            new RelayCommandAction(NavigationForwardMethod, () => _navigationService.CanGoBack()));
+            new RelayCommandAction(NavigationForwardMethod, () => navigationService.CanGoBack()));
 
         protected virtual void NavigationForwardMethod()
         {
@@ -47,7 +47,7 @@ namespace MemeFolderN.MFViewModelsBase.BaseViewModels
 
         public BaseNavigationViewModel(INavigationService navigationService)
         {
-            _navigationService = navigationService;
+            this.navigationService = navigationService;
         }
 
         #endregion

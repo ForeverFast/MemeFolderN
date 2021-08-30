@@ -12,7 +12,7 @@ namespace MemeFolderN.MFViewModelsBase
     public abstract partial class MFViewModelBase : BaseWindowViewModel, IMFViewModel
     {
         public RelayCommand NavigationByFolderCommand => _navigationByFolderCommand ?? (_navigationByFolderCommand =
-           new RelayCommandAction<IFolder>(NavigationByFolderMethod, (f) => _navigationService.CanNavigate(f?.Id.ToString())));
+           new RelayCommandAction<IFolder>(NavigationByFolderMethod));
 
         protected virtual void NavigationByFolderMethod(IFolder folder)
         {
@@ -22,7 +22,7 @@ namespace MemeFolderN.MFViewModelsBase
         }
 
         public RelayCommand NavigationByMemeTagCommand => _navigationByMemeTagCommand ?? (_navigationByMemeTagCommand =
-          new RelayCommandAction<IMemeTag>(NavigationByMemeTagMethod, (mt) => _navigationService.CanNavigate(mt?.Id.ToString())));
+          new RelayCommandAction<IMemeTag>(NavigationByMemeTagMethod));
 
         protected virtual void NavigationByMemeTagMethod(IMemeTag memeTag)
         {

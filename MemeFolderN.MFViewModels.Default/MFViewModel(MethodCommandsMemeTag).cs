@@ -2,9 +2,6 @@
 using MemeFolderN.MFViewModelsBase;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModels.Default
 {
@@ -15,8 +12,6 @@ namespace MemeFolderN.MFViewModels.Default
             base.MemeTagLoadMethod();
             MemeTagLoadMethodAsync();
         }
-
-        // Отошёл
 
         protected virtual async void MemeTagLoadMethodAsync()
         {
@@ -42,53 +37,53 @@ namespace MemeFolderN.MFViewModels.Default
 
         protected override void MemeTagAddMethod()
         {
-            base.MemeTagAddMethod();
-            MemeTagAddMethodAsync();
-        }
-
-        protected virtual async void MemeTagAddMethodAsync()
-        {
             try
             {
-                MemeTagDTO notSavedMemeTagDTO = await dialogService.MemeTagDtoOpenAddDialog();
-                if (notSavedMemeTagDTO != null)
-                    await model.AddMemeTagAsync(notSavedMemeTagDTO);
+                base.MemeTagAddMethod();
+                memeTagMethodCommandsClass.MemeTagAddMethodAsync();
             }
             catch (Exception ex)
             {
                 OnException(ex);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
         protected override void MemeTagChangeMethod(MemeTagVMBase memeTagVMBase)
         {
-            base.MemeTagChangeMethod(memeTagVMBase);
-            MemeTagChangeMethodAsync(memeTagVMBase);
-        }
-
-        protected virtual async void MemeTagChangeMethodAsync(MemeTagVMBase memeTagVMBase)
-        {
             try
             {
-                MemeTagDTO notSavedEditedMemeTagDTO = await dialogService.MemeTagDtoOpenEditDialog(memeTagVMBase.CopyDTO());
-                if (notSavedEditedMemeTagDTO != null)
-                    await model.ChangeMemeTagAsync(notSavedEditedMemeTagDTO);
+                base.MemeTagChangeMethod(memeTagVMBase);
+                memeTagMethodCommandsClass.MemeTagChangeMethodAsync(memeTagVMBase.CopyDTO());
             }
             catch (Exception ex)
             {
                 OnException(ex);
             }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         protected override void MemeTagDeleteMethod(MemeTagVMBase memeTagVMBase)
         {
-            base.MemeTagDeleteMethod(memeTagVMBase);
-            MemeTagDeleteMethodAsync(memeTagVMBase);
-        }
-        protected virtual async void MemeTagDeleteMethodAsync(MemeTagVMBase memeTagVMBase)
-        {
-            try { await model.DeleteMemeTagAsync(memeTagVMBase.CopyDTO()); }
-            catch (Exception ex) { OnException(ex); }
+            try
+            {
+                base.MemeTagDeleteMethod(memeTagVMBase);
+                memeTagMethodCommandsClass.MemeTagDeleteMethodAsync(memeTagVMBase.CopyDTO());
+            }
+            catch (Exception ex)
+            {
+                OnException(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

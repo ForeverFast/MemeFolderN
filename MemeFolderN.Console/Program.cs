@@ -5,6 +5,7 @@ using MemeFolderN.EntityFramework;
 using MemeFolderN.EntityFramework.Services;
 using System;
 using MemeFolderN.Extentions.Services;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MemeFolderN.Console
 {
@@ -19,17 +20,18 @@ namespace MemeFolderN.Console
                 //System.Console.ReadKey();
             }
 
-            UserSettingsService userSettingsService = new UserSettingsService();
-
-            string path = userSettingsService.RootFolderPath;
-            userSettingsService.RootFolderPath = "temp";
-            path = userSettingsService.RootFolderPath;
+           
 
 
             System.Console.ReadKey();
         }
 
-
+        static void Test<TView>([NotNull] string viewTypeKey)
+             where TView : class, new()
+        {
+            TView temp = null;
+            var q = temp.GetType();
+        }
 
     }
 }

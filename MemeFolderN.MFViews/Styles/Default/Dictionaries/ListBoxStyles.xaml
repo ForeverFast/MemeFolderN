@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:srd="clr-namespace:MemeFolderN.Extentions.Data"
                     xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel">
    
     <Style x:Key="DefLB" TargetType="{x:Type ListView}">

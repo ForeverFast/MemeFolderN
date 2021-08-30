@@ -7,7 +7,7 @@ namespace MemeFolderN.MFViewModelsBase
     public abstract partial class FolderVMBase : BasePageViewModel, IFolderVM, IFolder
     {
         public RelayCommand NavigationByFolderCommand => _navigationByFolderCommand ?? (_navigationByFolderCommand =
-           new RelayCommandAction<IFolder>(NavigationByFolderMethod, (f) => _navigationService.CanNavigate(f?.Id.ToString())));
+           new RelayCommandAction<IFolder>(NavigationByFolderMethod));
 
         protected virtual void NavigationByFolderMethod(IFolder folder)
         {

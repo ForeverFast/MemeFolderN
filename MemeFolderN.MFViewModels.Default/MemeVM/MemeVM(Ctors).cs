@@ -1,5 +1,7 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.MFModelBase.Abstractions;
+using MemeFolderN.MFViewModels.Default.Extentions;
+using MemeFolderN.MFViewModels.Default.MethodCommands;
 using MemeFolderN.MFViewModels.Default.Services;
 using MemeFolderN.MFViewModelsBase;
 using MemeFolderN.Navigation;
@@ -14,28 +16,27 @@ namespace MemeFolderN.MFViewModels.Default
 {
     public partial class MemeVM : MemeVMBase
     {
+        private readonly VmDIContainer vmDIContainer;
+
         /// <summary>Диспетчер UI потока</summary>
         private readonly Dispatcher dispatcher;
         private readonly IDialogService dialogService;
+        private readonly IMemeMethodCommandsClass memeMethodCommandsClass;
+        private readonly IMemeTagMethodCommandsClass memeTagMethodCommandsClass;
 
-        public MemeVM(INavigationService navigationService,
-            IDialogService dialogService,
-            IMFModel model,
-            Dispatcher dispatcher) : base(navigationService, model)
+        public MemeVM(VmDIContainer vmDIContainer) : base(vmDIContainer.navigationService, vmDIContainer.model)
         {
-            this.dispatcher = dispatcher;
-            this.dialogService = dialogService;
+            this.vmDIContainer = vmDIContainer;
+
+            this.dispatcher = vmDIContainer.dispatcher;
+            this.dialogService = vmDIContainer.dialogService;
+            this.memeMethodCommandsClass = vmDIContainer.memeMethodCommandsClass;
+            this.memeTagMethodCommandsClass = vmDIContainer.memeTagMethodCommandsClass;
 
             model.ChangedMemeTagsEvent += Model_ChangedMemeTagsEvent;
         }
 
-       
-
-        public MemeVM(INavigationService navigationService,
-            IDialogService dialogService,
-            IMFModel model,
-            Dispatcher dispatcher,
-            MemeDTO memeDTO) : this(navigationService, dialogService, model, dispatcher)
+        public MemeVM(VmDIContainer vmDIContainer, MemeDTO memeDTO) : this(vmDIContainer)
         {
             this.CopyFromDTO(memeDTO);
         }

@@ -4,17 +4,20 @@ using MemeFolderN.Extentions.Services;
 using MemeFolderN.MFModelBase.Abstractions;
 using MemeFolderN.MFModelBase.Default;
 using MemeFolderN.MFViewModels.Default;
+using MemeFolderN.MFViewModels.Default.Extentions;
+using MemeFolderN.MFViewModels.Default.MethodCommands;
 using MemeFolderN.MFViewModels.Default.Services;
 using MemeFolderN.MFViewModelsBase.Services;
+using MemeFolderN.MFViews;
+using MemeFolderN.MFViews.Pages;
 using MemeFolderN.Navigation;
-using MemeFolderN.Views;
-using MemeFolderN.Views.Pages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,6 +33,7 @@ namespace MemeFolderN
     {
         public IServiceProvider ServiceProvider { get; private set; }
         public IConfiguration Configuration { get; private set; }
+       
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -56,7 +60,9 @@ namespace MemeFolderN
                 MFWindow mainWindow = ServiceProvider.GetRequiredService<MFWindow>();
                 INavigationService navigationService = ServiceProvider.GetRequiredService<INavigationService>();
 
-                navigationService.Register<EmptyPage>("root", null);
+                navigationService.RegisterViewType<FolderPage>("folderPage");
+
+                navigationService.Register<StartPage>("root", null);
                 //navigationService.Register<SettingsPage>("settings", ServiceProvider.GetRequiredService<SettingsPageVM>());
                 //navigationService.Register<SearchPage>("searchPage", ServiceProvider.GetRequiredService<SearchPageVM>());
                 navigationService.Navigate("root", NavigationType.Root);
@@ -87,6 +93,13 @@ namespace MemeFolderN
             services.AddSingleton<IUserSettingsService, UserSettingsService>();
             services.AddSingleton<INavigationService, NavigationService>();
 
+
+            services.AddSingleton<IFolderMethodCommandsClass, FolderMethodCommandsClass>();
+            services.AddSingleton<IMemeMethodCommandsClass, MemeMethodCommandsClass>();
+            services.AddSingleton<IMemeTagMethodCommandsClass, MemeTagMethodCommandsClass>();
+            services.AddSingleton<INavCommandsClass, NavCommandsClass>();
+
+            services.AddSingleton(typeof(VmDIContainer));
             services.AddSingleton(service => Configuration);
 
             services.AddSingleton(typeof(Dispatcher), Current.Dispatcher);
@@ -98,7 +111,7 @@ namespace MemeFolderN
 
 
 
-            services.AddSingleton(typeof(ContentControl), (s) => s.GetRequiredService<MFWindow>().FrameContent);
+            services.AddSingleton(typeof(ContentControl), (s) => s.GetRequiredService<MFWindow>().FrameContentControl);
 
         }
     }

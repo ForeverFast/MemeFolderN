@@ -50,7 +50,7 @@ namespace MemeFolderN.MFViewModels.Default
                 if (Memes.All(r => r.Id != meme.Id))
                 {
                     /// Создание нового Мема для добавления в коллекцию
-                    MemeVM newMemeVM = new MemeVM(_navigationService, dialogService, model, dispatcher, meme);
+                    MemeVM newMemeVM = new MemeVM(vmDIContainer, meme);
                     
                     list.Add(newMemeVM);
                     /// Удаление Мема созданного из полученной коллекции

@@ -12,13 +12,33 @@ namespace MemeFolderN.MFViewModels.Default
     {
         protected override void NavigationByFolderMethod(IFolder folder)
         {
-            base.NavigationByFolderMethod(folder);
-            try 
+            try
             {
+                base.NavigationByFolderMethod(folder);
+            
                 FolderVM folderVM = (FolderVM)this.RootFolders.FirstOrDefault(rf => rf.Id == folder.Id);
-                _navigationService.Navigate<FolderPage>
+
+                navCommandsClass.NavigationByFolderMethod(folderVM);
             }
             catch(Exception ex)
+            {
+                OnException(ex);
+            }
+        }
+
+        protected override void NavigationByMemeTagMethod(IMemeTag memeTag)
+        {
+            try
+            {
+                base.NavigationByMemeTagMethod(memeTag);
+
+                MemeTagVM memeTagVM = (MemeTagVM)this.MemeTags.FirstOrDefault(rf => rf.Id == memeTag.Id);
+
+                // todo
+
+                //navCommandsClass.NavigationByFolderMethod(memeTagVM);
+            }
+            catch (Exception ex)
             {
                 OnException(ex);
             }

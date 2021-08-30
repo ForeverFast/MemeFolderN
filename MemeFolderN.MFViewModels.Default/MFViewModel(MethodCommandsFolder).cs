@@ -24,7 +24,7 @@ namespace MemeFolderN.MFViewModels.Default
                 lock (RootFolders)
                 {
                     foreach (FolderDTO folder in folders)
-                        RootFolders.Add(new FolderVM(_navigationService, dialogService, model, dispatcher, folder));
+                        RootFolders.Add(new FolderVM(vmDIContainer, folder));
                     
                     IsBusy = !(IsLoaded = (IsFoldersLoaded = true) && IsMemeTagsLoaded);
                 }
@@ -37,36 +37,36 @@ namespace MemeFolderN.MFViewModels.Default
 
         protected override void FolderAddMethod()
         {
-            base.FolderAddMethod();
-            FolderAddMethodAsync();
-        }
-        
-        protected virtual async void FolderAddMethodAsync()
-        {
             try
             {
-                FolderDTO notSavedFolderDTO = await dialogService.FolderDtoOpenAddDialog(null);
-                if (notSavedFolderDTO != null)
-                    await model.AddFolderAsync(notSavedFolderDTO);
-                else
-                    IsBusy = false;
+                base.FolderAddMethod();
+                folderMethodCommandsClass.FolderAddMethodAsync(null);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 OnException(ex);
             }
+            finally
+            {
+                IsBusy = false;
+            }
         }
-
+        
         protected override void FolderAddNonParametersMethod()
         {
-            base.FolderAddNonParametersMethod();
-            FolderAddNonParametersMethodAsync();
-        }
-
-        protected virtual async void FolderAddNonParametersMethodAsync()
-        {
-            try { await model.AddFolderAsync(new FolderDTO { ParentFolderId = null }); }
-            catch(Exception ex) { OnException(ex); }
+            try
+            {
+                base.FolderAddNonParametersMethod();
+                folderMethodCommandsClass.FolderAddNonParametersMethodAsync(null);
+            }
+            catch(Exception ex)
+            {
+                OnException(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

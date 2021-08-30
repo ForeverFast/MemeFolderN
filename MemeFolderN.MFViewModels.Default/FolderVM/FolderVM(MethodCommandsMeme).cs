@@ -24,7 +24,7 @@ namespace MemeFolderN.MFViewModels.Default
                 lock (Memes)
                 {
                     foreach (MemeDTO meme in memes)
-                        Memes.Add(new MemeVM(_navigationService, dialogService, model, dispatcher, meme));
+                        Memes.Add(new MemeVM(vmDIContainer, meme));
 
                     IsBusy = false;
                     IsLoaded = (IsMemesLoaded = true) && IsFoldersLoaded;
@@ -38,21 +38,18 @@ namespace MemeFolderN.MFViewModels.Default
 
         protected override void MemeAddMethod()
         {
-            base.MemeAddMethod();
-            MemeAddMethodAsync();
-        }
-
-        protected virtual async void MemeAddMethodAsync()
-        {
             try
             {
-                MemeDTO notSavedMemeDTO = await dialogService.MemeDtoOpenAddDialog(this.ParentFolderId);
-                if (notSavedMemeDTO != null)
-                    await model.AddMemeAsync(notSavedMemeDTO);
+                base.MemeAddMethod();
+                memeMethodCommandsClass.MemeAddMethodAsync(this.ParentFolderId);
             }
             catch (Exception ex)
             {
                 OnException(ex);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

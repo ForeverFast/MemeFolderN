@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MemeFolderN.Views.Pages
+namespace MemeFolderN.MFViews.Pages
 {
     /// <summary>
     /// Логика взаимодействия для FolderPage.xaml

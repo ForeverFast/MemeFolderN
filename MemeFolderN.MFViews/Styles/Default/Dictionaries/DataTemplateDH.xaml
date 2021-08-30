@@ -2,10 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:dVm="clr-namespace:MemeFolderN.MFViewModelsBase;assembly=MemeFolderN.MFViewModelsBase"
-                    xmlns:converter="clr-namespace:MemeFolderN.Converters"
+                    xmlns:cn="clr-namespace:MemeFolderN.MFViews.Converters"
                     xmlns:ib="http://schemas.microsoft.com/xaml/behaviors">
 
-    <converter:StringToBoolConverter x:Key="StringToBoolConverter"/>
+    <cn:StringToBoolConverter x:Key="StringToBoolConverter"/>
 
     <!-- Dialog for Memes -->
     <DataTemplate DataType="{x:Type dVm:DialogMemeVMBase}">

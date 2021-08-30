@@ -6,15 +6,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="Views\MFWindow2.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Pages\FolderPage.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <PackageReference Include="gong-wpf-dragdrop" Version="2.4.0" />
+    <PackageReference Include="LoadingSpinner.WPF" Version="1.0.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="1.5.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MemeFolderN.MFViewModels.Default\MemeFolderN.MFViewModels.Default.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Brushes.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Styles\Default\DefaultDictionary.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -42,14 +49,6 @@
     </Page>
     <Page Update="Styles\Default\Dictionaries\TreeViewStyles.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Views\MFWindow2.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Pages\FolderPage.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
 

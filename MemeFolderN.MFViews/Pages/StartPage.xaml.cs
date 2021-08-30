@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace MemeFolderN.MFViews.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для EmptyPage.xaml
+    /// Логика взаимодействия для StartPage.xaml
     /// </summary>
-    public partial class EmptyPage : Page
+    public partial class StartPage : Page
     {
-        public EmptyPage()
+        public StartPage()
         {
             InitializeComponent();
         }

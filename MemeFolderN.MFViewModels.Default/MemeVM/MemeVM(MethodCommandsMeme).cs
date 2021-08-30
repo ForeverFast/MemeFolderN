@@ -1,10 +1,5 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFViewModelsBase;
+﻿using MemeFolderN.MFViewModelsBase;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace MemeFolderN.MFViewModels.Default
 {
@@ -12,49 +7,71 @@ namespace MemeFolderN.MFViewModels.Default
     {
         protected override void MemeChangeMethod(MemeVMBase memeVMBase)
         {
-            base.MemeChangeMethod(memeVMBase);
-            MemeChangeMethodAsync(memeVMBase);
+            try
+            {
+                base.MemeChangeMethod(memeVMBase);
+                memeMethodCommandsClass.MemeChangeMethodAsync(memeVMBase.CopyDTO());
+            }
+            catch(Exception ex)
+            {
+                OnException(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+           
         }
 
-        protected virtual async void MemeChangeMethodAsync(MemeVMBase memeVMBase)
+        protected override void MemeDeleteMethod(MemeVMBase memeVMBase)
         {
             try
             {
-                MemeDTO notSavedEditedMemeDTO = await dialogService.MemeDtoOpenEditDialog(this.CopyDTO());
-                if (notSavedEditedMemeDTO != null)
-                    await model.ChangeMemeAsync(notSavedEditedMemeDTO);
+                base.MemeDeleteMethod(memeVMBase);
+                memeMethodCommandsClass.MemeDeleteMethodAsync(memeVMBase.CopyDTO());
             }
             catch (Exception ex)
             {
                 OnException(ex);
             }
-        }
-
-        protected override void MemeDeleteMethod(MemeVMBase memeVMBase)
-        {
-            base.MemeDeleteMethod(memeVMBase);
-            MemeDeleteMethodAsync(memeVMBase);
-        }
-
-        protected virtual async void MemeDeleteMethodAsync(MemeVMBase memeVMBase)
-        {
-            try { await model.DeleteMemeAsync(memeVMBase.CopyDTO()); }
-            catch (Exception ex) { OnException(ex); }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         protected override void MemeOpenMethod()
         {
-            base.MemeOpenMethod();
-            Process p = new Process();
-            p.StartInfo = new ProcessStartInfo(this.ImagePath) { UseShellExecute = true };
-            p.Start();
-            p.Dispose();
+            try
+            {
+                base.MemeOpenMethod();
+                memeMethodCommandsClass.MemeOpenMethod(this.ImagePath);
+            }
+            catch (Exception ex)
+            {
+                OnException(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         protected override void MemeCopyMethod()
         {
-            base.MemeCopyMethod();
-            Clipboard.SetImage(new BitmapImage(new Uri(this.ImagePath)));
+            try
+            {
+                base.MemeCopyMethod();
+                memeMethodCommandsClass.MemeCopyMethod(this.ImagePath);
+            }
+            catch (Exception ex)
+            {
+                OnException(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
     }

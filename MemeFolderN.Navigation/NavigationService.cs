@@ -11,6 +11,8 @@ namespace MemeFolderN.Navigation
     {
         private LinkedList<string> _history;
         private LinkedListNode<string> _currentPageKey;
+        private Dictionary<string, Type> PageData = new Dictionary<string, Type>();
+
 
         public NavigationService([NotNull] ContentControl frameControl) : base(frameControl)
         {
@@ -83,10 +85,24 @@ namespace MemeFolderN.Navigation
         }
 
         public void Navigate<TView>(string navigationKey, object viewModel, object arg = null)
-         where TView : class, new()
+          where TView : class, new()
         {
             if (!CanNavigate(navigationKey))
                 this.Register<TView>(navigationKey, viewModel);
+            this.Navigate(navigationKey, NavigationType.Default, arg);
+        }
+
+        public void NavigateByViewTypeKey(object viewModel, string viewTypeKey, object arg = null)
+        {
+            var tempKey = Guid.NewGuid().ToString();
+            this.RegisterWithViewTypeKey(tempKey, viewTypeKey, viewModel);
+            this.Navigate(tempKey, NavigationType.Default, arg);
+        }
+
+        public void NavigateByViewTypeKey(string navigationKey, string viewTypeKey, object viewModel, object arg = null)
+        {
+            if (!CanNavigate(navigationKey))
+                this.RegisterWithViewTypeKey(navigationKey, viewTypeKey, viewModel);
             this.Navigate(navigationKey, NavigationType.Default, arg);
         }
 
@@ -114,8 +130,25 @@ namespace MemeFolderN.Navigation
         public void Register<TView>([NotNull] string navigationKey, object viewModel)
           where TView : class, new()
         {
-            object t = Activator.CreateInstance<TView>();
-            Func<object> getView = () => t;
+            object viewInstance = Activator.CreateInstance<TView>();
+            Func<object> getView = () => viewInstance;
+            this.Register(navigationKey, () => viewModel, getView);
+        }
+
+        public void RegisterViewType<TView>([NotNull] string viewTypeKey)
+             where TView : class, new()
+        {
+            if (viewTypeKey == null)
+                throw new ArgumentNullException(nameof(viewTypeKey));
+
+            PageData.Add(viewTypeKey, typeof(TView));
+        }
+
+        public void RegisterWithViewTypeKey([NotNull] string navigationKey, [NotNull] string viewTypeKey, object viewModel)
+        {
+            Type viewType = PageData[viewTypeKey];
+            object viewInstance = Activator.CreateInstance(viewType);
+            Func<object> getView = () => viewInstance;
             this.Register(navigationKey, () => viewModel, getView);
         }
     }

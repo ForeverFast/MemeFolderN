@@ -4,14 +4,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace MemeFolderN.Views
+namespace MemeFolderN.MFViews
 {
-    /// <summary>
-    /// Логика взаимодействия для MFWindow.xaml
-    /// </summary>
     public partial class MFWindow : Window
     {
         private IServiceProvider _serviceProvider;
+
+        public ContentControl FrameContentControl => FrameContent;
 
         //public event RoutedEventHandler DataContextLoaded;
 
