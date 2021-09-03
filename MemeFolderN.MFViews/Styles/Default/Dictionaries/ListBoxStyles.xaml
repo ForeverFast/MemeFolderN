@@ -117,9 +117,9 @@
                                     
                                     <Border.InputBindings>
 
-                                        <MouseBinding Gesture="LeftDoubleClick"
+                                        <!--<MouseBinding Gesture="LeftDoubleClick"
                                                       CommandParameter="{Binding}"
-                                                      Command="{Binding Tag.NavigationByMemeTagCommand}"  />
+                                                      Command="{Binding NavigationByMemeTagCommand}"  />-->
 
                                     </Border.InputBindings>
 

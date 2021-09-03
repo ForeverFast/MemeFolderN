@@ -151,5 +151,8 @@ namespace MemeFolderN.Navigation
             Func<object> getView = () => viewInstance;
             this.Register(navigationKey, () => viewModel, getView);
         }
+
+
+        
     }
 }

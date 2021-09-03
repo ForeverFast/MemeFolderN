@@ -23,11 +23,11 @@
             Style="{StaticResource ContentSV}"
             Background="{DynamicResource GrayLVL3}">
 
-        <ib:Interaction.Triggers>
+        <!--<ib:Interaction.Triggers>
             <ib:EventTrigger EventName="Loaded">
                 <ib:InvokeCommandAction Command="{Binding PageLoadedCommand}" />
             </ib:EventTrigger>
-        </ib:Interaction.Triggers>
+        </ib:Interaction.Triggers>-->
 
         <Grid Background="{StaticResource GrayLVL2}">
 

@@ -53,6 +53,23 @@ namespace MemeFolderN.MFViewModels.Default
             }
         }
 
+        protected override void FolderAddNonParametersMethod()
+        {
+            try
+            {
+                base.FolderAddNonParametersMethod();
+                folderMethodCommandsClass.FolderAddNonParametersMethodAsync(this.Id);
+            }
+            catch (Exception ex)
+            {
+                OnException(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
         protected override void FolderChangeMethod(FolderVMBase folderVMBase)
         {
             try

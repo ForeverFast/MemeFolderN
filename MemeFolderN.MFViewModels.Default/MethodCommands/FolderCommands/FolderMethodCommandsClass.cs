@@ -15,6 +15,12 @@ namespace MemeFolderN.MFViewModels.Default.MethodCommands
         private readonly IDialogService dialogService;
         private readonly IMFModel model;
 
+        public FolderMethodCommandsClass(IDialogService dialogService, IMFModel model)
+        {
+            this.dialogService = dialogService;
+            this.model = model;
+        }
+
         public virtual async void FolderAddMethodAsync(Guid? parentFolderId)
         {
             FolderDTO notSavedFolderDTO = await dialogService.FolderDtoOpenAddDialog(parentFolderId);

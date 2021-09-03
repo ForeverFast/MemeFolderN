@@ -43,6 +43,8 @@
         <Setter Property="Padding" Value="1,0,0,0" />
         <Setter Property="Foreground" Value="{DynamicResource StandartLightColor2}" />
         <!--<Setter Property="FocusVisualStyle" Value="{DynamicResource TreeViewItemFocusVisual}" />-->
+        
+        
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeViewItem}">
@@ -110,7 +112,7 @@
                                 <ib:Interaction.Triggers>
                                     <ib:EventTrigger EventName="MouseLeftButtonDown">
                                         <ib:ChangePropertyAction TargetName="Expander" PropertyName="IsChecked" Value="True"/>
-                                        <ib:InvokeCommandAction Command="{Binding DataContext.NavigationToFolderCommand,
+                                        <ib:InvokeCommandAction Command="{Binding DataContext.NavigationByFolderCommand,
                                         RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
                                                             CommandParameter="{Binding}"/>
                                     </ib:EventTrigger>

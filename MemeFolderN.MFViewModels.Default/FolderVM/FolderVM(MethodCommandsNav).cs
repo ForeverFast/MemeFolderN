@@ -16,6 +16,7 @@ namespace MemeFolderN.MFViewModels.Default
             {
                 base.NavigationByFolderMethod(folder);
 
+                var q = this;
                 FolderVM folderVM = (FolderVM)this.Folders.FirstOrDefault(rf => rf.Id == folder.Id);
 
                 navCommandsClass.NavigationByFolderMethod(folderVM);
