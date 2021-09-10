@@ -17,7 +17,6 @@ namespace MemeFolderN.Core.Models
 
         public Folder()
         {
-            CreatingDate = DateTime.Now;
             Folders = new List<Folder>();
             Memes = new List<Meme>();
         }

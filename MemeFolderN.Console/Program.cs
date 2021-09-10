@@ -6,6 +6,9 @@ using MemeFolderN.EntityFramework.Services;
 using System;
 using MemeFolderN.Extentions.Services;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace MemeFolderN.Console
 {
@@ -17,7 +20,12 @@ namespace MemeFolderN.Console
         {
             using (MemeFolderNDbContext context = memeFolderNDbContextFactory.CreateDbContext(null))
             {
-                //System.Console.ReadKey();
+                Folder folder = context.Folders
+                    .Select(f => new Folder { Id = f.Id, Title = f.Title, Description = f.Description})
+                    .FirstOrDefault(f => f.Id == Guid.Parse("52347510-A42B-4C53-B331-61A9E38A861F"));
+
+
+                System.Console.ReadKey();
             }
 
            
@@ -26,12 +34,15 @@ namespace MemeFolderN.Console
             System.Console.ReadKey();
         }
 
-        static void Test<TView>([NotNull] string viewTypeKey)
-             where TView : class, new()
-        {
-            TView temp = null;
-            var q = temp.GetType();
-        }
+        
 
+    }
+
+    [Table("Folders")]
+    class IncompleteFolder
+    {
+        public Guid Id { get; set; }
+
+        public string Title { get; set; }
     }
 }

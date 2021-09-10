@@ -60,9 +60,9 @@ namespace MemeFolderN
                 MFWindow mainWindow = ServiceProvider.GetRequiredService<MFWindow>();
                 INavigationService navigationService = ServiceProvider.GetRequiredService<INavigationService>();
 
-                navigationService.RegisterViewType<FolderPage>("folderPage");
+                navigationService.RegisterViewType<FolderUC>("folderPage");
 
-                navigationService.Register<StartPage>("root", null);
+                navigationService.Register<StartUC>("root", null);
                 //navigationService.Register<SettingsPage>("settings", ServiceProvider.GetRequiredService<SettingsPageVM>());
                 //navigationService.Register<SearchPage>("searchPage", ServiceProvider.GetRequiredService<SearchPageVM>());
                 navigationService.Navigate("root", NavigationType.Root);

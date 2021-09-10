@@ -20,7 +20,7 @@ namespace MemeFolderN.MFViewModels.Default.MethodCommands
             }
             else
             {
-                navigationService.NavigateByViewTypeKey(folderVM.Id, "folderPage", folderVM);
+                navigationService.NavigateByViewTypeKey(navKey, "folderPage", folderVM, null);
             }
         }
     }

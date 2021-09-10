@@ -10,7 +10,7 @@ namespace MemeFolderN.MFViews
     {
         private IServiceProvider _serviceProvider;
 
-        public ContentControl FrameContentControl => FrameContent;
+        public ContentControl FrameContentControl => MFContent;
 
         //public event RoutedEventHandler DataContextLoaded;
 

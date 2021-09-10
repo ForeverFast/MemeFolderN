@@ -80,9 +80,9 @@
             <ssc:LoadingSpinner IsLoading="{Binding IsBusy, UpdateSourceTrigger=PropertyChanged}"
                                 Color="AliceBlue"/>
 
-            <Frame x:Name="FrameContent" Margin="0,0,0,0" 
-                   BorderThickness="0,0,0,0"
-                   NavigationUIVisibility="Hidden"/>
+            <ContentControl x:Name="MFContent"
+                            Margin="0,0,0,0" 
+                            BorderThickness="0,0,0,0"/>
         </Grid>
 
         <Border x:Name="HeaderGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
