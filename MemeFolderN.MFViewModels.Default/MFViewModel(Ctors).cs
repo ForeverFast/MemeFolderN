@@ -34,6 +34,10 @@ namespace MemeFolderN.MFViewModels.Default
             model.ChangedMemeTagsEvent += Model_ChangedMemeTagsEvent;
         }
 
+        // Только для Времени Разработки
+        public MFViewModel() : base(null, null)
+        { }
+
         public override void Dispose()
         {
             

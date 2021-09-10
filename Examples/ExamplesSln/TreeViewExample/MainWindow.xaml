@@ -1,0 +1,52 @@
+﻿<Window x:Class="TreeViewExample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TreeViewExample"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <FrameworkElement.Resources>
+        <local:TagCollectionViewSource
+            x:Key="root"
+            Source="{x:Static local:Node.Nodes}"
+            Tag="0"
+            Filter="{x:Static local:Handlers.OnChildrenNodeFilter}"/>
+        <Style TargetType="TreeViewItem">
+            <Setter Property="Tag">
+                <Setter.Value>
+                    <MultiBinding Converter="{local:BindingTagSourceCollectionConverter}">
+                        <Binding RelativeSource="{RelativeSource Self}"/>
+                        <Binding Path="(local:Handlers.OnChildrenNodeFilter)"/>
+                        <Binding Path="(local:Node.Nodes)"/>
+                        <Binding Path="Id"/>
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Title}"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsSource" Value="{Binding Tag.View, RelativeSource={RelativeSource Self}}"/>
+        </Style>
+    </FrameworkElement.Resources>
+    <Grid>
+        <TreeView ItemsSource="{Binding Source={StaticResource root}}">
+            <!--<TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type local:Node}" ItemsSource="{Binding Tag, ElementName=textBlock}">
+                    <TextBlock x:Name="textBlock" Text="{Binding Title}">
+                        <TextBlock.Tag>
+                            <local:TagCollectionViewSource
+                                Source="{x:Static local:Node.Nodes}"
+                                Tag="{Binding Id}"
+                                Filter="OnNodeFilter"/>
+                        </TextBlock.Tag>
+                    </TextBlock>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>-->
+        </TreeView>
+    </Grid>
+</Window>
