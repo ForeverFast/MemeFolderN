@@ -6,8 +6,6 @@ namespace MemeFolderN.MFViewModelsBase
 {
     public abstract partial class MFViewModelBase : BaseWindowViewModel, IMFViewModel
     {
-       
-
         public RelayCommand MemeTagLoadCommand => _memeTagLoadCommand ?? (_memeTagLoadCommand =
             new RelayCommandAction(MemeTagLoadMethod));
 

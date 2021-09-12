@@ -57,6 +57,15 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
+        public virtual async Task<IEnumerable<MemeDTO>> GetAllMemes()
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                IEnumerable<Meme> entities = await Task.FromResult(context.Memes
+                    .ToList());
+                return entities.Select(f => f.ConvertMeme());
+            }
+        }
 
         public virtual async Task<MemeDTO> Add(MemeDTO memeDTO)
         {

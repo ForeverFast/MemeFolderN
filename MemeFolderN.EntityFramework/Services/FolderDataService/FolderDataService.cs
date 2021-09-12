@@ -50,6 +50,17 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
+        public virtual async Task<IEnumerable<FolderDTO>> GetAllFolders()
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                IEnumerable<Folder> entities = await Task.FromResult(context.Folders
+                    .Include(f => f.Memes)
+                    .ToList());
+                return entities.Where(f => f.ParentFolderId == null).Select(f => f.ConvertFolder());
+            }
+        }
+
         public virtual async Task<FolderDTO> Add(FolderDTO folderDTO)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))

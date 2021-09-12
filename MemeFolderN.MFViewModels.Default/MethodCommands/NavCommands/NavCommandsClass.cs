@@ -13,15 +13,7 @@ namespace MemeFolderN.MFViewModels.Default.MethodCommands
 
         public virtual void NavigationByFolderMethod(FolderVM folderVM)
         {
-            string navKey = folderVM.Id.ToString();
-            if (navigationService.CanNavigate(navKey))
-            {
-                navigationService.Navigate(navKey, NavigationType.Default);
-            }
-            else
-            {
-                navigationService.NavigateByViewTypeKey(navKey, "folderPage", folderVM, null);
-            }
+            
         }
     }
 }

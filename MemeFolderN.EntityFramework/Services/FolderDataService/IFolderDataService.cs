@@ -1,6 +1,5 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,5 +9,6 @@ namespace MemeFolderN.EntityFramework.Services
     {
         Task<IEnumerable<FolderDTO>> GetRootFolders();
         Task<IEnumerable<FolderDTO>> GetFoldersByFolderID(Guid guid);
+        Task<IEnumerable<FolderDTO>> GetAllFolders();
     }
 }

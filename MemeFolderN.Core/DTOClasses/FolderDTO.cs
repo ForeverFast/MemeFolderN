@@ -12,5 +12,7 @@ namespace MemeFolderN.Core.DTOClasses
         public List<FolderDTO> Folders { get; init; }
 
         public List<MemeDTO> Memes { get; init; }
+
+
     }
 }

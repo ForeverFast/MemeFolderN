@@ -17,6 +17,7 @@ namespace MemeFolderN.MFViewModels.Default
         private readonly Dispatcher dispatcher;
         private readonly IDialogService dialogService;
         private readonly IFolderMethodCommandsClass folderMethodCommandsClass;
+        private readonly IMemeMethodCommandsClass memeMethodCommandsClass;
         private readonly IMemeTagMethodCommandsClass memeTagMethodCommandsClass;
         private readonly INavCommandsClass navCommandsClass;
 
@@ -27,6 +28,7 @@ namespace MemeFolderN.MFViewModels.Default
             this.dispatcher = vmDIContainer.dispatcher;
             this.dialogService = vmDIContainer.dialogService;
             this.folderMethodCommandsClass = vmDIContainer.folderMethodCommandsClass;
+            this.memeMethodCommandsClass = vmDIContainer.memeMethodCommandsClass;
             this.memeTagMethodCommandsClass = vmDIContainer.memeTagMethodCommandsClass;
             this.navCommandsClass = vmDIContainer.navCommandsClass;
 

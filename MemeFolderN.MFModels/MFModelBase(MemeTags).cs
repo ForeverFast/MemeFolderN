@@ -21,8 +21,8 @@ namespace MemeFolderN.MFModelBase
 
         protected void OnChangedMemeTagsEvent(List<MemeTagDTO> memeTags) => ChangedMemeTagsEvent?.Invoke(this, ActionType.Changed, memeTags);
 
-        public Task<List<MemeTagDTO>> GetMemeTagsAsync() => Task.Factory.StartNew(() => GetMemeTags());
-        protected abstract List<MemeTagDTO> GetMemeTags();
+        public Task<List<MemeTagDTO>> GetAllMemeTagsAsync() => Task.Factory.StartNew(() => GetAllMemeTags());
+        protected abstract List<MemeTagDTO> GetAllMemeTags();
 
         public Task<List<MemeTagDTO>> GetMemeTagsByMemeIdAsync(Guid id) => Task.Factory.StartNew(() => GetMemeTagsByMemeId(id));
         protected abstract List<MemeTagDTO> GetMemeTagsByMemeId(Guid id);

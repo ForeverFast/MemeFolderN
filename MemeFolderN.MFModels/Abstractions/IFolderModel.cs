@@ -12,7 +12,7 @@ namespace MemeFolderN.MFModelBase.Abstractions
     {
         Task<List<FolderDTO>> GetRootFoldersAsync();
         Task<List<FolderDTO>> GetFoldersByFolderIdAsync(Guid id);
-
+        Task<List<FolderDTO>> GetAllFoldersAsync();
         Task DeleteFolderAsync(FolderDTO folderDTO);
 
         Task AddFolderAsync(FolderDTO folderDTO);

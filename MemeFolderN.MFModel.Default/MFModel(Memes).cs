@@ -23,6 +23,12 @@ namespace MemeFolderN.MFModelBase.Default
             return memesDTO.ToList();
         }
 
+        protected override List<MemeDTO> GetAllMemes()
+        {
+            IEnumerable<MemeDTO> memesDTO = memeDataService.GetAllMemes().Result;
+            return memesDTO.ToList();
+        }
+
         protected override void AddMeme(MemeDTO memeDTO)
         {
             memeDTO = MemeAddInit(memeDTO); 

@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MemeFolderN.Core\MemeFolderN.Core.csproj" />
+    <ProjectReference Include="..\MemeFolderN.Extentions\MemeFolderN.Extentions.csproj" />
   </ItemGroup>
 
 </Project>

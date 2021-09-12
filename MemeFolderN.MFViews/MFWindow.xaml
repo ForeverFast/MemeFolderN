@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MemeFolderN.MFViews"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance vm:MFViewModel, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance vm:MFViewModel, IsDesignTimeCreatable=False}"
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:ib="http://schemas.microsoft.com/xaml/behaviors"  
         xmlns:ssc="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
         xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Default;assembly=MemeFolderN.MFViewModels.Default"
-        xmlns:behaviours="clr-namespace:MemeFolderN.MFViews.Extentions" xmlns:proxy="clr-namespace:Proxy"
+        xmlns:behaviours="clr-namespace:MemeFolderN.MFViews.Extentions"
+        xmlns:proxy="clr-namespace:Proxy"
         Title="MFWindow"
         x:Name="MFWindowElement"
         Height="800" Width="1500"
@@ -201,14 +202,10 @@
 
             <Grid Background="{StaticResource GrayLVL3}">
 
-                <TreeView ItemsSource="{Binding RootFolders, UpdateSourceTrigger=PropertyChanged}"
+                <TreeView ItemsSource="{Binding Folders, UpdateSourceTrigger=PropertyChanged}"
                           Foreground="{DynamicResource StandartLightColor2}"
                           ItemContainerStyle="{DynamicResource TreeViewItemStyle}"
                           Margin="10">
-
-                    <ib:Interaction.Behaviors>
-                        <behaviours:BindableSelectedItemBehavior SelectedItem="{Binding SelectedFolder, Mode=TwoWay}" />
-                    </ib:Interaction.Behaviors>
 
                     <TreeView.Resources>
                         <proxy:ProxyValue x:Key="treeView.DataContext"/>
@@ -217,38 +214,35 @@
                                                   ItemsSource="{Binding Folders, UpdateSourceTrigger=PropertyChanged}">
 
                             <Border Height="25">
-                                <!--<Border Height="25"
-                                    Tag="{Binding DataContext,
-                                RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsPresenter}}">-->
+                                
                                 <Border.InputBindings>
                                     <MouseBinding Gesture="LeftDoubleClick"
                                                   CommandParameter="{Binding}"
                                                   Command="{Binding NavigationByFolderCommand}"/>
                                 </Border.InputBindings>
 
-                                <!--DataContext="{Binding DataContext,
-                                        RelativeSource={RelativeSource Mode=TemplatedParent}}" NavigationByFolderCommand-->
-
                                 <Border.ContextMenu>
                                     <ContextMenu Tag="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.Tag}">
-
                                         <MenuItem Header="Открыть"
                                                   CommandParameter="{Binding}"
-                                                  Command="{Binding Value.NavigationByFolderCommand, Mode=OneWay, Source={StaticResource treeView.DataContext}}"/>
+                                                  Command="{Binding Value.NavigationByFolderCommand, Mode=OneWay,
+                                            Source={StaticResource treeView.DataContext}}"/>
                                         <MenuItem Header="Создать папку"
                                                   CommandParameter="{Binding}"
-                                                  Command="{Binding FolderAddNonParametersCommand}"/>
+                                                  Command="{Binding Value.FolderAddNonParametersCommand, Mode=OneWay,
+                                            Source={StaticResource treeView.DataContext}}"/>
                                         <MenuItem Header="Создать папку с параметрами"
                                                   CommandParameter="{Binding}"
-                                                  Command="{Binding FolderAddCommand}"/>
+                                                  Command="{Binding Value.FolderAddCommand, Mode=OneWay,
+                                            Source={StaticResource treeView.DataContext}}"/>
                                         <MenuItem Header="Изменить"
                                                   CommandParameter="{Binding}"
-                                                  Command="{Binding Tag.FolderChangeCommand, 
-                                            RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"/>
+                                                  Command="{Binding Value.FolderChangeCommand, Mode=OneWay,
+                                            Source={StaticResource treeView.DataContext}}"/>
                                         <MenuItem Header="Удалить" 
                                                   CommandParameter="{Binding}"
-                                                  Command="{Binding Tag.FolderDeleteCommand, 
-                                            RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"/>
+                                                  Command="{Binding Value.FolderDeleteCommand, Mode=OneWay,
+                                            Source={StaticResource treeView.DataContext}}"/>
                                     </ContextMenu>
                                 </Border.ContextMenu>
 

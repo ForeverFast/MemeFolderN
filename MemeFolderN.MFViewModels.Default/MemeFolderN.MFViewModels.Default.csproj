@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MemeFolderN.Extentions\MemeFolderN.Extentions.csproj" />
     <ProjectReference Include="..\MemeFolderN.MFViewModel\MemeFolderN.MFViewModelsBase.csproj" />
   </ItemGroup>
 

@@ -11,7 +11,7 @@ namespace MemeFolderN.MFModelBase.Abstractions
     public interface IMemeModel
     {
         Task<List<MemeDTO>> GetMemesByFolderIdAsync(Guid id);
-
+        Task<List<MemeDTO>> GetAllMemesAsync();
         Task DeleteMemeAsync(MemeDTO meme);
 
         Task AddMemeAsync(MemeDTO meme);

@@ -25,7 +25,8 @@ namespace MemeFolderN.MFViews
         {
             DataContext = _serviceProvider.GetService(typeof(MFViewModel));
             //DataContextLoaded?.Invoke(this, null);
-            ((MFViewModel)DataContext).FolderRootsCommand.Execute(null);
+            ((MFViewModel)DataContext).FolderLoadCommand.Execute(null);
+            ((MFViewModel)DataContext).MemeLoadCommand.Execute(null);
             ((MFViewModel)DataContext).MemeTagLoadCommand.Execute(null);
         }
 

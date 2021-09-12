@@ -8,7 +8,7 @@ namespace MemeFolderN.MFModelBase.Default
 {
     public partial class MFModel : MFModelBase
     {
-        protected override List<MemeTagDTO> GetMemeTags()
+        protected override List<MemeTagDTO> GetAllMemeTags()
         {
             IEnumerable<MemeTagDTO> memeTagsDTO = memeTagDataService.GetTags().Result;
             return memeTagsDTO.ToList();

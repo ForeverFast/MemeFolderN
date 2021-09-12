@@ -9,6 +9,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MemeFolderN.Extentions;
 
 namespace MemeFolderN.Console
 {
@@ -18,14 +21,22 @@ namespace MemeFolderN.Console
         
         static void Main(string[] args)
         {
+            IEnumerable<Folder> entities = null;
+            List<FolderDTO> entitiesDTO = null;
+            List<FolderDTO> result = new List<FolderDTO>();
             using (MemeFolderNDbContext context = memeFolderNDbContextFactory.CreateDbContext(null))
             {
-                Folder folder = context.Folders
-                    .Select(f => new Folder { Id = f.Id, Title = f.Title, Description = f.Description})
-                    .FirstOrDefault(f => f.Id == Guid.Parse("52347510-A42B-4C53-B331-61A9E38A861F"));
 
+                entities = Task.FromResult(context.Folders
+                   .Include(f => f.Memes)
+                   .ToList()).Result;
+                entitiesDTO = entities.Where(f=>f.ParentFolderId == null).Select(f => f.ConvertFolder()).ToList();
 
-                System.Console.ReadKey();
+                entitiesDTO.ForEach(f =>
+                {
+                    result.Add(f);
+                    result.AddRange(DataExtentions.SelectRecursive(f.Folders, innerF => innerF.Folders));
+                });
             }
 
            
@@ -38,11 +49,10 @@ namespace MemeFolderN.Console
 
     }
 
-    [Table("Folders")]
-    class IncompleteFolder
-    {
-        public Guid Id { get; set; }
-
-        public string Title { get; set; }
-    }
+  
 }
+
+
+//Folder folder = context.Folders
+//    .Select(f => new Folder { Id = f.Id, Title = f.Title, Description = f.Description})
+//    .FirstOrDefault(f => f.Id == Guid.Parse("52347510-A42B-4C53-B331-61A9E38A861F"));

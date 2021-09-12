@@ -1,16 +1,12 @@
-﻿using MemeFolderN.MFModelBase.Abstractions;
-using MemeFolderN.MFViewModelsBase.Abstractions;
-using MemeFolderN.MFViewModelsBase.BaseViewModels;
+﻿using MemeFolderN.MFViewModelsBase.Abstractions;
 using System;
 using System.Collections.ObjectModel;
 
 namespace MemeFolderN.MFViewModelsBase
 {
-    public abstract partial class MemeVMBase : BaseNavigationViewModel, IMemeVM, IMeme
+    public abstract partial class MemeVMBase : OnPropertyChangedClass, IMeme
     {
-        protected readonly IMFModel model;
-
-        public ObservableCollection<IMemeTag> Tags { get; } = new ObservableCollection<IMemeTag>();
+        public ObservableCollection<IMemeTag> MemeTags { get; } = new ObservableCollection<IMemeTag>();
 
         public Guid Id { get => _id; set => SetProperty(ref _id, value); }
 

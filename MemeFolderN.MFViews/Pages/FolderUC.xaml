@@ -49,7 +49,7 @@
                             <TextBlock Text="Мемчиков нема" Grid.Row="0"
                                        FontSize="50"
                                        Foreground="{DynamicResource StandartLightColor}"/>
-                            <TextBlock Text="Наполни меня (͡° ͜ʖ ͡°)"  Grid.Row="1"
+                            <TextBlock Text="Наполни меня (͡° ͜ʖ ͡°)" Grid.Row="1"
                                        FontSize="11"
                                        Foreground="{DynamicResource StandartLightColor}"
                                        HorizontalAlignment="Center"/>

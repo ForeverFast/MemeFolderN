@@ -12,6 +12,6 @@ namespace MemeFolderN.MFViewModelsBase.Abstractions
 
         string MiniImagePath { get; set; }
 
-        ObservableCollection<IMemeTag> Tags { get; }
+        ObservableCollection<IMemeTag> MemeTags { get; }
     }
 }

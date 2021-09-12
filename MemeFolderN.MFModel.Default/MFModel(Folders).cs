@@ -21,6 +21,12 @@ namespace MemeFolderN.MFModelBase.Default
             return foldersDTO.ToList();
         }
 
+        protected override List<FolderDTO> GetAllFolders()
+        {
+            IEnumerable<FolderDTO> foldersDTO = folderDataService.GetAllFolders().Result;
+            return foldersDTO.ToList();
+        }
+
         protected override void AddFolder(FolderDTO folderDTO)
         {
             FolderDTO parentFolder = folderDTO.ParentFolder;

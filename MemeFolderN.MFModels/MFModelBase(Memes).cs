@@ -26,6 +26,9 @@ namespace MemeFolderN.MFModelBase
         public Task<List<MemeDTO>> GetMemesByTitleAsync(string title) => Task.Factory.StartNew(() => GetMemesByTitle(title));
         protected abstract List<MemeDTO> GetMemesByTitle(string title);
 
+        public Task<List<MemeDTO>> GetAllMemesAsync() => Task.Factory.StartNew(() => GetAllMemes());
+        protected abstract List<MemeDTO> GetAllMemes();
+
         public Task AddMemeAsync(MemeDTO meme) => Task.Factory.StartNew(() => AddMeme(meme));
         protected abstract void AddMeme(MemeDTO meme);
 

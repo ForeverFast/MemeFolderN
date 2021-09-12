@@ -20,13 +20,13 @@ namespace MemeFolderN.MFViewModels.Default
                 if (IsMemeTagsLoaded)
                     return;
 
-                IEnumerable<MemeTagDTO> memeTags = await model.GetMemeTagsAsync();
+                IEnumerable<MemeTagDTO> memeTags = await model.GetAllMemeTagsAsync();
                 lock (MemeTags)
                 {
                     foreach (MemeTagDTO memeTag in memeTags)
                         MemeTags.Add(new MemeTagVM(memeTag));
 
-                    IsBusy = !(IsLoaded = (IsMemeTagsLoaded = true) && IsFoldersLoaded);
+                    IsBusy = !(IsLoaded = (IsMemeTagsLoaded = true) && IsFoldersLoaded && IsMemesLoaded);
                 }
             }
             catch (Exception ex)

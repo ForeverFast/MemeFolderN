@@ -48,7 +48,7 @@ namespace MemeFolderN.MFViewModels.Default
             foreach (MemeTagDTO memeTag in memeTags.ToArray())
             {
                 /// Если в имеющейся коллекции нет Тега с таким ID
-                if (RootFolders.All(r => r.Id != memeTag.Id))
+                if (Folders.All(r => r.Id != memeTag.Id))
                 {
                     /// Создание нового Тега для добавления в коллекцию
                     MemeTagVM newMemeTagVM = new MemeTagVM(memeTag);
@@ -93,7 +93,7 @@ namespace MemeFolderN.MFViewModels.Default
             foreach (MemeTagDTO memeTag in memeTags.ToArray())
             {
                 /// Если в имеющейся коллекции есть Тег с таким ID
-                MemeTagVM mtvm = (MemeTagVM)RootFolders.FirstOrDefault(r => r.Id == memeTag.Id);
+                MemeTagVM mtvm = (MemeTagVM)Folders.FirstOrDefault(r => r.Id == memeTag.Id);
                 if (mtvm != null)
                 {
                     /// Создание новой пары Данные и Теги для изменения в коллекции

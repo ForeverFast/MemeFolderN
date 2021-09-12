@@ -25,7 +25,8 @@ namespace MemeFolderN.MFModelBase
 
         public Task<List<FolderDTO>> GetRootFoldersAsync() => Task.Factory.StartNew(() => GetRootFolders());
         protected abstract List<FolderDTO> GetRootFolders();
-
+        public Task<List<FolderDTO>> GetAllFoldersAsync() => Task.Factory.StartNew(() => GetAllFolders());
+        protected abstract List<FolderDTO> GetAllFolders();
         public Task AddFolderAsync(FolderDTO folderDTO) => Task.Factory.StartNew(() => AddFolder(folderDTO));
         protected abstract void AddFolder(FolderDTO folderDTO);
 

@@ -1,14 +1,10 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.MFViewModelsBase.Abstractions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModelsBase
 {
-    public class MemeTagVMBase : OnPropertyChangedClass, IMemeTagVM
+    public class MemeTagVMBase : OnPropertyChangedClass, IMemeTag
     {
         public Guid Id { get => _id; set => SetProperty(ref _id, value); }
         public string Title { get => _title; set => SetProperty(ref _title, value); }

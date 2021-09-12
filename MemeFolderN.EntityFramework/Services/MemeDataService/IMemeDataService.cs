@@ -10,6 +10,7 @@ namespace MemeFolderN.EntityFramework.Services
         Task<IEnumerable<MemeDTO>> GetMemesByFolderId(Guid guid);
 
         Task<IEnumerable<MemeDTO>> GetMemesByTitle(string title);
+        Task<IEnumerable<MemeDTO>> GetAllMemes();
 
         Task<IEnumerable<MemeDTO>> AddRangeMemes(List<MemeDTO> memes);
 

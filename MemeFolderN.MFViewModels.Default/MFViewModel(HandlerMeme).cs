@@ -9,23 +9,21 @@ using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModels.Default
 {
-    public partial class FolderVM : FolderVMBase
+    public partial class MFViewModel : MFViewModelBase
     {
         private void Model_ChangedMemesEvent(object sender, ActionType action, List<MemeDTO> memesDTO)
         {
-            IEnumerable<MemeDTO> sortedMemes = memesDTO.Where(m => m.ParentFolderId != this.ParentFolderId);
-
-            if (sortedMemes.Any())
+            if (memesDTO.Any())
                 switch (action)
                 {
                     case ActionType.Add:
-                        Task.Factory.StartNew(MemesAdd, sortedMemes);
+                        Task.Factory.StartNew(MemesAdd, memesDTO);
                         break;
                     case ActionType.Changed:
-                        Task.Factory.StartNew(MemesChanged, sortedMemes);
+                        Task.Factory.StartNew(MemesChanged, memesDTO);
                         break;
                     case ActionType.Remove:
-                        Task.Factory.StartNew(MemesRemove, sortedMemes);
+                        Task.Factory.StartNew(MemesRemove, memesDTO);
                         break;
                     default:
                         return;
@@ -50,8 +48,8 @@ namespace MemeFolderN.MFViewModels.Default
                 if (Memes.All(r => r.Id != meme.Id))
                 {
                     /// Создание нового Мема для добавления в коллекцию
-                    MemeVM newMemeVM = new MemeVM(vmDIContainer, meme);
-                    
+                    MemeVM newMemeVM = new MemeVM(meme);
+
                     list.Add(newMemeVM);
                     /// Удаление Мема созданного из полученной коллекции
                     memes.Remove(meme);
@@ -74,7 +72,7 @@ namespace MemeFolderN.MFViewModels.Default
                 foreach (MemeVM meme in memes)
                     Memes.Add(meme);
                 IsBusy = false;
-            }  
+            }
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using MemeFolderN.MFViewModelsBase;
 using MemeFolderN.MFViewModelsBase.Abstractions;
+using MemeFolderN.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,21 @@ namespace MemeFolderN.MFViewModels.Default
             {
                 base.NavigationByFolderMethod(folder);
             
-                FolderVM folderVM = (FolderVM)this.RootFolders.FirstOrDefault(rf => rf.Id == folder.Id);
+                FolderVM folderVM = (FolderVM)this.Folders.FirstOrDefault(rf => rf.Id == folder.Id);
 
-                navCommandsClass.NavigationByFolderMethod(folderVM);
+                string navKey = folderVM.Id.ToString();
+                if (navigationService.CanNavigate(navKey))
+                {
+                    navigationService.Navigate(navKey, NavigationType.Default);
+                }
+                else
+                {
+                    Memes.Where(m => m.ParentFolderId == folder.Id)
+                        .ToList()
+                        .ForEach(m => folderVM.Memes.Add(m));
+                    
+                    navigationService.NavigateByViewTypeKey(navKey, "folderPage", folderVM, null);
+                }
             }
             catch(Exception ex)
             {
