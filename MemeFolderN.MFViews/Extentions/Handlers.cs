@@ -11,7 +11,7 @@ namespace MemeFolderN.MFViews.Extentions
             TagCollectionViewSource collection = (TagCollectionViewSource)s;
             if (!(collection.Tag is Guid id))
             {
-                if (!(collection.Tag is string str && Guid.TryParse(str, out id)))
+                if (!(collection.Tag is string str && (Guid.TryParse(str, out id) || (str == "null" && Guid.TryParse("00000000-0000-0000-0000-000000000000", out id)))))
                 {
                     return;
                 }
@@ -19,7 +19,10 @@ namespace MemeFolderN.MFViews.Extentions
 
             if (e.Item is FolderVM node)
             {
-                e.Accepted = node.ParentFolderId == id;
+                if (id == Guid.Empty)
+                    e.Accepted = node.ParentFolderId == null;
+                else
+                    e.Accepted = node.ParentFolderId == id;
             }
         };
     }

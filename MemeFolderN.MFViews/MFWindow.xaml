@@ -54,6 +54,14 @@
         </Style>
     </Window.Style>
 
+    <Window.Resources>
+        <behaviours:TagCollectionViewSource
+                                x:Key="root"
+                                Source="{Binding Folders}"
+                                Tag="null"
+                                Filter="{x:Static behaviours:Handlers.OnChildrenNodeFilter}"/>
+    </Window.Resources>
+    
     <!--<ib:Interaction.Triggers>
         <ib:EventTrigger EventName="DataContextLoaded">
             <ib:InvokeCommandAction Command="{Binding MemeTagLoadCommand}" />
@@ -202,7 +210,7 @@
 
             <Grid Background="{StaticResource GrayLVL3}">
 
-                <TreeView ItemsSource="{Binding Folders, UpdateSourceTrigger=PropertyChanged}"
+                <TreeView ItemsSource="{Binding Source={StaticResource root}}"
                           Foreground="{DynamicResource StandartLightColor2}"
                           ItemContainerStyle="{DynamicResource TreeViewItemStyle}"
                           Margin="10">
@@ -218,11 +226,12 @@
                                 <Border.InputBindings>
                                     <MouseBinding Gesture="LeftDoubleClick"
                                                   CommandParameter="{Binding}"
-                                                  Command="{Binding NavigationByFolderCommand}"/>
+                                                  Command="{Binding Value.NavigationByFolderCommand, Mode=OneWay,
+                                            Source={StaticResource treeView.DataContext}}"/>
                                 </Border.InputBindings>
 
                                 <Border.ContextMenu>
-                                    <ContextMenu Tag="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.Tag}">
+                                    <ContextMenu>
                                         <MenuItem Header="Открыть"
                                                   CommandParameter="{Binding}"
                                                   Command="{Binding Value.NavigationByFolderCommand, Mode=OneWay,

@@ -54,13 +54,21 @@
                 <MultiBinding Converter="{StaticResource BTS}">
                     <Binding RelativeSource="{RelativeSource Self}"/>
                     <Binding Path="(ext:Handlers.OnChildrenNodeFilter)"/>
-                    <Binding Path=""/> <!-- Как привязаться к коллекции? -->
+                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=TreeView}"
+                             Path="DataContext.Folders"/> 
                     <Binding Path="Id"/>
                 </MultiBinding>
             </Setter.Value>
         </Setter>
+        <!--<Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>-->
+        <Setter Property="ItemsSource" Value="{Binding Tag.View, RelativeSource={RelativeSource Self}}"/>
 
-            
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeViewItem}">

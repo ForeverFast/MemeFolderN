@@ -56,6 +56,7 @@ namespace MemeFolderN.EntityFramework.Services
             {
                 IEnumerable<Folder> entities = await Task.FromResult(context.Folders
                     .Include(f => f.Memes)
+                    .Include(f => f.ParentFolder)
                     .ToList());
                 return entities.Where(f => f.ParentFolderId == null).Select(f => f.ConvertFolder());
             }

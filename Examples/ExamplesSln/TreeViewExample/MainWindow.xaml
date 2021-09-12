@@ -12,7 +12,7 @@
             Source="{x:Static local:Node.Nodes}"
             Tag="0"
             Filter="{x:Static local:Handlers.OnChildrenNodeFilter}"/>
-        <!--<Style TargetType="TreeViewItem">
+        <Style TargetType="TreeViewItem">
             <Setter Property="Tag">
                 <Setter.Value>
                     <MultiBinding Converter="{local:BindingTagSourceCollectionConverter}">
@@ -31,11 +31,11 @@
                 </Setter.Value>
             </Setter>
             <Setter Property="ItemsSource" Value="{Binding Tag.View, RelativeSource={RelativeSource Self}}"/>
-        </Style>-->
+        </Style>
     </FrameworkElement.Resources>
     <Grid>
         <TreeView ItemsSource="{Binding Source={StaticResource root}}">
-            <TreeView.ItemTemplate>
+            <!--<TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type local:Node}" ItemsSource="{Binding Tag, ElementName=textBlock}">
                     <TextBlock x:Name="textBlock" Text="{Binding Title}">
                         <TextBlock.Tag>
@@ -46,7 +46,7 @@
                         </TextBlock.Tag>
                     </TextBlock>
                 </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
+            </TreeView.ItemTemplate>-->
         </TreeView>
     </Grid>
 </Window>

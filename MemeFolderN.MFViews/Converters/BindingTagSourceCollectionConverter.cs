@@ -1,4 +1,5 @@
-﻿using MemeFolderN.MFViews.Extentions;
+﻿using MemeFolderN.MFViewModels.Default;
+using MemeFolderN.MFViews.Extentions;
 using System;
 using System.Globalization;
 using System.Windows;
@@ -17,7 +18,7 @@ namespace MemeFolderN.MFViews.Converters
                 {
                     coll = new TagCollectionViewSource();
                     //coll.IsLiveFilteringRequested = true;
-                    //coll.LiveFilteringProperties.Add(nameof(Node.Id));
+                    //coll.LiveFilteringProperties.Add(nameof(FolderVM.Id));
                     element.Resources[typeof(BindingTagSourceCollectionConverter)] = coll;
                     coll.Filter += (FilterEventHandler)values[1];
                 }

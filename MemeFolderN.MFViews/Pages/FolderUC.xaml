@@ -87,8 +87,8 @@
             </ListView>
 
 
-            <ssc:LoadingSpinner IsLoading="{Binding IsBusy, UpdateSourceTrigger=PropertyChanged}"
-                                Color="AliceBlue"/>
+            <!--<ssc:LoadingSpinner IsLoading="{Binding IsBusy, UpdateSourceTrigger=PropertyChanged}"
+                                Color="AliceBlue"/>-->
         </Grid>
 
     </ScrollViewer>
