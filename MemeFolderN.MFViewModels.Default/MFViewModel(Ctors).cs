@@ -24,7 +24,7 @@ namespace MemeFolderN.MFViewModels.Default
         public MFViewModel(VmDIContainer vmDIContainer) : base(vmDIContainer.navigationService, vmDIContainer.model)
         {
             this.vmDIContainer = vmDIContainer;
-
+            
             this.dispatcher = vmDIContainer.dispatcher;
             this.dialogService = vmDIContainer.dialogService;
             this.folderMethodCommandsClass = vmDIContainer.folderMethodCommandsClass;
@@ -33,6 +33,7 @@ namespace MemeFolderN.MFViewModels.Default
             this.navCommandsClass = vmDIContainer.navCommandsClass;
 
             model.ChangedFoldersEvent += Model_ChangedFoldersEvent;
+            model.ChangedMemesEvent += Model_ChangedMemesEvent;
             model.ChangedMemeTagsEvent += Model_ChangedMemeTagsEvent;
         }
 

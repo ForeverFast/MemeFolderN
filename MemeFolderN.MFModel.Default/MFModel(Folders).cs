@@ -45,8 +45,8 @@ namespace MemeFolderN.MFModelBase.Default
                 newFolderPath = @$"{parentFolderPath}\{folderDTO.Title}";
                 if (Directory.Exists(newFolderPath))
                     newFolderPath = GetFolderAnotherName(parentFolderPath, folderDTO.Title);
-                Directory.CreateDirectory(newFolderPath);
             }
+            Directory.CreateDirectory(newFolderPath);
 
             FolderDTO proccesedFolderDTO = folderDTO with
             {
@@ -90,12 +90,9 @@ namespace MemeFolderN.MFModelBase.Default
                 newFolderPath = @$"{rootPath}\{tempTitle}";
                 if (!Directory.Exists(newFolderPath))
                 {
-                    Directory.CreateDirectory(newFolderPath);
-                    break;
+                    return newFolderPath;
                 }
             }
-
-            return newFolderPath;
         }
     }
 }

@@ -3,14 +3,56 @@
                     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:ib="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:cn="clr-namespace:MemeFolderN.MFViews.Converters"
-                    xmlns:ext="clr-namespace:MemeFolderN.MFViews.Extentions">
+                    xmlns:ext="clr-namespace:MemeFolderN.MFViews.Extentions"
+                    xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Default;assembly=MemeFolderN.MFViewModels.Default"
+                    xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
+        >
 
     <cn:BindingTagSourceCollectionConverter x:Key="BTS"/>
+
+    <HierarchicalDataTemplate DataType="{x:Type vm:FolderVM}"
+                                          ItemsSource="{Binding Folders, UpdateSourceTrigger=PropertyChanged}">
+
+        <Border Height="25">
+
+            <Border.InputBindings>
+                <MouseBinding Gesture="LeftDoubleClick"
+                                          CommandParameter="{Binding}"
+                                          Command="{x:Static routedCommands:FolderRoutedCommands.NavigationByFolderRoutedCommand}"/>
+            </Border.InputBindings>
+
+            <Border.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Открыть"
+                                CommandParameter="{Binding}"
+                                Command="{x:Static routedCommands:FolderRoutedCommands.NavigationByFolderRoutedCommand}"/>
+                    <MenuItem Header="Создать папку"
+                                CommandParameter="{Binding}"
+                                Command="{x:Static routedCommands:FolderRoutedCommands.FolderAddNonParametersRoutedCommand}"/>
+                    <MenuItem Header="Создать папку с параметрами"
+                                CommandParameter="{Binding}"
+                                Command="{x:Static routedCommands:FolderRoutedCommands.FolderAddRoutedCommand}"/>
+                    <MenuItem Header="Изменить"
+                                CommandParameter="{Binding}"
+                                Command="{x:Static routedCommands:FolderRoutedCommands.FolderChangeRoutedCommand}"/>
+                    <MenuItem Header="Удалить" 
+                                CommandParameter="{Binding}"
+                                Command="{x:Static routedCommands:FolderRoutedCommands.FolderDeleteRoutedCommand}"/>
+                </ContextMenu>
+            </Border.ContextMenu>
+
+
+            <TextBlock Text="{Binding Title}"
+                                    FontSize="14"
+                                    VerticalAlignment="Center"/>
+        </Border>
+
+    </HierarchicalDataTemplate>
 
     <Style x:Key="ExpandCollapseToggleStyle"
           TargetType="{x:Type ToggleButton}">
         <Setter Property="Focusable" Value="False" />
-        
+
         <Setter Property="Width" Value="17" />
         <Setter Property="Height" Value="17" />
         <Setter Property="Template">
@@ -55,76 +97,76 @@
                     <Binding RelativeSource="{RelativeSource Self}"/>
                     <Binding Path="(ext:Handlers.OnChildrenNodeFilter)"/>
                     <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=TreeView}"
-                             Path="DataContext.Folders"/> 
+                             Path="DataContext.Folders"/>
                     <Binding Path="Id"/>
                 </MultiBinding>
             </Setter.Value>
         </Setter>
+
+        <Setter Property="ItemsSource" Value="{Binding Tag.View, RelativeSource={RelativeSource Self}}"/>
+
         <!--<Setter Property="ItemTemplate">
             <Setter.Value>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Title}"/>
-                </DataTemplate>
+                
             </Setter.Value>
         </Setter>-->
-        <Setter Property="ItemsSource" Value="{Binding Tag.View, RelativeSource={RelativeSource Self}}"/>
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeViewItem}">
 
-                        <Grid Background="{DynamicResource GrayLVL4WithLowOpacity}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition MinWidth="19" Width="Auto" />
-                                <ColumnDefinition MinWidth="150" Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="SelectionStates">
-                                    <VisualState x:Name="Selected">
-                                        <Storyboard>
-                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Bd"
+                    <Grid Background="{DynamicResource GrayLVL4WithLowOpacity}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="19" Width="Auto" />
+                            <ColumnDefinition MinWidth="150" Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="Bd"
                                                 Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
-                                                <EasingColorKeyFrame KeyTime="0"
+                                            <EasingColorKeyFrame KeyTime="0"
                                          Value="{DynamicResource GrayLVL2_Color}" />
-                                            </ColorAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Unselected" />
-                                    <VisualState x:Name="SelectedInactive">
-                                        <Storyboard>
-                                            <ColorAnimationUsingKeyFrames Storyboard.TargetName="Bd"
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unselected" />
+                                <VisualState x:Name="SelectedInactive">
+                                    <Storyboard>
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="Bd"
                                                 Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
-                                                <EasingColorKeyFrame KeyTime="0"
+                                            <EasingColorKeyFrame KeyTime="0"
                                          Value="{DynamicResource GrayLVL1_Color}" />
-                                            </ColorAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="ExpansionStates">
-                                    <VisualState x:Name="Expanded">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ExpansionStates">
+                                <VisualState x:Name="Expanded">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
                                                  Storyboard.TargetName="ItemsHost">
-                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                            <DiscreteObjectKeyFrame KeyTime="0"
                                             Value="{x:Static Visibility.Visible}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Collapsed" />
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <ToggleButton x:Name="Expander"
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Collapsed" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ToggleButton x:Name="Expander"
                                       Foreground="{DynamicResource StandartLightColor2}"
                                       Style="{DynamicResource ExpandCollapseToggleStyle}"
                                       ClickMode="Press"
                                       IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"/>
 
-                            <Border x:Name="Bd"
+                        <Border x:Name="Bd"
                                 Grid.Column="1"
                                
                                 Width="auto"
@@ -133,34 +175,34 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Padding="{TemplateBinding Padding}">
 
-                                <ib:Interaction.Triggers>
-                                    <ib:EventTrigger EventName="MouseLeftButtonDown">
-                                        <ib:ChangePropertyAction TargetName="Expander" PropertyName="IsChecked" Value="True"/>
-                                        <ib:InvokeCommandAction Command="{Binding DataContext.NavigationByFolderCommand,
+                            <ib:Interaction.Triggers>
+                                <ib:EventTrigger EventName="MouseLeftButtonDown">
+                                    <ib:ChangePropertyAction TargetName="Expander" PropertyName="IsChecked" Value="True"/>
+                                    <ib:InvokeCommandAction Command="{Binding DataContext.NavigationByFolderCommand,
                                         RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}"
                                                             CommandParameter="{Binding}"/>
-                                    </ib:EventTrigger>
-                                </ib:Interaction.Triggers>
+                                </ib:EventTrigger>
+                            </ib:Interaction.Triggers>
 
-                                <ContentPresenter x:Name="PART_Header"
+                            <ContentPresenter x:Name="PART_Header"
                                               ContentSource="Header"
                                               HorizontalAlignment="Stretch"/>
 
-                            </Border>
+                        </Border>
 
-                            <ItemsPresenter x:Name="ItemsHost"
+                        <ItemsPresenter x:Name="ItemsHost"
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Grid.ColumnSpan="2"
                                         Visibility="Collapsed" />
-                        </Grid>
+                    </Grid>
 
                     <ControlTemplate.Triggers>
 
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{DynamicResource GrayLVL0}"/>
                         </Trigger>
-                        
+
                         <Trigger Property="HasItems" Value="False">
                             <Setter TargetName="Expander" Property="Foreground" Value="{DynamicResource GrayLVL0}" />
                         </Trigger>
@@ -174,7 +216,7 @@
                             <Setter TargetName="Expander" Property="IsChecked" Value="False" />
                             <Setter TargetName="Expander" Property="IsEnabled" Value="False" />
                         </MultiTrigger>-->
-                        
+
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="HasHeader" Value="False" />
@@ -182,7 +224,7 @@
                             </MultiTrigger.Conditions>
                             <Setter TargetName="PART_Header" Property="MinWidth" Value="75" />
                         </MultiTrigger>
-                        
+
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="HasHeader" Value="False" />
@@ -190,12 +232,41 @@
                             </MultiTrigger.Conditions>
                             <Setter TargetName="PART_Header" Property="MinHeight" Value="19" />
                         </MultiTrigger>
-                      
+
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
+    <Style x:Key="TreeViewFolders" TargetType="{x:Type TreeView}">
+
+        <Setter Property="ItemContainerStyle" Value="{StaticResource TreeViewItemStyle}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ItemsControl">
+
+                    <ScrollViewer Style="{DynamicResource ContentSV}"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu>
+                    <MenuItem Header="Создать папку"
+                              Command="{x:Static routedCommands:FolderRoutedCommands.FolderAddNonParametersRoutedCommand}"/>
+                    <MenuItem Header="Создать папку с параметрами"
+                              Command="{x:Static routedCommands:FolderRoutedCommands.FolderAddRoutedCommand}"/>
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
 
 </ResourceDictionary>

@@ -66,6 +66,9 @@ namespace MemeFolderN.MFViewModelsBase
         protected override void PropertyNewValue<T>(ref T fieldProperty, T newValue, string propertyName)
         {
             base.PropertyNewValue(ref fieldProperty, newValue, propertyName);
+            if (SaveDataMeme == null)
+                return;
+
             if (propertyName == nameof(Title))
                 SaveDataMeme = SaveDataMeme with { Title = newValue as string };
           

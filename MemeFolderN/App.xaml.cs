@@ -47,7 +47,6 @@ namespace MemeFolderN
 
             //Configuration = builder.Build();
 
-
             try
             {
                 var serviceCollection = new ServiceCollection();
@@ -81,8 +80,6 @@ namespace MemeFolderN
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(typeof(ShowDialogDelegete), (ShowDialogDelegete)((vm, id) => MaterialDesignThemes.Wpf.DialogHost.Show(vm, id)));
-
             services.AddSingleton<IMemeDataService, MemeDataService>();
             services.AddSingleton<IFolderDataService, FolderDataService>();
             services.AddSingleton<IMemeTagDataService, MemeTagDataService>();
@@ -92,7 +89,6 @@ namespace MemeFolderN
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IUserSettingsService, UserSettingsService>();
             services.AddSingleton<INavigationService, NavigationService>();
-
 
             services.AddSingleton<IFolderMethodCommandsClass, FolderMethodCommandsClass>();
             services.AddSingleton<IMemeMethodCommandsClass, MemeMethodCommandsClass>();
@@ -109,10 +105,8 @@ namespace MemeFolderN
             services.AddSingleton(typeof(MFViewModel));
             services.AddSingleton(typeof(MFWindow));
 
-
-
+            services.AddSingleton(typeof(ShowDialogDelegete), (ShowDialogDelegete)((vm, id) => MaterialDesignThemes.Wpf.DialogHost.Show(vm, id)));
             services.AddSingleton(typeof(ContentControl), (s) => s.GetRequiredService<MFWindow>().FrameContentControl);
-
         }
     }
 }

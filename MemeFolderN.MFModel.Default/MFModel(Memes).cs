@@ -35,9 +35,12 @@ namespace MemeFolderN.MFModelBase.Default
 
             // Отделение тегов от исходной сущности meme
             List<MemeTagDTO> memeTags = new List<MemeTagDTO>();
-            foreach (MemeTagDTO mtn in memeDTO.Tags.ToArray())
-                memeTags.Add(mtn);
-                
+            if (memeDTO.Tags != null)
+            {
+                foreach (MemeTagDTO mtn in memeDTO.Tags.ToArray())
+                    memeTags.Add(mtn);
+            }
+        
             MemeDTO proccesedMemeDTO = memeDTO with { Tags = null };
 
             MemeDTO createdMeme = memeDataService.Add(proccesedMemeDTO).Result;
@@ -145,7 +148,13 @@ namespace MemeFolderN.MFModelBase.Default
         /// <returns></returns>
         protected MemeDTO MemeAddInit(MemeDTO memeDTO)
         {
-            FolderDTO folder = memeDTO.ParentFolder;
+            FolderDTO folder = memeDTO?.ParentFolder;
+            if (folder == null)
+            {
+                folder = folderDataService.GetById((Guid)memeDTO.ParentFolderId).Result;
+                if (folder == null)
+                    throw new MFModelException($"Не удалось найти папку для сохранения мема.", MFModelExceptionEnum.NotSaved);
+            }
 
             string newMemePath = @$"{folder.FolderPath}\{memeDTO.Title}{Path.GetExtension(memeDTO.ImagePath)}";
             if (File.Exists(newMemePath))
@@ -185,12 +194,9 @@ namespace MemeFolderN.MFModelBase.Default
                 newMemePath = @$"{rootPath}\{title} ({num++}){Path.GetExtension(imagePath)}";
                 if (!File.Exists(newMemePath))
                 {
-                    File.Copy(imagePath, newMemePath);
-                    break;
+                    return newMemePath;
                 }
             }
-
-            return newMemePath;
         }
 
         protected Image ResizeOrigImg(Image image, int nWidth, int nHeight)

@@ -9,6 +9,7 @@
              xmlns:ib="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
              xmlns:ssc="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
+             xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
              xmlns:dd="urn:gong-wpf-dragdrop"
              xmlns:cn="clr-namespace:MemeFolderN.MFViews.Converters"
              xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Default;assembly=MemeFolderN.MFViewModels.Default"
@@ -44,12 +45,17 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="60"/>
                                 <RowDefinition/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Text="Мемчиков нема" Grid.Row="0"
                                        FontSize="50"
                                        Foreground="{DynamicResource StandartLightColor}"/>
                             <TextBlock Text="Наполни меня (͡° ͜ʖ ͡°)" Grid.Row="1"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource StandartLightColor}"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding Title}" Grid.Row="2"
                                        FontSize="11"
                                        Foreground="{DynamicResource StandartLightColor}"
                                        HorizontalAlignment="Center"/>
@@ -79,9 +85,13 @@
 
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Создать мемчик" Command="{Binding MemeAddCommand}"/>
-                        <MenuItem Header="Создать мемчик с параметрами" Command="{Binding MemeAddNonParametersCommand}"/>
-                        <MenuItem Header="Test" Command="{Binding TestCommand}" />
+                        <MenuItem Header="Создать мемчик"
+                                  CommandParameter="{Binding}"
+                                  Command="{x:Static routedCommands:MemeRoutedCommands.MemeAddNonParametersRoutedCommand}"/>
+                        <MenuItem Header="Создать мемчик с параметрами"
+                                  CommandParameter="{Binding}"
+                                  Command="{x:Static routedCommands:MemeRoutedCommands.MemeAddRoutedCommand}"/>
+                        <!--<MenuItem Header="Test" Command="{Binding TestCommand}" />-->
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>

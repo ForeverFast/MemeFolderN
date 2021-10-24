@@ -38,6 +38,24 @@ namespace MemeFolderN.MFViewModels.Default
             }
         }
 
+        protected override void MemeAddNonParametersMethod(FolderVMBase folderVMBase)
+        {
+            
+            try
+            {
+                base.MemeAddNonParametersMethod(folderVMBase);
+                memeMethodCommandsClass.MemeAddNonParametersMethodAsync(folderVMBase.Id);
+            }
+            catch (Exception ex)
+            {
+                OnException(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
         protected override void MemeAddMethod(FolderVMBase folderVMBase)
         {
             try

@@ -29,12 +29,5 @@ namespace MemeFolderN.MFViews
             ((MFViewModel)DataContext).MemeLoadCommand.Execute(null);
             ((MFViewModel)DataContext).MemeTagLoadCommand.Execute(null);
         }
-
-        private void empListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            ScrollViewer sv = (ScrollViewer)sender;
-            double offset = sv.ContentHorizontalOffset + (e.Delta / 120);
-            sv.ScrollToHorizontalOffset(offset);
-        }
     }
 }

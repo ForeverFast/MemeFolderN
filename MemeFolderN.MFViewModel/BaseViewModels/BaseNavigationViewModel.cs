@@ -28,7 +28,7 @@ namespace MemeFolderN.MFViewModelsBase.BaseViewModels
         }
 
         public RelayCommand NavigationForwardCommand => _navigationForwardCommand ?? (_navigationForwardCommand =
-            new RelayCommandAction(NavigationForwardMethod, () => navigationService.CanGoBack()));
+            new RelayCommandAction(NavigationForwardMethod, () => navigationService.CanGoForward()));
 
         protected virtual void NavigationForwardMethod()
         {

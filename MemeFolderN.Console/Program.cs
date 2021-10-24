@@ -39,9 +39,6 @@ namespace MemeFolderN.Console
                 });
             }
 
-           
-
-
             System.Console.ReadKey();
         }
 

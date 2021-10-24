@@ -3,6 +3,7 @@ using MemeFolderN.MFModelBase.Abstractions;
 using MemeFolderN.MFViewModels.Default.Services;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
@@ -17,6 +18,23 @@ namespace MemeFolderN.MFViewModels.Default.MethodCommands
         {
             this.dialogService = dialogService;
             this.model = model;
+        }
+
+        public virtual async void MemeAddNonParametersMethodAsync(Guid? parentFolderId)
+        {
+            string path = dialogService.FileBrowserDialog();
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            MemeDTO notSavedMemeDTO = new MemeDTO
+            {
+                ParentFolderId = parentFolderId,
+                Title = Path.GetFileNameWithoutExtension(path),
+                ImagePath = path
+            };
+
+            if (notSavedMemeDTO != null)
+                await model.AddMemeAsync(notSavedMemeDTO);
         }
 
         public virtual async void MemeAddMethodAsync(Guid? parentFolderId)

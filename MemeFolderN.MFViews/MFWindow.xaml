@@ -12,6 +12,8 @@
         xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Default;assembly=MemeFolderN.MFViewModels.Default"
         xmlns:behaviours="clr-namespace:MemeFolderN.MFViews.Extentions"
         xmlns:proxy="clr-namespace:Proxy"
+        xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
+        xmlns:propa="clr-namespace:MemeFolderN.MFViewModelsBase.Commands;assembly=MemeFolderN.MFViewModelsBase"
         Title="MFWindow"
         x:Name="MFWindowElement"
         Height="800" Width="1500"
@@ -70,6 +72,42 @@
     </ib:Interaction.Triggers>-->
 
     <Grid Background="{DynamicResource DimColor}">
+
+        <propa:RoutedCommandBindings.RoutedCommandBindings>
+            <!-- Folder -->
+            <propa:RoutedCommandBinding Command="{Binding NavigationByFolderCommand}"
+                                        RoutedCommand="{x:Static routedCommands:FolderRoutedCommands.NavigationByFolderRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding FolderAddNonParametersCommand}"
+                                        RoutedCommand="{x:Static routedCommands:FolderRoutedCommands.FolderAddNonParametersRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding FolderAddCommand}"
+                                        RoutedCommand="{x:Static routedCommands:FolderRoutedCommands.FolderAddRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding FolderChangeCommand}"
+                                        RoutedCommand="{x:Static routedCommands:FolderRoutedCommands.FolderChangeRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding FolderDeleteCommand}"
+                                        RoutedCommand="{x:Static routedCommands:FolderRoutedCommands.FolderDeleteRoutedCommand }"/>
+            <!-- Meme -->
+            <propa:RoutedCommandBinding Command="{Binding MemeAddNonParametersCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeAddNonParametersRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding MemeAddCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeAddRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding MemeChangeCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeChangeRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding MemeDeleteCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeDeleteRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding MemeOpenCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeOpenRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding MemeCopyCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeCopyRoutedCommand }"/>
+            <!-- MemeTags -->
+            <propa:RoutedCommandBinding Command="{Binding NavigationByMemeTagCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeTagRoutedCommands.NavigationByMemeTagRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding MemeTagAddCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeTagRoutedCommands.MemeTagAddRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding MemeTagChangeCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeTagRoutedCommands.MemeTagChangeRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding MemeTagDeleteCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeTagRoutedCommands.MemeTagDeleteRoutedCommand }"/>
+        </propa:RoutedCommandBindings.RoutedCommandBindings>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -171,9 +209,14 @@
 
 
                 </Grid>
-
+                
                 <Grid Grid.Column="3" Background="{x:Null}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Button x:Name="Debug"
+                            WindowChrome.IsHitTestVisibleInChrome="True"
+                            Command="{Binding ShowExecutableMethodCommand}"
+                            Background="{StaticResource GrayLVL4}"
+                            Style="{StaticResource SettingsButton}"/>
                         <Button x:Name="SettingsButton"
                             WindowChrome.IsHitTestVisibleInChrome="True"      
                             
@@ -212,79 +255,8 @@
 
                 <TreeView ItemsSource="{Binding Source={StaticResource root}}"
                           Foreground="{DynamicResource StandartLightColor2}"
-                          ItemContainerStyle="{DynamicResource TreeViewItemStyle}"
-                          Margin="10">
-
-                    <TreeView.Resources>
-                        <proxy:ProxyValue x:Key="treeView.DataContext"/>
-
-                        <HierarchicalDataTemplate DataType="{x:Type vm:FolderVM}"
-                                                  ItemsSource="{Binding Folders, UpdateSourceTrigger=PropertyChanged}">
-
-                            <Border Height="25">
-                                
-                                <Border.InputBindings>
-                                    <MouseBinding Gesture="LeftDoubleClick"
-                                                  CommandParameter="{Binding}"
-                                                  Command="{Binding Value.NavigationByFolderCommand, Mode=OneWay,
-                                            Source={StaticResource treeView.DataContext}}"/>
-                                </Border.InputBindings>
-
-                                <Border.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="Открыть"
-                                                  CommandParameter="{Binding}"
-                                                  Command="{Binding Value.NavigationByFolderCommand, Mode=OneWay,
-                                            Source={StaticResource treeView.DataContext}}"/>
-                                        <MenuItem Header="Создать папку"
-                                                  CommandParameter="{Binding}"
-                                                  Command="{Binding Value.FolderAddNonParametersCommand, Mode=OneWay,
-                                            Source={StaticResource treeView.DataContext}}"/>
-                                        <MenuItem Header="Создать папку с параметрами"
-                                                  CommandParameter="{Binding}"
-                                                  Command="{Binding Value.FolderAddCommand, Mode=OneWay,
-                                            Source={StaticResource treeView.DataContext}}"/>
-                                        <MenuItem Header="Изменить"
-                                                  CommandParameter="{Binding}"
-                                                  Command="{Binding Value.FolderChangeCommand, Mode=OneWay,
-                                            Source={StaticResource treeView.DataContext}}"/>
-                                        <MenuItem Header="Удалить" 
-                                                  CommandParameter="{Binding}"
-                                                  Command="{Binding Value.FolderDeleteCommand, Mode=OneWay,
-                                            Source={StaticResource treeView.DataContext}}"/>
-                                    </ContextMenu>
-                                </Border.ContextMenu>
-
-                                <TextBlock Text="{Binding Title}"
-                                           FontSize="14"
-                                           VerticalAlignment="Center"/>
-                            </Border>
-
-
-                        </HierarchicalDataTemplate>
-
-                    </TreeView.Resources>
-
-                    <TreeView.Template>
-                        <ControlTemplate TargetType="ItemsControl">
-
-                            <ScrollViewer Style="{DynamicResource ContentSV}"
-                                          ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                <ItemsPresenter />
-                            </ScrollViewer>
-
-                        </ControlTemplate>
-                    </TreeView.Template>
-
-                    <TreeView.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Создать папку" Command="{Binding FolderAddNonParametersCommand}"/>
-                            <MenuItem Header="Создать папку с параметрами" Command="{Binding FolderAddCommand}"/>
-                        </ContextMenu>
-                    </TreeView.ContextMenu>
-
-                </TreeView>
-
+                          Style="{StaticResource TreeViewFolders}"
+                          Margin="10"/>
             </Grid>
 
         </Border>
@@ -314,57 +286,14 @@
 
                     <ListBox ItemsSource="{Binding MemeTags}" Grid.Column="1"
                              Style="{DynamicResource TagLB}"
-                             Background="{DynamicResource GrayLVL4}">
-
-                        <ListBox.Template>
-                            <ControlTemplate TargetType="ItemsControl">
-                                <Grid>
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="40"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="20"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Button Grid.Column="0" 
-                                            CommandTarget="{Binding ElementName=ScrollElem}"
-                                            Command="{x:Static ScrollBar.LineLeftCommand}"
-                                            VerticalAlignment="Center"
-                                            Style="{DynamicResource NavigationBack2}"/>
-
-                                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" x:Name="ScrollElem"
-                                                  CanContentScroll="True"
-                                                  PreviewMouseWheel="empListBox_PreviewMouseWheel"
-                                                  Grid.Column="1">
-                                        <ItemsPresenter/>
-                                    </ScrollViewer>
-
-                                    <Button Grid.Column="2"                 
-                                            CommandTarget="{Binding ElementName=ScrollElem}"
-                                            Command="{x:Static ScrollBar.LineRightCommand}"
-                                            VerticalAlignment="Center"
-                                            Style="{DynamicResource NavigationForward2}"/>
-                                </Grid>
-
-
-
-                            </ControlTemplate>
-                        </ListBox.Template>
-
-                    </ListBox>
-
+                             Background="{DynamicResource GrayLVL4}"/>
                 </Grid>
             </Grid>
 
         </Border>
 
-
-
-
         <md:DialogHost Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3"
-                       CloseOnClickAway="False"
+                       CloseOnClickAway="True"
                        Identifier="RootDialog"/>
-
-
     </Grid>
 </Window>

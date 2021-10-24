@@ -5,6 +5,7 @@ namespace MemeFolderN.MFViewModels.Default.MethodCommands
 {
     public interface IMemeMethodCommandsClass
     {
+        void MemeAddNonParametersMethodAsync(Guid? parentFolderId);
         void MemeAddMethodAsync(Guid? parentFolderId);
         void MemeChangeMethodAsync(MemeDTO memeDTO);
         void MemeDeleteMethodAsync(MemeDTO memeDTO);
