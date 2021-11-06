@@ -55,22 +55,40 @@ namespace MemeFolderN.MFViewModels.Default
                 }
             }
 
+
             /// Если в добавляемой коллекции есть элементы
             if (list.Count > 0)
+            {
+                List<MemeVM> curMemes = new List<MemeVM>();
+                if (SelectedFolder != null)
+                {
+                    curMemes = list.Where(m => m.ParentFolderId == SelectedFolder.Id && !SelectedFolder.Memes.Any(x => x.Id == m.Id))
+                        .ToList();
+                         
+                }
+
                 /// Вызов метода добавления в коллекцию в потоке UI
-                dispatcher.BeginInvoke((Action<IEnumerable<MemeVM>>)MemesAddUI, list);
+                dispatcher.BeginInvoke((Action<List<MemeVM>, List<MemeVM>>)MemesAddUI, list, curMemes);
+            }
+            else
+            {
+                IsMemesLoadedFlag = true;
+                BusyCheck();
+            }
         }
 
         /// <summary>Метод добавляющий Мемы в коллекцию для представления</summary>
         /// <param name="memes">Добавляемые Мемы</param>
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
-        private void MemesAddUI(IEnumerable<MemeVM> memes)
+        private void MemesAddUI(List<MemeVM> memes, List<MemeVM> curMemes)
         {
             lock (Memes)
             {
                 foreach (MemeVM meme in memes)
                     Memes.Add(meme);
-                IsBusy = false;
+                curMemes.ForEach(m => SelectedFolder.Memes.Add(m));
+                IsMemesLoadedFlag = true;
+                BusyCheck();
             }
         }
 
@@ -103,6 +121,11 @@ namespace MemeFolderN.MFViewModels.Default
             if (list.Count > 0)
                 /// Вызов метода добавления в коллекцию в потоке UI
                 dispatcher.BeginInvoke((Action<Dictionary<MemeDTO, MemeVM>>)MemesChangedUI, list);
+            else
+            {
+                IsMemesLoadedFlag = true;
+                BusyCheck();
+            }
 
         }
 
@@ -112,8 +135,12 @@ namespace MemeFolderN.MFViewModels.Default
         private void MemesChangedUI(Dictionary<MemeDTO, MemeVM> memes)
         {
             lock (Memes)
+            {
                 foreach (var meme in memes)
                     meme.Value.CopyFromDTO(meme.Key);
+                IsMemesLoadedFlag = true;
+                BusyCheck();
+            }   
         }
 
 
@@ -145,6 +172,12 @@ namespace MemeFolderN.MFViewModels.Default
             if (list.Count > 0)
                 /// Вызов метода добавления в коллекцию в потоке UI
                 dispatcher.BeginInvoke((Action<List<MemeVM>>)MemesRemoveUI, list);
+            else
+            {
+                IsMemesLoadedFlag = true;
+                BusyCheck();
+            }
+                
 
         }
 
@@ -156,8 +189,13 @@ namespace MemeFolderN.MFViewModels.Default
             lock (Memes)
             {
                 foreach (MemeVM meme in memes)
+                {
                     Memes.Remove(meme);
-                IsBusy = false;
+                    meme.Dispose();
+                }
+
+                IsMemesLoadedFlag = true;
+                BusyCheck();
             }
         }
     }

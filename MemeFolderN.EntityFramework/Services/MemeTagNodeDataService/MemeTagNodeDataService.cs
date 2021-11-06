@@ -7,14 +7,16 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using MemeFolderN.Core.DTOClasses;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MemeFolderN.EntityFramework.Services
 {
     public class MemeTagNodeDataService : IMemeTagNodeDataService
     {
         protected readonly MemeFolderNDbContextFactory _contextFactory;
-       
-        
+
+
         public virtual async Task<MemeTagNodeDTO> GetById(Guid guid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
@@ -34,6 +36,18 @@ namespace MemeFolderN.EntityFramework.Services
                 MemeTagNode entity = await context.MemeTagNodes
                     .FirstOrDefaultAsync(mtn => mtn.MemeId == memeId && mtn.MemeTagId == memeTagId);
                 return entity.ConvertMemeTagNode();
+            }
+        }
+
+        public virtual async Task<List<Guid>> GetAllMemeIdByMemeTagId(Guid memeTagId)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                List<Guid> result = await context.MemeTagNodes
+                    .Where(x => x.MemeTagId == memeTagId)
+                    .Select(x => x.MemeId)
+                    .ToListAsync();
+                return result;
             }
         }
 
@@ -59,6 +73,19 @@ namespace MemeFolderN.EntityFramework.Services
                 await context.SaveChangesAsync();
 
                 return createdResult.Entity.ConvertMemeTagNode();
+            }
+        }
+
+        public virtual async Task<List<MemeTagNodeDTO>> AddRange(List<MemeTagNodeDTO> memeTagNodeDTOs)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                List<MemeTagNode> memeTagNodes = memeTagNodeDTOs.Select(x => x.ConvertMemeTagNodeDTO()).ToList();
+
+                await context.BulkInsertAsync(memeTagNodes);
+                await context.SaveChangesAsync();
+
+                return memeTagNodes.Select(x => x.ConvertMemeTagNode()).ToList();
             }
         }
 

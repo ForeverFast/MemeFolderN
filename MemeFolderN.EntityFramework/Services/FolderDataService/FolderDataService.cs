@@ -1,6 +1,7 @@
 ﻿using MemeFolderN.Core.Converters;
 using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.Core.Models;
+using MemeFolderN.Extentions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
@@ -8,13 +9,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Z.BulkOperations;
 
 namespace MemeFolderN.EntityFramework.Services
 {
     public class FolderDataService : IFolderDataService
     {
         private readonly MemeFolderNDbContextFactory _contextFactory;
-        
+
         public virtual async Task<FolderDTO> GetById(Guid guid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
@@ -23,42 +25,47 @@ namespace MemeFolderN.EntityFramework.Services
                     .Include(f => f.Memes)
                     .Include(f => f.Folders)
                     .FirstOrDefault(e => e.Id == guid));
+
                 return entity.ConvertFolder();
             }
         }
 
-        public virtual async Task<IEnumerable<FolderDTO>> GetRootFolders()
+        public virtual async Task<List<FolderDTO>> GetAllFolders()
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                IEnumerable<Folder> folders = await Task.FromResult(context.Folders
-                    .Include(m => m.Folders)
-                    .Where(e => e.ParentFolder == null).ToList());
-                return folders.Select(f => f.ConvertFolder());
-            }
-        }
-
-        public virtual async Task<IEnumerable<FolderDTO>> GetFoldersByFolderID(Guid guid)
-        {
-            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
-            {
-                IEnumerable<Folder> folders = await Task.FromResult(context.Folders
-                 .Include(m => m.Folders)
-                 .Where(e => e.ParentFolder.Id == guid).ToList());
-
-                return folders.Select(f => f.ConvertFolder());
-            }
-        }
-
-        public virtual async Task<IEnumerable<FolderDTO>> GetAllFolders()
-        {
-            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
-            {
-                IEnumerable<Folder> entities = await Task.FromResult(context.Folders
+                List<Folder> entities = await context.Folders
                     .Include(f => f.Memes)
-                    .Include(f => f.ParentFolder)
-                    .ToList());
-                return entities.Where(f => f.ParentFolderId == null).Select(f => f.ConvertFolder());
+                    .ToListAsync();
+
+                return entities.Select(f => f.ConvertFolder()).ToList();
+            }
+        }
+
+        [Obsolete]
+        public virtual async Task<List<FolderDTO>> GetRootFolders()
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                List<Folder> folders = await context.Folders
+                    .Include(m => m.Folders)
+                    .Where(e => e.ParentFolder == null)
+                    .ToListAsync();
+
+                return folders.Select(f => f.ConvertFolder()).ToList();
+            }
+        }
+
+        public virtual async Task<List<FolderDTO>> GetFoldersByFolderID(Guid guid)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                List<Folder> folders = await context.Folders
+                    .Include(m => m.Folders)
+                    .Where(e => e.ParentFolder.Id == guid)
+                    .ToListAsync();
+
+                return folders.Select(f => f.ConvertFolder()).ToList();
             }
         }
 
@@ -69,14 +76,6 @@ namespace MemeFolderN.EntityFramework.Services
                 Folder folder = folderDTO.ConvertFolderDTO();
                 folder.ParentFolder = null;
 
-                //if (folder.ParentFolderId == null && folder.ParentFolder != null)
-                //{
-                //    Folder parentFolder = await context.Folders
-                //        .FirstOrDefaultAsync(x => x.Id == folder.ParentFolder.Id);
-                //    if (parentFolder != null)
-                //        folder.ParentFolder = parentFolder;
-                //}
-                
                 EntityEntry<Folder> createdResult = await context.Folders.AddAsync(folder);
                 await context.SaveChangesAsync();
 
@@ -104,23 +103,35 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
-        public virtual async Task<bool> Delete(Guid guid)
+        public virtual async Task<List<FolderDTO>> Delete(Guid guid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-
-                Folder folder = await context.Folders
-                    .Include(f => f.Folders)
-                    .FirstOrDefaultAsync(x => x.Id == guid);
-                if (folder != null)
+                try
                 {
-                    RemoveAllData(folder, context);
-                    context.Folders.Remove(folder);
-                    await context.SaveChangesAsync();
-                    return true;
+                    await context.Folders.LoadAsync();
+                    await context.Memes.LoadAsync();
+                    Folder folder = await context.Folders
+                        .Include(f => f.Folders)
+                        .Include(f => f.Memes)
+                        .FirstOrDefaultAsync(x => x.Id == guid);
+
+                    if (folder != null)
+                    {
+                        await context.BulkDeleteAsync(new List<Folder> { folder }, opt => opt.IncludeGraph = true);
+                        await context.SaveChangesAsync();
+
+                        List<FolderDTO> removedFolders = folder.Folders.SelectRecursive(x => x.Folders).Select(x => x.ConvertFolder()).ToList();
+                        removedFolders.Add(folder.ConvertFolder());
+                        return removedFolders;
+                    }
+                    else
+                        throw new ArgumentNullException($"Не существует папки с guid({guid})");
                 }
-                else
-                    throw new ArgumentNullException($"Не существует папки с guid({guid})");
+                catch (Exception ex)
+                {
+                    return null;
+                }
 
             }
         }
@@ -139,7 +150,7 @@ namespace MemeFolderN.EntityFramework.Services
             {
                 RemoveAllData(item, context);
             }
-                
+
             foreach (var meme in folder.Memes)
             {
                 var memeEntity = context.Memes.FirstOrDefault(x => x.Id == meme.Id);

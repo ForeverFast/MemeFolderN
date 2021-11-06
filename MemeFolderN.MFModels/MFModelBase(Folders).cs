@@ -20,20 +20,19 @@ namespace MemeFolderN.MFModelBase
 
         protected void OnChangedFoldersEvent(List<FolderDTO> foldersDTO) => ChangedFoldersEvent?.Invoke(this, ActionType.Changed, foldersDTO);
 
-        public Task<List<FolderDTO>> GetFoldersByFolderIdAsync(Guid id) => Task.Factory.StartNew(() => GetFoldersByFolderId(id));
-        protected abstract List<FolderDTO> GetFoldersByFolderId(Guid id);
+        public Task<List<FolderDTO>> GetAllFoldersAsync() => Task.Run(() => GetAllFolders());
+        protected abstract Task<List<FolderDTO>> GetAllFolders();
 
-        public Task<List<FolderDTO>> GetRootFoldersAsync() => Task.Factory.StartNew(() => GetRootFolders());
-        protected abstract List<FolderDTO> GetRootFolders();
-        public Task<List<FolderDTO>> GetAllFoldersAsync() => Task.Factory.StartNew(() => GetAllFolders());
-        protected abstract List<FolderDTO> GetAllFolders();
-        public Task AddFolderAsync(FolderDTO folderDTO) => Task.Factory.StartNew(() => AddFolder(folderDTO));
-        protected abstract void AddFolder(FolderDTO folderDTO);
+        public Task<List<FolderDTO>> GetFoldersByFolderIdAsync(Guid id) => Task.Run(() => GetFoldersByFolderId(id));
+        protected abstract Task<List<FolderDTO>> GetFoldersByFolderId(Guid id);
 
-        public Task ChangeFolderAsync(FolderDTO folderDTO) => Task.Factory.StartNew(() => ChangeFolder(folderDTO));
-        protected abstract void ChangeFolder(FolderDTO folderDTO);
+        public Task AddFolderAsync(FolderDTO folderDTO) => Task.Run(() => AddFolder(folderDTO));
+        protected abstract Task AddFolder(FolderDTO folderDTO);
 
-        public Task DeleteFolderAsync(FolderDTO folderDTO) => Task.Factory.StartNew(() => DeleteFolder(folderDTO));
-        protected abstract void DeleteFolder(FolderDTO folderDTO);
+        public Task ChangeFolderAsync(FolderDTO folderDTO) => Task.Run(() => ChangeFolder(folderDTO));
+        protected abstract Task ChangeFolder(FolderDTO folderDTO);
+
+        public Task DeleteFolderAsync(FolderDTO folderDTO) => Task.Run(() => DeleteFolder(folderDTO));
+        protected abstract Task DeleteFolder(FolderDTO folderDTO);
     }
 }

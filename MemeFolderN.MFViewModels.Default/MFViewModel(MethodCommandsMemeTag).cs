@@ -17,7 +17,7 @@ namespace MemeFolderN.MFViewModels.Default
         {
             try
             {
-                if (IsMemeTagsLoaded)
+                if (IsMemeTagsLoadedFlag)
                     return;
 
                 IEnumerable<MemeTagDTO> memeTags = await model.GetAllMemeTagsAsync();
@@ -26,63 +26,93 @@ namespace MemeFolderN.MFViewModels.Default
                     foreach (MemeTagDTO memeTag in memeTags)
                         MemeTags.Add(new MemeTagVM(memeTag));
 
-                    IsBusy = !(IsLoaded = (IsMemeTagsLoaded = true) && IsFoldersLoaded && IsMemesLoaded);
+                    IsMemeTagsLoadedFlag = true;
+                    LoadCheck();
+                    BusyCheck();
                 }
             }
             catch (Exception ex)
             {
+                IsMemeTagsLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
             }
         }
 
         protected override void MemeTagAddMethod()
         {
+            base.MemeTagAddMethod();
+            MemeTagAddMethodAsync();
+        }
+
+        public virtual async void MemeTagAddMethodAsync()
+        {
             try
             {
-                base.MemeTagAddMethod();
-                memeTagMethodCommandsClass.MemeTagAddMethodAsync();
+                IsMemeTagsLoadedFlag = false;
+                MemeTagDTO notSavedMemeTagDTO = await dialogService.MemeTagDtoOpenAddDialog();
+                if (notSavedMemeTagDTO != null)
+                    await model.AddMemeTagAsync(notSavedMemeTagDTO);
+                else
+                {
+                    IsMemeTagsLoadedFlag = true;
+                    BusyCheck();
+                }
             }
             catch (Exception ex)
             {
+                IsMemeTagsLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
 
         protected override void MemeTagChangeMethod(MemeTagVMBase memeTagVMBase)
         {
+            base.MemeTagChangeMethod(memeTagVMBase);
+            MemeTagChangeMethodAsync(memeTagVMBase.CopyDTO());
+        }
+
+        public virtual async void MemeTagChangeMethodAsync(MemeTagDTO memeTagDTO)
+        {
             try
             {
-                base.MemeTagChangeMethod(memeTagVMBase);
-                memeTagMethodCommandsClass.MemeTagChangeMethodAsync(memeTagVMBase.CopyDTO());
+                IsMemeTagsLoadedFlag = false;
+                MemeTagDTO notSavedEditedMemeTagDTO = await dialogService.MemeTagDtoOpenEditDialog(memeTagDTO);
+                if (notSavedEditedMemeTagDTO != null)
+                    await model.ChangeMemeTagAsync(notSavedEditedMemeTagDTO);
+                else
+                {
+                    IsMemeTagsLoadedFlag = true;
+                    BusyCheck();
+                }
             }
             catch (Exception ex)
             {
+                IsMemeTagsLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
 
         protected override void MemeTagDeleteMethod(MemeTagVMBase memeTagVMBase)
         {
+            base.MemeTagDeleteMethod(memeTagVMBase);
+            MemeTagDeleteMethodAsync(memeTagVMBase.CopyDTO());
+        }
+
+        public virtual async void MemeTagDeleteMethodAsync(MemeTagDTO memeTagDTO)
+        {
             try
             {
-                base.MemeTagDeleteMethod(memeTagVMBase);
-                memeTagMethodCommandsClass.MemeTagDeleteMethodAsync(memeTagVMBase.CopyDTO());
+                IsMemeTagsLoadedFlag = false;
+                await model.DeleteMemeTagAsync(memeTagDTO);
             }
             catch (Exception ex)
             {
+                IsMemeTagsLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
     }

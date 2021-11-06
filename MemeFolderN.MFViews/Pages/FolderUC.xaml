@@ -65,15 +65,14 @@
                 </Label.Content>
             </Label>
 
-            <ListView ItemsSource="{Binding Memes}"
+            <ListView x:Name="MemeList" ItemsSource="{Binding Memes}"
                      Style="{StaticResource DefLB}"
                      Background="{x:Null}"
                     
                      VirtualizingStackPanel.IsVirtualizing="True"
-                     VirtualizingStackPanel.VirtualizationMode="Standard"
+                     VirtualizingStackPanel.VirtualizationMode="Recycling"
                 
-                     VirtualizingStackPanel.CacheLength="20"
-                     VirtualizingStackPanel.CacheLengthUnit="Item"
+                    
                  
                      ScrollViewer.CanContentScroll="False"
                      ScrollViewer.IsDeferredScrollingEnabled="False"
@@ -81,7 +80,7 @@
                      PreviewMouseWheel="empListBox_PreviewMouseWheel"
                          
                      dd:DragDrop.IsDropTarget="True"
-                     dd:DragDrop.DropHandler="{Binding}">
+                     dd:DragDrop.DropHandler="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext}">
 
                 <ListView.ContextMenu>
                     <ContextMenu>

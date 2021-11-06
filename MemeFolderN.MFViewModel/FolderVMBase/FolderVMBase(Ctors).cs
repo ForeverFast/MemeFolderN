@@ -1,11 +1,11 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.MFViewModelsBase.Abstractions;
+using MemeFolderN.MFViewModelsBase.BaseViewModels;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace MemeFolderN.MFViewModelsBase
 {
-    public abstract partial class FolderVMBase : OnPropertyChangedClass, IFolder
+    public abstract partial class FolderVMBase : BaseViewModel, IFolder, IDisposable
     {
         public FolderVMBase()
         {

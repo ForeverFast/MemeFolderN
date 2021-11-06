@@ -1,11 +1,15 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.MFViewModelsBase.Abstractions;
+using MemeFolderN.MFViewModelsBase.BaseViewModels;
 using System;
+using System.Collections.ObjectModel;
 
 namespace MemeFolderN.MFViewModelsBase
 {
-    public class MemeTagVMBase : OnPropertyChangedClass, IMemeTag
+    public abstract class MemeTagVMBase : BaseViewModel, IMemeTag
     {
+        public ObservableCollection<IMeme> Memes { get; } = new ObservableCollection<IMeme>();
+
         public Guid Id { get => _id; set => SetProperty(ref _id, value); }
         public string Title { get => _title; set => SetProperty(ref _title, value); }
 

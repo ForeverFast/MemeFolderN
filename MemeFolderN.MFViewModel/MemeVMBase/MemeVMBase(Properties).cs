@@ -1,10 +1,11 @@
 ﻿using MemeFolderN.MFViewModelsBase.Abstractions;
+using MemeFolderN.MFViewModelsBase.BaseViewModels;
 using System;
 using System.Collections.ObjectModel;
 
 namespace MemeFolderN.MFViewModelsBase
 {
-    public abstract partial class MemeVMBase : OnPropertyChangedClass, IMeme
+    public abstract partial class MemeVMBase : BaseViewModel, IMeme
     {
         public ObservableCollection<IMemeTag> MemeTags { get; } = new ObservableCollection<IMemeTag>();
 

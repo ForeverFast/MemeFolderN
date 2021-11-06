@@ -16,6 +16,7 @@
     </PackageReference>
     <PackageReference Include="NLog" Version="4.7.10" />
     <PackageReference Include="NLog.Config" Version="4.7.10" />
+    <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="5.2.15" />
   </ItemGroup>
 
   <ItemGroup>

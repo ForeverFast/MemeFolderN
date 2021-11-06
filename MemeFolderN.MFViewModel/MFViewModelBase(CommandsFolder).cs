@@ -23,7 +23,10 @@ namespace MemeFolderN.MFViewModelsBase
         {
             IsBusy = true;
 #if DEBUG
-            ShowMetod($"Вызвано добавление папки для {folderVMBase.Id} / {folderVMBase.Title}");
+            if (folderVMBase != null)
+                ShowMetod($"Вызвано добавление папки для {folderVMBase.Id} / {folderVMBase.Title}");
+            else
+                ShowMetod($"Вызвано добавление папки для корневого раздела");
 #endif
         }
 
@@ -34,7 +37,10 @@ namespace MemeFolderN.MFViewModelsBase
         {
             IsBusy = true;
 #if DEBUG
-            ShowMetod($"Вызвано добавление коренной папки без параметров для {folderVMBase.Id} / {folderVMBase.Title}");
+            if (folderVMBase != null)
+                ShowMetod($"Вызвано добавление папки без параметров для {folderVMBase.Id} / {folderVMBase.Title}");
+            else
+                ShowMetod($"Вызвано добавление папки без параметров для корневого раздела");
 #endif
         }
 

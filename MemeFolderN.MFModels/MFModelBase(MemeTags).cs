@@ -21,19 +21,22 @@ namespace MemeFolderN.MFModelBase
 
         protected void OnChangedMemeTagsEvent(List<MemeTagDTO> memeTags) => ChangedMemeTagsEvent?.Invoke(this, ActionType.Changed, memeTags);
 
-        public Task<List<MemeTagDTO>> GetAllMemeTagsAsync() => Task.Factory.StartNew(() => GetAllMemeTags());
-        protected abstract List<MemeTagDTO> GetAllMemeTags();
+        public Task<List<MemeTagDTO>> GetAllMemeTagsAsync() => Task.Run(() => GetAllMemeTags());
+        protected abstract Task<List<MemeTagDTO>> GetAllMemeTags();
 
-        public Task<List<MemeTagDTO>> GetMemeTagsByMemeIdAsync(Guid id) => Task.Factory.StartNew(() => GetMemeTagsByMemeId(id));
-        protected abstract List<MemeTagDTO> GetMemeTagsByMemeId(Guid id);
+        public Task<List<Guid>> GetAllMemeIdByMemeTagIdAsync(Guid id) => Task.Run(() => GetAllMemeIdByMemeTagId(id));
+        protected abstract Task<List<Guid>> GetAllMemeIdByMemeTagId(Guid id);
 
-        public Task AddMemeTagAsync(MemeTagDTO memeTag) => Task.Factory.StartNew(() => AddMemeTag(memeTag));
-        protected abstract void AddMemeTag(MemeTagDTO memeTag);
+        public Task<List<MemeTagDTO>> GetMemeTagsByMemeIdAsync(Guid id) => Task.Run(() => GetMemeTagsByMemeId(id));
+        protected abstract Task<List<MemeTagDTO>> GetMemeTagsByMemeId(Guid id);
 
-        public Task ChangeMemeTagAsync(MemeTagDTO memeTag) => Task.Factory.StartNew(() => ChangeMemeTag(memeTag));
-        protected abstract void ChangeMemeTag(MemeTagDTO memeTag);
+        public Task AddMemeTagAsync(MemeTagDTO memeTag) => Task.Run(() => AddMemeTag(memeTag));
+        protected abstract Task AddMemeTag(MemeTagDTO memeTag);
 
-        public Task DeleteMemeTagAsync(MemeTagDTO memeTag) => Task.Factory.StartNew(() => DeleteMemeTag(memeTag));
-        protected abstract void DeleteMemeTag(MemeTagDTO memeTag);
+        public Task ChangeMemeTagAsync(MemeTagDTO memeTag) => Task.Run(() => ChangeMemeTag(memeTag));
+        protected abstract Task ChangeMemeTag(MemeTagDTO memeTag);
+
+        public Task DeleteMemeTagAsync(MemeTagDTO memeTag) => Task.Run(() => DeleteMemeTag(memeTag));
+        protected abstract Task DeleteMemeTag(MemeTagDTO memeTag);
     }
 }

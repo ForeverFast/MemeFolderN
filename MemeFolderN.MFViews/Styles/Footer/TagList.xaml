@@ -1,0 +1,116 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
+                    xmlns:mBeh="clr-namespace:MemeFolderN.MFViews.Behaviors" 
+                    xmlns:ib="http://schemas.microsoft.com/xaml/behaviors">
+
+    <Style x:Key="FooterTagList" TargetType="{x:Type ListBox}">
+
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ItemsControl">
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" 
+                                            CommandTarget="{Binding ElementName=ScrollElem}"
+                                            Command="{x:Static ScrollBar.LineLeftCommand}"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource NavigationBack2}"/>
+
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" x:Name="ScrollElem"
+                                      CanContentScroll="True"
+                                      Grid.Column="1">
+
+                            <ib:Interaction.Behaviors>
+                                <mBeh:ScrollViewerPreviewMouseWheelBehavior/>
+                            </ib:Interaction.Behaviors>
+
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+
+                        <Button Grid.Column="2"                 
+                                            CommandTarget="{Binding ElementName=ScrollElem}"
+                                            Command="{x:Static ScrollBar.LineRightCommand}"
+                                            VerticalAlignment="Center"
+                                            Style="{DynamicResource NavigationForward2}"/>
+                    </Grid>
+
+
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type ListBoxItem}">
+
+                    <Setter Property="Background" Value="{x:Null}"/>
+
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+
+                                <Border Background="{DynamicResource StandartLightColor2}"
+                                        MinWidth="100"
+                                        MinHeight="20"
+                                        Height="25"
+                                        CornerRadius="15"
+                                        Margin="0,0,15,0">
+
+                                    <Border.InputBindings>
+
+                                        <MouseBinding Gesture="LeftDoubleClick"
+                                                      CommandParameter="{Binding}"
+                                                      Command="{x:Static routedCommands:MemeTagRoutedCommands.NavigationByMemeTagRoutedCommand}"/>
+
+                                    </Border.InputBindings>
+
+                                    <Border.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Открыть"
+                                                  CommandParameter="{Binding}"
+                                                  Command="{x:Static routedCommands:MemeTagRoutedCommands.NavigationByMemeTagRoutedCommand}"/>
+                                            <MenuItem Header="Изменить"
+                                                  CommandParameter="{Binding}"
+                                                  Command="{x:Static routedCommands:MemeTagRoutedCommands.MemeTagChangeRoutedCommand}"/>
+                                            <MenuItem Header="Удалить"
+                                                  CommandParameter="{Binding}"
+                                                  Command="{x:Static routedCommands:MemeTagRoutedCommands.MemeTagDeleteRoutedCommand}"/>
+                                        </ContextMenu>
+                                    </Border.ContextMenu>
+                                    <TextBlock Text="{Binding Title, StringFormat=#{0}}"
+                                               FontSize="15"
+                                               Margin="10,0,10,0"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               Foreground="{DynamicResource GrayLVL4}"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+
+                </Style>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+    
+</ResourceDictionary>

@@ -2,9 +2,10 @@
 using MemeFolderN.MFViewModelsBase;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace MemeFolderN.MFViewModels.Default
 {
@@ -20,7 +21,7 @@ namespace MemeFolderN.MFViewModels.Default
         {
             try
             {
-                if (IsMemesLoaded)
+                if (IsMemesLoadedFlag)
                     return;
 
                 IEnumerable<MemeDTO> memes = await model.GetAllMemesAsync();
@@ -29,82 +30,127 @@ namespace MemeFolderN.MFViewModels.Default
                     foreach (MemeDTO meme in memes)
                         Memes.Add(new MemeVM(meme));
 
-                    IsBusy = !(IsLoaded = (IsMemesLoaded = true) && IsFoldersLoaded && IsMemeTagsLoaded);
+                    IsMemesLoadedFlag = true;
+                    LoadCheck();
+                    BusyCheck();
                 }
             }
             catch (Exception ex)
             {
+                IsMemesLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
             }
         }
 
         protected override void MemeAddNonParametersMethod(FolderVMBase folderVMBase)
         {
-            
+            base.MemeAddNonParametersMethod(folderVMBase);
+            MemeAddNonParametersMethodAsync(folderVMBase.Id);
+        }
+
+        public virtual async void MemeAddNonParametersMethodAsync(Guid? parentFolderId)
+        {
             try
             {
-                base.MemeAddNonParametersMethod(folderVMBase);
-                memeMethodCommandsClass.MemeAddNonParametersMethodAsync(folderVMBase.Id);
+                IsMemesLoadedFlag = false;
+                string path = dialogService.FileBrowserDialog();
+                if (string.IsNullOrEmpty(path))
+                    return;
+
+                MemeDTO notSavedMemeDTO = new MemeDTO
+                {
+                    ParentFolderId = parentFolderId,
+                    Title = Path.GetFileNameWithoutExtension(path),
+                    ImagePath = path
+                };
+
+                if (notSavedMemeDTO != null)
+                    await model.AddMemeAsync(notSavedMemeDTO);
             }
             catch (Exception ex)
             {
+                IsMemesLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
 
         protected override void MemeAddMethod(FolderVMBase folderVMBase)
         {
-            try
-            {
-                base.MemeAddMethod(folderVMBase);
-                memeMethodCommandsClass.MemeAddMethodAsync(folderVMBase.Id);
-            }
-            catch (Exception ex)
-            {
-                OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            base.MemeAddMethod(folderVMBase);
+            MemeAddMethodAsync(folderVMBase.Id);
         }
 
-        protected override void MemeChangeMethod(MemeVMBase memeVMBase)
+        public virtual async void MemeAddMethodAsync(Guid? parentFolderId)
         {
             try
             {
-                base.MemeChangeMethod(memeVMBase);
-                memeMethodCommandsClass.MemeChangeMethodAsync(memeVMBase.CopyDTO());
+                IsMemesLoadedFlag = false;
+                MemeDTO notSavedMemeDTO = await dialogService.MemeDtoOpenAddDialog(parentFolderId);
+                if (notSavedMemeDTO != null)
+                    await model.AddMemeAsync(notSavedMemeDTO);
+                else
+                {
+                    IsMemesLoadedFlag = true;
+                    BusyCheck();
+                }
             }
             catch (Exception ex)
             {
+                IsMemesLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
             }
-            finally
-            {
-                IsBusy = false;
-            }
+        }
 
+
+        protected override void MemeChangeMethod(MemeVMBase memeVMBase)
+        {
+            base.MemeChangeMethod(memeVMBase);
+            MemeChangeMethodAsync(memeVMBase.CopyDTO());
+        }
+
+        public virtual async void MemeChangeMethodAsync(MemeDTO memeDTO)
+        {
+            try
+            {
+                IsMemesLoadedFlag = false;
+                MemeDTO notSavedEditedMemeDTO = await dialogService.MemeDtoOpenEditDialog(memeDTO);
+                if (notSavedEditedMemeDTO != null)
+                    await model.ChangeMemeAsync(notSavedEditedMemeDTO);
+                else
+                {
+                    IsMemesLoadedFlag = true;
+                    BusyCheck();
+                }
+            }
+            catch (Exception ex)
+            {
+                IsMemesLoadedFlag = true;
+                BusyCheck();
+                OnException(ex);
+            }
         }
 
         protected override void MemeDeleteMethod(MemeVMBase memeVMBase)
         {
+            base.MemeDeleteMethod(memeVMBase);
+            MemeDeleteMethodAsync(memeVMBase.CopyDTO());
+        }
+
+        public virtual async void MemeDeleteMethodAsync(MemeDTO memeDTO)
+        {
             try
             {
-                base.MemeDeleteMethod(memeVMBase);
-                memeMethodCommandsClass.MemeDeleteMethodAsync(memeVMBase.CopyDTO());
+                IsMemesLoadedFlag = false;
+                await model.DeleteMemeAsync(memeDTO);
             }
             catch (Exception ex)
             {
+                IsMemesLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
 
@@ -113,15 +159,15 @@ namespace MemeFolderN.MFViewModels.Default
             try
             {
                 base.MemeOpenMethod(memeVMBase);
-                memeMethodCommandsClass.MemeOpenMethod(memeVMBase.ImagePath);
+                Process p = new Process();
+                p.StartInfo = new ProcessStartInfo(memeVMBase.ImagePath) { UseShellExecute = true };
+                p.Start();
+                p.Dispose();
             }
             catch (Exception ex)
             {
+                BusyCheck();
                 OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
 
@@ -130,15 +176,12 @@ namespace MemeFolderN.MFViewModels.Default
             try
             {
                 base.MemeCopyMethod(memeVMBase);
-                memeMethodCommandsClass.MemeCopyMethod(memeVMBase.ImagePath);
+                Clipboard.SetImage(new BitmapImage(new Uri(memeVMBase.ImagePath)));
             }
             catch (Exception ex)
             {
+                BusyCheck();
                 OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
     }

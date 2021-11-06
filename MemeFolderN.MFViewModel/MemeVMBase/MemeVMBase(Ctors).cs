@@ -1,9 +1,10 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.MFViewModelsBase.Abstractions;
+using MemeFolderN.MFViewModelsBase.BaseViewModels;
 
 namespace MemeFolderN.MFViewModelsBase
 {
-    public abstract partial class MemeVMBase : OnPropertyChangedClass, IMeme
+    public abstract partial class MemeVMBase : BaseViewModel, IMeme
     {
         public MemeVMBase()
         {

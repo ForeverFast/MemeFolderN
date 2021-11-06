@@ -13,7 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MemeFolderN.Core\MemeFolderN.Core.csproj" />
     <ProjectReference Include="..\MemeFolderN.MFModels\MemeFolderN.MFModelBase.csproj" />
-    <ProjectReference Include="..\MemeFolderN.Navigation\MemeFolderN.Navigation.csproj" />
+    <ProjectReference Include="..\MvvmNavigation.Abstractions\MvvmNavigation.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

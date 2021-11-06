@@ -7,7 +7,14 @@ namespace MemeFolderN.EntityFramework.Services
 {
     public interface IMemeTagDataService : IDataService<MemeTagDTO>
     {
-        Task<IEnumerable<MemeTagDTO>> GetTags();
-        Task<IEnumerable<MemeTagDTO>> GetTagsByMemeId(Guid id);
+        Task<List<MemeTagDTO>> GetTags();
+        Task<List<MemeTagDTO>> GetTagsByMemeId(Guid id);
+
+        /// <summary>
+        /// Удаление сущности по Guid
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        Task<bool> Delete(Guid guid);
     }
 }

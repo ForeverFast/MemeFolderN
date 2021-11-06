@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MvvmNavigation.Abstractions\MvvmNavigation.Abstractions.csproj" />
+    <ProjectReference Include="..\MvvmNavigation.Core\MvvmNavigation.Core.csproj" />
+    <ProjectReference Include="..\MvvmNavigation.Internal\MvvmNavigation.Internal.csproj" />
+  </ItemGroup>
+
+</Project>

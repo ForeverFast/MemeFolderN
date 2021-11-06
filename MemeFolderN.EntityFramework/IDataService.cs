@@ -26,11 +26,5 @@ namespace MemeFolderN.EntityFramework
         /// <param name="entity">Сущность с новыми, не сохранёнными, параметрами</param>
         /// <returns></returns>
         Task<T> Update(Guid guid, T entity);
-        /// <summary>
-        /// Удаление сущности по Guid
-        /// </summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
-        Task<bool> Delete(Guid guid);
     }
 }

@@ -65,6 +65,11 @@ namespace MemeFolderN.MFViewModels.Default
             if (list.Count > 0)
                 /// Вызов метода добавления в коллекцию в потоке UI
                 dispatcher.BeginInvoke((Action<IEnumerable<FolderVM>>)FoldersAddUI, list);
+            else
+            {
+                IsFoldersLoadedFlag = true;
+                BusyCheck();
+            }
         }
 
         /// <summary>Метод добавляющий Папки в коллекцию для представления</summary>
@@ -76,7 +81,8 @@ namespace MemeFolderN.MFViewModels.Default
             {
                 foreach (FolderVM folder in folders)
                     Folders.Add(folder);
-                IsBusy = false;
+                IsFoldersLoadedFlag = true;
+                BusyCheck();
             }  
         }
 
@@ -109,6 +115,11 @@ namespace MemeFolderN.MFViewModels.Default
             if (list.Count > 0)
                 /// Вызов метода добавления в коллекцию в потоке UI
                 dispatcher.BeginInvoke((Action<Dictionary<FolderDTO, FolderVM>>)FoldersChangedUI, list);
+            else
+            {
+                IsFoldersLoadedFlag = true;
+                BusyCheck();
+            }
 
         }
 
@@ -121,7 +132,8 @@ namespace MemeFolderN.MFViewModels.Default
             {
                 foreach (var folder in folders)
                     folder.Value.CopyFromDTO(folder.Key);
-                IsBusy = false;
+                IsFoldersLoadedFlag = true;
+                BusyCheck();
             }
         }
 
@@ -136,6 +148,8 @@ namespace MemeFolderN.MFViewModels.Default
             /// Создание коллекции добавляемых Папок
             List<FolderVM> list = new List<FolderVM>(folders.Count);
 
+            List<MemeVM> memes = new List<MemeVM>();
+
             /// Цикл по полученной коллекции
             foreach (FolderDTO folder in folders.ToArray())
             {
@@ -145,6 +159,11 @@ namespace MemeFolderN.MFViewModels.Default
                 {
                     /// Добавление Папки для удаления из коллекции
                     list.Add(rvm);
+
+                    Memes.Where(m => m.ParentFolderId == folder.Id)
+                        .ToList()
+                        .ForEach(m => memes.Add((MemeVM)m));
+
                     /// Удаление Папки из полученной коллекции
                     folders.Remove(folder);
                 }
@@ -152,23 +171,51 @@ namespace MemeFolderN.MFViewModels.Default
 
             /// Если в добавляемой коллекции есть элементы
             if (list.Count > 0)
+            {
+                IFolder currentFolder = list.FirstOrDefault(x => x.Id == SelectedFolder.Id);
+                
                 /// Вызов метода добавления в коллекцию в потоке UI
-                dispatcher.BeginInvoke((Action<List<FolderVM>>)FoldersRemoveUI, list);
+                dispatcher.BeginInvoke((Action<List<FolderVM>, List<MemeVM>, FolderVM>)FoldersRemoveUI, list, memes, currentFolder);
+            }
+            else
+            {
+                IsFoldersLoadedFlag = true;
+                IsMemesLoadedFlag = true;
+                BusyCheck();
+            }
+           
 
         }
 
         /// <summary>Метод удаляющий Папки в коллекции для представления</summary>
         /// <param name="folders">Удаляемые Папки</param>
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
-        private void FoldersRemoveUI(List<FolderVM> folders)
+        private void FoldersRemoveUI(List<FolderVM> folders, List<MemeVM> memes, FolderVM currentFolder)
         {
             lock (Folders)
             {
                 foreach (FolderVM folder in folders)
+                {
                     Folders.Remove(folder);
-                IsBusy = false;
+                    navigationManager.RemoveDataByKey(folder.Id.ToString());
+                    folder.Dispose();
+                }
+                
+                IsFoldersLoadedFlag = true;
+                BusyCheck();
             }
-               
+
+            lock (Memes)
+            {
+                foreach (MemeVM meme in memes)
+                {
+                    Memes.Remove(meme);
+                    meme.Dispose();
+                }
+                    
+                IsMemesLoadedFlag = true;
+                BusyCheck();
+            }
         }
     }
 }

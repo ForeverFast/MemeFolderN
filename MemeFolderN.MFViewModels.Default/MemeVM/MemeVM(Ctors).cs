@@ -34,5 +34,22 @@ namespace MemeFolderN.MFViewModels.Default
 
             return baseDTO;
         }
+
+        protected override void CleanUp(bool clean)
+        {
+            if (!this._disposed)
+            {
+                if (clean)
+                {
+                    this.MemeTags.Clear();
+                }
+            }
+            this._disposed = true;
+        }
+
+        ~MemeVM()
+        {
+            CleanUp(false);
+        }
     }
 }

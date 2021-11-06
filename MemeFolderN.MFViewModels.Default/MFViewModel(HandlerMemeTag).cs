@@ -61,8 +61,15 @@ namespace MemeFolderN.MFViewModels.Default
 
             /// Если в добавляемой коллекции есть элементы
             if (list.Count > 0)
+            {
                 /// Вызов метода добавления в коллекцию в потоке UI
                 dispatcher.BeginInvoke((Action<IEnumerable<MemeTagVM>>)MemeTagsAddUI, list);
+            }
+            else
+            {
+                IsMemeTagsLoadedFlag = true;
+                BusyCheck();
+            }
         }
 
         /// <summary>Метод добавляющий Теги в коллекцию для представления</summary>
@@ -74,7 +81,8 @@ namespace MemeFolderN.MFViewModels.Default
             {
                 foreach (MemeTagVM memeTag in memeTags)
                     MemeTags.Add(memeTag);
-                IsBusy = false;
+                IsMemeTagsLoadedFlag = true;
+                BusyCheck();
             }
         }
 
@@ -105,8 +113,15 @@ namespace MemeFolderN.MFViewModels.Default
 
             /// Если в добавляемой коллекции есть элементы
             if (list.Count > 0)
+            {
                 /// Вызов метода добавления в коллекцию в потоке UI
                 dispatcher.BeginInvoke((Action<Dictionary<MemeTagDTO, MemeTagVM>>)MemeTagsChangedUI, list);
+            }
+            else
+            {
+                IsMemeTagsLoadedFlag = true;
+                BusyCheck();
+            }
 
         }
 
@@ -119,7 +134,8 @@ namespace MemeFolderN.MFViewModels.Default
             {
                 foreach (var memeTag in memeTags)
                     memeTag.Value.CopyFromDTO(memeTag.Key);
-                IsBusy = false;
+                IsMemeTagsLoadedFlag = true;
+                BusyCheck();
             }        
         }
 
@@ -150,8 +166,15 @@ namespace MemeFolderN.MFViewModels.Default
 
             /// Если в добавляемой коллекции есть элементы
             if (list.Count > 0)
+            {
                 /// Вызов метода добавления в коллекцию в потоке UI
                 dispatcher.BeginInvoke((Action<List<MemeTagVM>>)MemeTagsRemoveUI, list);
+            }
+            else
+            {
+                IsMemeTagsLoadedFlag = true;
+                BusyCheck();
+            }
 
         }
 
@@ -164,7 +187,8 @@ namespace MemeFolderN.MFViewModels.Default
             {
                 foreach (MemeTagVM memeTag in memeTags)
                     MemeTags.Remove(memeTag);
-                IsBusy = false;
+                IsMemeTagsLoadedFlag = true;
+                BusyCheck();
             }   
         }
     }

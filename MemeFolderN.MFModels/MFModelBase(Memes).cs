@@ -20,28 +20,28 @@ namespace MemeFolderN.MFModelBase
 
         protected void OnChangedMemesEvent(List<MemeDTO> memes) => ChangedMemesEvent?.Invoke(this, ActionType.Changed, memes);
 
-        public Task<List<MemeDTO>> GetMemesByFolderIdAsync(Guid id) => Task.Factory.StartNew(() => GetMemesByFolderId(id));
-        protected abstract List<MemeDTO> GetMemesByFolderId(Guid id);
+        public Task<List<MemeDTO>> GetAllMemesAsync() => Task.Run(() => GetAllMemes());
+        protected abstract Task<List<MemeDTO>> GetAllMemes();
 
-        public Task<List<MemeDTO>> GetMemesByTitleAsync(string title) => Task.Factory.StartNew(() => GetMemesByTitle(title));
-        protected abstract List<MemeDTO> GetMemesByTitle(string title);
+        public Task<List<MemeDTO>> GetMemesByFolderIdAsync(Guid id) => Task.Run(() => GetMemesByFolderId(id));
+        protected abstract Task<List<MemeDTO>> GetMemesByFolderId(Guid id);
 
-        public Task<List<MemeDTO>> GetAllMemesAsync() => Task.Factory.StartNew(() => GetAllMemes());
-        protected abstract List<MemeDTO> GetAllMemes();
+        public Task<List<MemeDTO>> GetMemesByTitleAsync(string title) => Task.Run(() => GetMemesByTitle(title));
+        protected abstract Task<List<MemeDTO>> GetMemesByTitle(string title);
 
-        public Task AddMemeAsync(MemeDTO meme) => Task.Factory.StartNew(() => AddMeme(meme));
-        protected abstract void AddMeme(MemeDTO meme);
+        public Task AddMemeAsync(MemeDTO meme) => Task.Run(() => AddMeme(meme));
+        protected abstract Task AddMeme(MemeDTO meme);
 
-        public Task AddRangeMemesAsync(List<MemeDTO> memes) => Task.Factory.StartNew(() => AddRangeMemes(memes));
-        protected abstract void AddRangeMemes(List<MemeDTO> memes);
+        public Task AddRangeMemesAsync(List<MemeDTO> memes) => Task.Run(() => AddRangeMemes(memes));
+        protected abstract Task AddRangeMemes(List<MemeDTO> memes);
 
-        public Task ChangeMemeAsync(MemeDTO meme) => Task.Factory.StartNew(() => ChangeMeme(meme));
-        protected abstract void ChangeMeme(MemeDTO meme);
+        public Task ChangeMemeAsync(MemeDTO meme) => Task.Run(() => ChangeMeme(meme));
+        protected abstract Task ChangeMeme(MemeDTO meme);
 
-        public Task DeleteMemeAsync(MemeDTO meme) => Task.Factory.StartNew(() => DeleteMeme(meme));
-        protected abstract void DeleteMeme(MemeDTO meme);
+        public Task DeleteMemeAsync(MemeDTO meme) => Task.Run(() => DeleteMeme(meme));
+        protected abstract Task DeleteMeme(MemeDTO meme);
 
-        public Task DeleteRangeMemesAsync(List<MemeDTO> memes) => Task.Factory.StartNew(() => DeleteRangeMemes(memes));
-        protected abstract void DeleteRangeMemes(List<MemeDTO> memes);
+        public Task DeleteRangeMemesAsync(List<MemeDTO> memes) => Task.Run(() => DeleteRangeMemes(memes));
+        protected abstract Task DeleteRangeMemes(List<MemeDTO> memes);
     }
 }

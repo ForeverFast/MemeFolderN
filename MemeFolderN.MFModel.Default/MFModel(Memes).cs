@@ -7,88 +7,89 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace MemeFolderN.MFModelBase.Default
+namespace MemeFolderN.MFModelBase.Wpf
 {
-    public partial class MFModel : MFModelBase
+    public partial class MFModelWpf : MFModelBase
     {
-        protected override List<MemeDTO> GetMemesByFolderId(Guid id)
+        protected override async Task<List<MemeDTO>> GetMemesByFolderId(Guid id)
         {
-            IEnumerable<MemeDTO> memesDTO = memeDataService.GetMemesByFolderId(id).Result;
-            return memesDTO.ToList();
-        }
-        protected override List<MemeDTO> GetMemesByTitle(string title)
-        {
-            IEnumerable<MemeDTO> memesDTO = memeDataService.GetMemesByTitle(title).Result;
+            List<MemeDTO> memesDTO = await memeDataService.GetMemesByFolderId(id);
             return memesDTO.ToList();
         }
 
-        protected override List<MemeDTO> GetAllMemes()
+        protected override async Task<List<MemeDTO>> GetMemesByTitle(string title)
         {
-            IEnumerable<MemeDTO> memesDTO = memeDataService.GetAllMemes().Result;
-            return memesDTO.ToList();
+            List<MemeDTO> memesDTO = await memeDataService.GetMemesByTitle(title);
+            return memesDTO;
         }
 
-        protected override void AddMeme(MemeDTO memeDTO)
+        protected override async Task<List<MemeDTO>> GetAllMemes()
         {
-            memeDTO = MemeAddInit(memeDTO); 
+            List<MemeDTO> memesDTO = await memeDataService.GetAllMemes();
+            return memesDTO;
+        }
 
-            // Отделение тегов от исходной сущности meme
-            List<MemeTagDTO> memeTags = new List<MemeTagDTO>();
-            if (memeDTO.Tags != null)
-            {
-                foreach (MemeTagDTO mtn in memeDTO.Tags.ToArray())
-                    memeTags.Add(mtn);
-            }
-        
+        protected override async Task AddMeme(MemeDTO memeDTO)
+        {
+            Guid? parentGuid = memeDTO.ParentFolderId;
+            string parentFolderPath = parentGuid != null
+                ? await GetParentFolderPath(parentGuid)
+                : throw new MFModelException($"Для сохранения требуется guid родительского каталога.");
+
+            memeDTO = InitNewMeme(memeDTO, parentFolderPath);
+
+            List<MemeTagDTO> memeTags = memeDTO.Tags != null ? memeDTO.Tags : new List<MemeTagDTO>();
+            
             MemeDTO proccesedMemeDTO = memeDTO with { Tags = null };
 
-            MemeDTO createdMeme = memeDataService.Add(proccesedMemeDTO).Result;
+            MemeDTO createdMeme = await memeDataService.Add(proccesedMemeDTO);
             if (createdMeme != null)
             {
-                // Добавление отделённых тегов и сохранение memeTagNodes в БД
-                memeTags.ForEach(async (newMemeTag) =>
-                {
-                    MemeTagNodeDTO proccesedMemeDTO = new MemeTagNodeDTO 
+                List<MemeTagNodeDTO> memeTagNodeDTOs = memeTags
+                    .Select(mt => new MemeTagNodeDTO
                     {
-                        MemeTagId = newMemeTag.Id,
-                        MemeId = createdMeme.Id 
-                    };
-                    MemeTagNodeDTO dbCreatedMemeTagNode = await memeTagNodeDataService.Add(proccesedMemeDTO);
-                    createdMeme.Tags.Append(newMemeTag);
-                });
+                        MemeTagId = mt.Id,
+                        MemeId = createdMeme.Id
+                    }).ToList();
 
+                await memeTagNodeDataService.AddRange(memeTagNodeDTOs);
+                
                 OnAddMemesEvent(new List<MemeDTO>() { createdMeme });
             }
             else
                 throw new MFModelException($"Экзмпляр {memeDTO.Title} не удалось сохранить.", MFModelExceptionEnum.NotSaved);
         }
 
-        protected override void AddRangeMemes(List<MemeDTO> memesDTO)
+        protected override async Task AddRangeMemes(List<MemeDTO> memesDTO)
         {
-            List<MemeDTO> processedMemesDTO = new List<MemeDTO>();
-            foreach (MemeDTO memeDTO in memesDTO)
-            {
-                try
-                {
-                    MemeDTO processedMemeDTO = MemeAddInit(memeDTO);
-                    processedMemesDTO.Add(processedMemeDTO);
-                }
-                catch (Exception)
-                {
-                    
-                }
-            }
+            //List<MemeDTO> processedMemesDTO = new List<MemeDTO>();
+            //List<Task<MemeDTO>> InitTasks = new List<Task<MemeDTO>>();
 
-            OnAddMemesEvent(processedMemesDTO);
+            //memesDTO.ForEach(m =>
+            //{
+            //    Task<MemeDTO> InitTask = InitNewMeme(m);
+            //    InitTasks.Add(InitTask);
+            //    InitTask.Start();
+            //});
+
+            //await Task.WhenAll(InitTasks);
+
+            //await memeDataService.AddRangeMemes(processedMemesDTO);
+
+            //OnAddMemesEvent(processedMemesDTO);
+
+            await Task.Delay(1000);
         }
 
-        protected override void ChangeMeme(MemeDTO memeDTO)
+        protected override async Task ChangeMeme(MemeDTO memeDTO)
         {
             MemeDTO oldMemeData = memeDataService.GetById(memeDTO.Id).Result;
 
             List<MemeTagDTO> oldMemeTagForRemove = oldMemeData.Tags.Except(memeDTO.Tags).ToList();
-            foreach(MemeTagDTO memeTagDTO in oldMemeTagForRemove)
+            foreach (MemeTagDTO memeTagDTO in oldMemeTagForRemove)
             {
                 MemeTagNodeDTO memeTagNodeDTO = memeTagNodeDataService.GetByMemeIdAndMemeTagId(memeDTO.Id, memeTagDTO.Id).Result;
                 memeTagNodeDataService.Delete(memeTagNodeDTO.Id);
@@ -113,10 +114,11 @@ namespace MemeFolderN.MFModelBase.Default
             else
                 throw new MFModelException($"Экзмпляр {memeDTO.Title} не удалось обновить.", MFModelExceptionEnum.NotUpdated);
         }
-        
-        protected override void DeleteMeme(MemeDTO memeDTO)
+
+        protected override async Task DeleteMeme(MemeDTO memeDTO)
         {
-            if (memeDataService.Delete(memeDTO.Id).Result)
+            bool result = await memeDataService.Delete(memeDTO.Id);
+            if (result)
             {
                 OnRemoveMemesEvent(new List<MemeDTO>() { memeDTO });
             }
@@ -124,7 +126,7 @@ namespace MemeFolderN.MFModelBase.Default
                 throw new MFModelException($"Экзмпляр {memeDTO.Title} не удалось удалить.", MFModelExceptionEnum.NotDeleted);
         }
 
-        protected override void DeleteRangeMemes(List<MemeDTO> memesDTO)
+        protected override async Task DeleteRangeMemes(List<MemeDTO> memesDTO)
         {
             if (memeDataService.DeleteRangeMemes(memesDTO).Result)
             {
@@ -136,7 +138,7 @@ namespace MemeFolderN.MFModelBase.Default
                 memesDTO.ForEach(m => errorMessage += $"{m.Title}\r\n");
                 throw new MFModelException($"{errorMessage} не удалось удалить.", MFModelExceptionEnum.NotDeleted);
             }
-                
+
         }
 
         #region Вспомогательные методы
@@ -146,86 +148,24 @@ namespace MemeFolderN.MFModelBase.Default
         /// </summary>
         /// <param name="memeDTO"></param>
         /// <returns></returns>
-        protected MemeDTO MemeAddInit(MemeDTO memeDTO)
+        protected MemeDTO InitNewMeme(MemeDTO memeDTO, string parentFolderPath)
         {
-            FolderDTO folder = memeDTO?.ParentFolder;
-            if (folder == null)
-            {
-                folder = folderDataService.GetById((Guid)memeDTO.ParentFolderId).Result;
-                if (folder == null)
-                    throw new MFModelException($"Не удалось найти папку для сохранения мема.", MFModelExceptionEnum.NotSaved);
-            }
+            string newImagePath = string.Empty;
+            if (!string.IsNullOrEmpty(memeDTO.Title))
+                newImagePath = ExplorerHelper.CreateNewImage(parentFolderPath, memeDTO.ImagePath, memeDTO.Title);
+            else
+                newImagePath = ExplorerHelper.CreateNewImage(parentFolderPath, memeDTO.ImagePath);
 
-            string newMemePath = @$"{folder.FolderPath}\{memeDTO.Title}{Path.GetExtension(memeDTO.ImagePath)}";
-            if (File.Exists(newMemePath))
+            string newMiniImagePath= ExplorerHelper.CreateNewMiniImageForNewImage(parentFolderPath, newImagePath);
+            
+            memeDTO = memeDTO with
             {
-                newMemePath = GetMemeAnotherName(folder.FolderPath, memeDTO.Title, memeDTO.ImagePath);
-            }
-
-            File.Copy(memeDTO.ImagePath, newMemePath);
-            string newTitle = memeDTO.Title;
-            if (string.IsNullOrEmpty(memeDTO.Title))
-            {
-                newTitle = Path.GetFileNameWithoutExtension(newMemePath);
-            }
-
-            // Создание миниатюры
-            string newMiniImageMemePath = @$"{folder.FolderPath}\Mini{newTitle}{Path.GetExtension(memeDTO.ImagePath)}";
-            Image result = this.ResizeOrigImg(Image.FromFile(newMemePath), 120, 72);
-            result.Save(newMiniImageMemePath);
-            result.Dispose();
-
-            MemeDTO proccesedMemeDTO = memeDTO with
-            {
-                Title = newTitle,
-                ImagePath = newMemePath,
-                MiniImagePath = newMiniImageMemePath
+                Title = Path.GetFileNameWithoutExtension(newImagePath),
+                ImagePath = newImagePath,
+                MiniImagePath = newMiniImagePath
             };
 
-            return proccesedMemeDTO;
-        }
-
-        protected string GetMemeAnotherName(string rootPath, string title, string imagePath)
-        {
-            string newMemePath = string.Empty;
-            int num = 1;
-            while (true)
-            {
-                newMemePath = @$"{rootPath}\{title} ({num++}){Path.GetExtension(imagePath)}";
-                if (!File.Exists(newMemePath))
-                {
-                    return newMemePath;
-                }
-            }
-        }
-
-        protected Image ResizeOrigImg(Image image, int nWidth, int nHeight)
-        {
-            int newWidth, newHeight;
-            var coefH = (double)nHeight / (double)image.Height;
-            var coefW = (double)nWidth / (double)image.Width;
-            if (coefW >= coefH)
-            {
-                newHeight = (int)(image.Height * coefH);
-                newWidth = (int)(image.Width * coefH);
-            }
-            else
-            {
-                newHeight = (int)(image.Height * coefW);
-                newWidth = (int)(image.Width * coefW);
-            }
-
-            Image result = new Bitmap(newWidth, newHeight);
-            using (var g = Graphics.FromImage(result))
-            {
-                g.CompositingQuality = CompositingQuality.Default;
-                g.SmoothingMode = SmoothingMode.Default;
-                g.InterpolationMode = InterpolationMode.Default;
-
-                g.DrawImage(image, 0, 0, newWidth, newHeight);
-                g.Dispose();
-            }
-            return result;
+            return memeDTO;
         }
 
         #endregion

@@ -120,7 +120,8 @@ namespace MemeFolderN.EntityFramework.Migrations
                 {
                     b.HasOne("MemeFolderN.Core.Models.Folder", "ParentFolder")
                         .WithMany("Folders")
-                        .HasForeignKey("ParentFolderId");
+                        .HasForeignKey("ParentFolderId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ParentFolder");
                 });
@@ -129,7 +130,8 @@ namespace MemeFolderN.EntityFramework.Migrations
                 {
                     b.HasOne("MemeFolderN.Core.Models.Folder", "ParentFolder")
                         .WithMany("Memes")
-                        .HasForeignKey("ParentFolderId");
+                        .HasForeignKey("ParentFolderId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ParentFolder");
                 });

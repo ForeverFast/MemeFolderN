@@ -11,9 +11,9 @@ namespace MemeFolderN.Core.Models
 
         public DateTime CreatingDate { get; set; }
 
-        public IEnumerable<Folder> Folders { get; set; }
+        public List<Folder> Folders { get; set; }
 
-        public IEnumerable<Meme> Memes { get; set; }
+        public List<Meme> Memes { get; set; }
 
         public Folder()
         {

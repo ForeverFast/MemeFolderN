@@ -30,7 +30,7 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
-        public virtual async Task<IEnumerable<MemeDTO>> GetMemesByFolderId(Guid guid)
+        public virtual async Task<List<MemeDTO>> GetMemesByFolderId(Guid guid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
@@ -39,11 +39,11 @@ namespace MemeFolderN.EntityFramework.Services
                      .Include(m => m.TagNodes)
                          .ThenInclude(mtn => mtn.MemeTag)
                      .Where(e => e.Id == guid).ToList());
-                return memes.Select(m => m.ConvertMeme());
+                return memes.Select(m => m.ConvertMeme()).ToList();
             }
         }
 
-        public virtual async Task<IEnumerable<MemeDTO>> GetMemesByTitle(string title)
+        public virtual async Task<List<MemeDTO>> GetMemesByTitle(string title)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
@@ -53,17 +53,16 @@ namespace MemeFolderN.EntityFramework.Services
                      .ThenInclude(mtn => mtn.MemeTag)
                  .Where(e => e.Title == title).ToList());
 
-                return memes.Select(m => m.ConvertMeme());
+                return memes.Select(m => m.ConvertMeme()).ToList();
             }
         }
 
-        public virtual async Task<IEnumerable<MemeDTO>> GetAllMemes()
+        public virtual async Task<List<MemeDTO>> GetAllMemes()
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                IEnumerable<Meme> entities = await Task.FromResult(context.Memes
-                    .ToList());
-                return entities.Select(f => f.ConvertMeme());
+                List<Meme> entities = await context.Memes.AsNoTracking().ToListAsync();
+                return entities.Select(f => f.ConvertMeme()).ToList();
             }
         }
 
@@ -95,7 +94,7 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
-        public virtual async Task<IEnumerable<MemeDTO>> AddRangeMemes(List<MemeDTO> memesDTO)
+        public virtual async Task<List<MemeDTO>> AddRangeMemes(List<MemeDTO> memesDTO)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {

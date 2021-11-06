@@ -3,26 +3,32 @@ using MemeFolderN.MFModelBase.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace MemeFolderN.MFModelBase.Default
+namespace MemeFolderN.MFModelBase.Wpf
 {
-    public partial class MFModel : MFModelBase
+    public partial class MFModelWpf : MFModelBase
     {
-        protected override List<MemeTagDTO> GetAllMemeTags()
+        protected override async Task<List<MemeTagDTO>> GetAllMemeTags()
         {
-            IEnumerable<MemeTagDTO> memeTagsDTO = memeTagDataService.GetTags().Result;
-            return memeTagsDTO.ToList();
+            List<MemeTagDTO> memeTagsDTO = await memeTagDataService.GetTags();
+            return memeTagsDTO;
         }
 
-        protected override List<MemeTagDTO> GetMemeTagsByMemeId(Guid id)
+        protected override async Task<List<Guid>> GetAllMemeIdByMemeTagId(Guid id)
         {
-            IEnumerable<MemeTagDTO> memeTagsDTO = memeTagDataService.GetTagsByMemeId(id).Result;
-            return memeTagsDTO.ToList();
+            return await memeTagNodeDataService.GetAllMemeIdByMemeTagId(id);
         }
 
-        protected override void AddMemeTag(MemeTagDTO memeTagDTO)
+        protected override async Task<List<MemeTagDTO>> GetMemeTagsByMemeId(Guid id)
         {
-            MemeTagDTO createdMemeTag = memeTagDataService.Add(memeTagDTO).Result;
+            List<MemeTagDTO> memeTagsDTO = await memeTagDataService.GetTagsByMemeId(id);
+            return memeTagsDTO;
+        }
+
+        protected override async Task AddMemeTag(MemeTagDTO memeTagDTO)
+        {
+            MemeTagDTO createdMemeTag = await memeTagDataService.Add(memeTagDTO);
             if (createdMemeTag != null)
             {
                 OnAddMemeTagsEvent(new List<MemeTagDTO>() { createdMemeTag });
@@ -30,9 +36,9 @@ namespace MemeFolderN.MFModelBase.Default
             else
                 throw new MFModelException($"Экзмпляр {memeTagDTO.Title} не удалось сохранить.", MFModelExceptionEnum.NotSaved);
         }
-        protected override void ChangeMemeTag(MemeTagDTO memeTagDTO)
+        protected override async Task ChangeMemeTag(MemeTagDTO memeTagDTO)
         {
-            MemeTagDTO updatedMemeTag = memeTagDataService.Update(memeTagDTO.Id, memeTagDTO).Result;
+            MemeTagDTO updatedMemeTag = await memeTagDataService.Update(memeTagDTO.Id, memeTagDTO);
             if (updatedMemeTag != null)
             {
                 OnChangedMemeTagsEvent(new List<MemeTagDTO>() { updatedMemeTag });
@@ -41,9 +47,10 @@ namespace MemeFolderN.MFModelBase.Default
                 throw new MFModelException($"Экзмпляр {memeTagDTO.Title} не удалось обновить.", MFModelExceptionEnum.NotUpdated);
         }
 
-        protected override void DeleteMemeTag(MemeTagDTO memeTagDTO)
+        protected override async Task DeleteMemeTag(MemeTagDTO memeTagDTO)
         {
-            if (memeTagDataService.Delete(memeTagDTO.Id).Result)
+            bool result = await memeTagDataService.Delete(memeTagDTO.Id);
+            if (result)
             {
                 OnRemoveMemeTagsEvent(new List<MemeTagDTO>() { memeTagDTO });
             }

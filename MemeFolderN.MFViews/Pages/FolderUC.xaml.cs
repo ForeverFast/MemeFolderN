@@ -23,6 +23,7 @@ namespace MemeFolderN.MFViews.Pages
         public FolderUC()
         {
             InitializeComponent();
+            
         }
 
         private void empListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

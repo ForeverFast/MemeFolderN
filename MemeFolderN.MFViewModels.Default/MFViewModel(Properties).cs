@@ -4,15 +4,15 @@ namespace MemeFolderN.MFViewModels.Default
 {
     public partial class MFViewModel : MFViewModelBase
     {
-        public bool IsFoldersLoaded { get => _isFoldersLoaded; set => SetProperty(ref _isFoldersLoaded, value); }
-        public bool IsMemesLoaded { get => _isMemesLoaded; set => SetProperty(ref _isMemesLoaded, value); }
-        public bool IsMemeTagsLoaded { get => _isMemeTagsLoaded; set => SetProperty(ref _isMemeTagsLoaded, value); }
+        public bool IsFoldersLoadedFlag { get => _isFoldersLoadedFlag; set => SetProperty(ref _isFoldersLoadedFlag, value); }
+        public bool IsMemesLoadedFlag { get => _isMemesLoadedFlag; set => SetProperty(ref _isMemesLoadedFlag, value); }
+        public bool IsMemeTagsLoadedFlag { get => _isMemeTagsLoadedFlag; set => SetProperty(ref _isMemeTagsLoadedFlag, value); }
 
 
         #region Поля для хранения значений свойств
-        private bool _isFoldersLoaded;
-        private bool _isMemesLoaded;
-        private bool _isMemeTagsLoaded;
+        private bool _isFoldersLoadedFlag = false;
+        private bool _isMemesLoadedFlag = false;
+        private bool _isMemeTagsLoadedFlag = false;
         #endregion
     }
 }

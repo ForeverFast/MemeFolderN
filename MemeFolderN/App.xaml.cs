@@ -1,18 +1,19 @@
 ﻿using MemeFolderN.EntityFramework;
 using MemeFolderN.EntityFramework.Services;
 using MemeFolderN.Extentions.Services;
+using MemeFolderN.MFModel.Wpf.Abstractions;
 using MemeFolderN.MFModelBase.Abstractions;
-using MemeFolderN.MFModelBase.Default;
+using MemeFolderN.MFModelBase.Wpf;
 using MemeFolderN.MFViewModels.Default;
 using MemeFolderN.MFViewModels.Default.Extentions;
-using MemeFolderN.MFViewModels.Default.MethodCommands;
 using MemeFolderN.MFViewModels.Default.Services;
 using MemeFolderN.MFViewModelsBase.Services;
 using MemeFolderN.MFViews;
 using MemeFolderN.MFViews.Pages;
-using MemeFolderN.Navigation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MvvmNavigation;
+using MvvmNavigation.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -23,6 +24,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Z.EntityFramework.Extensions;
 
 namespace MemeFolderN
 {
@@ -54,17 +56,20 @@ namespace MemeFolderN
 
                 ServiceProvider = serviceCollection.BuildServiceProvider();
 
+                EntityFrameworkManager.ContextFactory = context => ServiceProvider.GetRequiredService<MemeFolderNDbContextFactory>().CreateDbContext(null);
+
                 #region NavManager
 
                 MFWindow mainWindow = ServiceProvider.GetRequiredService<MFWindow>();
-                INavigationService navigationService = ServiceProvider.GetRequiredService<INavigationService>();
+                INavigationManager navigationManager = ServiceProvider.GetRequiredService<INavigationManager>();
 
-                navigationService.RegisterViewType<FolderUC>("folderPage");
+                navigationManager.RegisterViewType<FolderUC>("folderPage");
+                navigationManager.RegisterViewType<MemeTagUC>("memeTagPage");
 
-                navigationService.Register<StartUC>("root", null);
+                navigationManager.Register<StartUC>("root", null);
                 //navigationService.Register<SettingsPage>("settings", ServiceProvider.GetRequiredService<SettingsPageVM>());
                 //navigationService.Register<SearchPage>("searchPage", ServiceProvider.GetRequiredService<SearchPageVM>());
-                navigationService.Navigate("root", NavigationType.Root);
+                navigationManager.Navigate("root", NavigationType.Root);
 
                 #endregion
 
@@ -84,16 +89,12 @@ namespace MemeFolderN
             services.AddSingleton<IFolderDataService, FolderDataService>();
             services.AddSingleton<IMemeTagDataService, MemeTagDataService>();
             services.AddSingleton<IMemeTagNodeDataService, MemeTagNodeDataService>();
+            services.AddSingleton<IExtentionalDataService, ExtentionalDataService>();
             services.AddSingleton(typeof(MemeFolderNDbContextFactory));
 
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IUserSettingsService, UserSettingsService>();
-            services.AddSingleton<INavigationService, NavigationService>();
-
-            services.AddSingleton<IFolderMethodCommandsClass, FolderMethodCommandsClass>();
-            services.AddSingleton<IMemeMethodCommandsClass, MemeMethodCommandsClass>();
-            services.AddSingleton<IMemeTagMethodCommandsClass, MemeTagMethodCommandsClass>();
-            services.AddSingleton<INavCommandsClass, NavCommandsClass>();
+            services.AddSingleton<INavigationManager, NavigationManager>();
 
             services.AddSingleton(typeof(VmDIContainer));
             services.AddSingleton(service => Configuration);
@@ -101,7 +102,7 @@ namespace MemeFolderN
             services.AddSingleton(typeof(Dispatcher), Current.Dispatcher);
             //services.AddSingleton(typeof(SearchPageVM));
             //services.AddSingleton(typeof(SettingsPageVM));
-            services.AddSingleton<IMFModel, MFModel>();
+            services.AddSingleton<IMFModelWpf, MFModelWpf>();
             services.AddSingleton(typeof(MFViewModel));
             services.AddSingleton(typeof(MFWindow));
 

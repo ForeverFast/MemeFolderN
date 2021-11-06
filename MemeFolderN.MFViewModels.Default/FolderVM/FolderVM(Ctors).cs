@@ -26,5 +26,25 @@ namespace MemeFolderN.MFViewModels.Default
         //            Memes.Add(new MemeVM(meme));
         //    }
         //}
+
+        protected override void CleanUp(bool clean)
+        {
+            if (!this._disposed)
+            {
+                if (clean)
+                {
+                    Folders.Clear();
+                    Memes.Clear();
+                    SelectedFolder = null;
+                    SelectedMeme = null;
+                }
+            }
+            this._disposed = true;
+        }
+
+        ~FolderVM()
+        {
+            CleanUp(false);
+        }
     }
 }

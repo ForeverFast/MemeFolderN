@@ -1,4 +1,6 @@
-﻿using MemeFolderN.Navigation;
+﻿
+
+using MvvmNavigation.Abstractions;
 
 namespace MemeFolderN.MFViewModelsBase.BaseViewModels
 {
@@ -6,7 +8,7 @@ namespace MemeFolderN.MFViewModelsBase.BaseViewModels
     {
         #region Конструкторы
 
-        public BasePageViewModel(INavigationService navigationService) : base(navigationService)
+        public BasePageViewModel(INavigationManager navigationManager) : base(navigationManager)
         {
 
         }

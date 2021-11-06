@@ -1,5 +1,5 @@
 ﻿using MemeFolderN.MFViewModelsBase.Commands;
-using MemeFolderN.Navigation;
+using MvvmNavigation.Abstractions;
 using System.Windows.Input;
 
 namespace MemeFolderN.MFViewModelsBase.BaseViewModels
@@ -23,7 +23,7 @@ namespace MemeFolderN.MFViewModelsBase.BaseViewModels
 
         #endregion
 
-        public BaseWindowViewModel(INavigationService navigationService) : base(navigationService)
+        public BaseWindowViewModel(INavigationManager navigationManager) : base(navigationManager)
         {
             MinimizedWindowCommand = new RelayCommand(MinimizedWindowMethod);
             ResizeWindowCommand = new RelayCommand(ResizeWindowMethod);

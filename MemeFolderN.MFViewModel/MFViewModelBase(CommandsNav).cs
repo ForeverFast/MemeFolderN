@@ -11,6 +11,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void NavigationByFolderMethod(IFolder folder)
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызван метод навигации к папке по ключу {folder?.Id}.");
 #endif
@@ -21,6 +22,7 @@ namespace MemeFolderN.MFViewModelsBase
 
         protected virtual void NavigationByMemeTagMethod(IMemeTag memeTag)
         {
+            IsBusy = true;
 #if DEBUG
             ShowMetod($"Вызван метод навигации к мему по тегу {memeTag?.Id} / {memeTag?.Title}.");
 #endif

@@ -14,12 +14,15 @@
         xmlns:proxy="clr-namespace:Proxy"
         xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
         xmlns:propa="clr-namespace:MemeFolderN.MFViewModelsBase.Commands;assembly=MemeFolderN.MFViewModelsBase"
+        xmlns:uib="clr-namespace:MemeFolderN.MFViews.UserControlles.UIBlockerUC"
+        xmlns:dd="urn:gong-wpf-dragdrop"
         Title="MFWindow"
         x:Name="MFWindowElement"
         Height="800" Width="1500"
         MinHeight="600" MinWidth="822"
         WindowStyle="SingleBorderWindow"
         WindowStartupLocation="CenterOwner">
+    
     <Window.Style>
         <Style TargetType="{x:Type Window}">
             <Setter Property="WindowChrome.WindowChrome">
@@ -121,11 +124,13 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
+        
+        
         <Grid x:Name="ContentGrid" Grid.Row="1" Grid.Column="1"
               Background="{DynamicResource GrayLVL3}">
 
-            <ssc:LoadingSpinner IsLoading="{Binding IsBusy, UpdateSourceTrigger=PropertyChanged}"
-                                Color="AliceBlue"/>
+            <!--<ssc:LoadingSpinner IsLoading="{Binding IsBusy, UpdateSourceTrigger=PropertyChanged}"
+                                Color="AliceBlue"/>-->
 
             <ContentControl x:Name="MFContent"
                             Margin="0,0,0,0" 
@@ -253,10 +258,72 @@
 
             <Grid Background="{StaticResource GrayLVL3}">
 
-                <TreeView ItemsSource="{Binding Source={StaticResource root}}"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0"
+                        BorderThickness="0,0,0,1"
+                        BorderBrush="{DynamicResource GrayLVL0}">
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0"
+                                Background="{DynamicResource GrayLVL4WithLowOpacity}"
+                                Style="{DynamicResource ChooseTagButton}">
+                            <ib:Interaction.Triggers>
+                                <ib:EventTrigger EventName="Click">
+                                    <ib:ChangePropertyAction TargetName="FolderTreeView" PropertyName="Visibility" Value="Hidden"/>
+                                    <ib:ChangePropertyAction TargetName="TagListBox" PropertyName="Visibility" Value="Visible"/>
+                                </ib:EventTrigger>
+                            </ib:Interaction.Triggers>
+                        </Button>
+
+                        <Button Grid.Column="1"
+                                Background="{DynamicResource GrayLVL4WithLowOpacity}"
+                                Style="{DynamicResource ChooseFolderButton}">
+                            <ib:Interaction.Triggers>
+                                <ib:EventTrigger EventName="Click">
+                                    <ib:ChangePropertyAction TargetName="FolderTreeView" PropertyName="Visibility" Value="Visible"/>
+                                    <ib:ChangePropertyAction TargetName="TagListBox" PropertyName="Visibility" Value="Hidden"/>
+                                </ib:EventTrigger>
+                            </ib:Interaction.Triggers>
+                        </Button>
+                        
+                    </Grid>
+                </Border>
+                
+
+                <TreeView Grid.Row="1" x:Name="FolderTreeView"
+                          ItemsSource="{Binding Source={StaticResource root}}"
                           Foreground="{DynamicResource StandartLightColor2}"
                           Style="{StaticResource TreeViewFolders}"
+                          Visibility="Hidden"
                           Margin="10"/>
+
+                <Grid Grid.Row="1" x:Name="TagListBox"
+                      Visibility="Visible">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    
+                    <ListBox Grid.Row="0"
+                            ItemsSource="{Binding MemeTags}"
+                            Style="{DynamicResource LeftMenuTagList}"/>
+
+                    <Button Style="{DynamicResource LeftMenuAddNewTagButton}" Grid.Row="1"
+                            Command="{Binding MemeTagAddCommand}"/>
+                </Grid>
+               
+
+
+
             </Grid>
 
         </Border>
@@ -281,19 +348,29 @@
                         <ColumnDefinition Width="20"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Style="{DynamicResource AddNewTagButton}" Grid.Column="0"
+                    <!--<Button Style="{DynamicResource AddNewTagButton}" Grid.Column="0"
                             Command="{Binding MemeTagAddCommand}"/>
 
                     <ListBox ItemsSource="{Binding MemeTags}" Grid.Column="1"
-                             Style="{DynamicResource TagLB}"
-                             Background="{DynamicResource GrayLVL4}"/>
+                             Style="{DynamicResource FooterTagList}"
+                             Background="{DynamicResource GrayLVL4}"/>-->
                 </Grid>
             </Grid>
 
         </Border>
 
+        <!--<Grid Grid.Row="1" Grid.Column="1"
+              dd:DragDrop.IsDropTarget="True"
+              dd:DragDrop.DropHandler="{Binding}">
+            
+        </Grid>-->
+        
         <md:DialogHost Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3"
                        CloseOnClickAway="True"
                        Identifier="RootDialog"/>
+
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="3">
+            <uib:UIBlocker IsLoading="{Binding IsBusy, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
     </Grid>
 </Window>

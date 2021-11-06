@@ -7,12 +7,19 @@ namespace MemeFolderN.EntityFramework.Services
 {
     public interface IMemeDataService : IDataService<MemeDTO>
     {
-        Task<IEnumerable<MemeDTO>> GetMemesByFolderId(Guid guid);
+        Task<List<MemeDTO>> GetMemesByFolderId(Guid guid);
 
-        Task<IEnumerable<MemeDTO>> GetMemesByTitle(string title);
-        Task<IEnumerable<MemeDTO>> GetAllMemes();
+        Task<List<MemeDTO>> GetMemesByTitle(string title);
+        Task<List<MemeDTO>> GetAllMemes();
 
-        Task<IEnumerable<MemeDTO>> AddRangeMemes(List<MemeDTO> memes);
+        Task<List<MemeDTO>> AddRangeMemes(List<MemeDTO> memes);
+
+        /// <summary>
+        /// Удаление сущности по Guid
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        Task<bool> Delete(Guid guid);
 
         Task<bool> DeleteRangeMemes(List<MemeDTO> memes);
 

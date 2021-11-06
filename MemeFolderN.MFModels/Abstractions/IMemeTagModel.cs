@@ -11,6 +11,7 @@ namespace MemeFolderN.MFModelBase.Abstractions
     public interface IMemeTagModel
     {
         Task<List<MemeTagDTO>> GetAllMemeTagsAsync();
+        Task<List<Guid>> GetAllMemeIdByMemeTagIdAsync(Guid id);
 
         Task<List<MemeTagDTO>> GetMemeTagsByMemeIdAsync(Guid id);
 

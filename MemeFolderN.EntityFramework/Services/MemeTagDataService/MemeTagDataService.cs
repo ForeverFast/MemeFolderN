@@ -27,26 +27,27 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
-        public virtual async Task<IEnumerable<MemeTagDTO>> GetTags()
+        public virtual async Task<List<MemeTagDTO>> GetTags()
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                IEnumerable<MemeTag> memeTags = await Task.FromResult(context.MemeTags.ToList());
-                return memeTags.Select(mt => mt.ConvertMemeTag());
+                List<MemeTag> memeTags = await context.MemeTags.ToListAsync();
+                return memeTags.Select(mt => mt.ConvertMemeTag()).ToList();
             }
         }
 
-        public virtual async Task<IEnumerable<MemeTagDTO>> GetTagsByMemeId(Guid id)
+        public virtual async Task<List<MemeTagDTO>> GetTagsByMemeId(Guid id)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                IEnumerable<MemeTag> memeTags = await Task.FromResult(context.MemeTagNodes
+                List<MemeTag> memeTags = await context.MemeTagNodes
                     .Include(mt => mt.MemeTag)
                     .Include(mt => mt.Meme)
                     .Where(mtn => mtn.MemeId == id)
                     .Select(mtn => mtn.MemeTag)
-                    .ToList());
-                return memeTags.Select(mt => mt.ConvertMemeTag());
+                    .ToListAsync();
+
+                return memeTags.Select(mt => mt.ConvertMemeTag()).ToList();
             }
         }
 

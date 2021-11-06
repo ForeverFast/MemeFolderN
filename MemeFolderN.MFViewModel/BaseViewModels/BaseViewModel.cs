@@ -10,10 +10,18 @@ namespace MemeFolderN.MFViewModelsBase.BaseViewModels
         protected bool _isBusy;
         protected bool _isLoaded;
         protected bool _showExecutableMethod;
+        protected bool _disposed = false;
+
         public bool IsBusy { get => _isBusy; set => SetProperty(ref _isBusy, value); }
         public bool IsLoaded { get => _isLoaded; set => SetProperty(ref _isLoaded, value); }
 
-        public abstract void Dispose();
+        public void Dispose()
+        {
+            CleanUp(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected abstract void CleanUp(bool clean);
 
 #if DEBUG
         /// <summary>Показывать исполняемые методы</summary>

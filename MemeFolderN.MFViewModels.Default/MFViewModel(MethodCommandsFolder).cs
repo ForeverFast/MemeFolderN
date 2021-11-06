@@ -1,43 +1,12 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.MFViewModelsBase;
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using MemeFolderN.Extentions;
-using MemeFolderN.MFViewModelsBase.Abstractions;
 
 namespace MemeFolderN.MFViewModels.Default
 {
     public partial class MFViewModel : MFViewModelBase
     {
-        //protected override void FolderRootsMethod()
-        //{
-        //    base.FolderRootsMethod();
-        //    FolderRootsMethodAsync();
-        //}
-
-        //protected virtual async void FolderRootsMethodAsync()
-        //{
-        //    try
-        //    {
-        //        if (IsFoldersLoaded)
-        //            return;
-
-        //        IEnumerable<FolderDTO> folders = await model.GetRootFoldersAsync();
-        //        lock (RootFolders)
-        //        {
-        //            foreach (FolderDTO folder in folders)
-        //                RootFolders.Add(new FolderVM(vmDIContainer, folder));
-
-        //            IsBusy = !(IsLoaded = (IsFoldersLoaded = true) && IsMemeTagsLoaded);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        OnException(ex);
-        //    }
-        //}
-
         protected override void FolderLoadMethod()
         {
             base.FolderLoadMethod();
@@ -48,130 +17,125 @@ namespace MemeFolderN.MFViewModels.Default
         {
             try
             {
-                if (IsFoldersLoaded)
+                if (IsFoldersLoadedFlag)
                     return;
 
-                IEnumerable<FolderDTO> folders = await model.GetAllFoldersAsync();
+                List<FolderDTO> folders = await model.GetAllFoldersAsync();
                 lock (Folders)
                 {
-                    foreach (FolderDTO folder in folders)
-                    {
-                        Folders.Add(new FolderVM(folder));
-                        IEnumerable<FolderDTO> innerFolders = DataExtentions.SelectRecursive(folder.Folders, innerF => innerF.Folders);
-                        foreach (FolderDTO innerFolder in innerFolders)
-                            Folders.Add(new FolderVM(innerFolder));
-                    }
+                    folders.ForEach(f => Folders.Add(new FolderVM(f)));
 
-                    IsBusy = !(IsLoaded = (IsFoldersLoaded = true) && IsMemesLoaded && IsMemeTagsLoaded);
+                    IsFoldersLoadedFlag = true;
+                    LoadCheck();
+                    BusyCheck();
                 }
             }
             catch (Exception ex)
             {
+                IsFoldersLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
             }
         }
 
-
         protected override void FolderAddMethod(FolderVMBase folderVMBase)
+        {
+            base.FolderAddMethod(folderVMBase);
+            FolderAddMethodAsync(folderVMBase?.Id);
+        }
+
+        public async void FolderAddMethodAsync(Guid? parentFolderId)
         {
             try
             {
-                base.FolderAddMethod(folderVMBase);
-                folderMethodCommandsClass.FolderAddMethodAsync(folderVMBase.Id);
+                IsFoldersLoadedFlag = false;
+                FolderDTO notSavedFolderDTO = await dialogService.FolderDtoOpenAddDialog(parentFolderId);
+                if (notSavedFolderDTO != null)
+                    await model.AddFolderAsync(notSavedFolderDTO);
+                else
+                {
+                    IsFoldersLoadedFlag = true;
+                    BusyCheck();
+                }
             }
             catch (Exception ex)
             {
+                IsFoldersLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
 
         protected override void FolderAddNonParametersMethod(FolderVMBase folderVMBase)
         {
+            base.FolderAddNonParametersMethod(folderVMBase);
+            FolderAddNonParametersMethodAsync(folderVMBase?.Id);
+        }
+
+        public async void FolderAddNonParametersMethodAsync(Guid? parentFolderId)
+        {
             try
             {
-                base.FolderAddNonParametersMethod(folderVMBase);
-                folderMethodCommandsClass.FolderAddNonParametersMethodAsync(folderVMBase.Id);
+                IsFoldersLoadedFlag = false;
+                await model.AddFolderAsync(new FolderDTO { ParentFolderId = parentFolderId });
             }
             catch (Exception ex)
             {
+                IsFoldersLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
 
         protected override void FolderChangeMethod(FolderVMBase folderVMBase)
         {
+            base.FolderChangeMethod(folderVMBase);
+            FolderChangeMethodAsync(folderVMBase);
+        }
+
+        public async void FolderChangeMethodAsync(FolderVMBase folderVMBase)
+        {
             try
             {
-                base.FolderChangeMethod(folderVMBase);
-                folderMethodCommandsClass.FolderChangeMethodAsync(folderVMBase);
+                IsFoldersLoadedFlag = false;
+                FolderDTO notSavedEditedFolderDTO = await dialogService.FolderDtoOpenEditDialog(folderVMBase.CopyDTO());
+                if (notSavedEditedFolderDTO != null)
+                    await model.ChangeFolderAsync(notSavedEditedFolderDTO);
+                else
+                {
+                    IsFoldersLoadedFlag = true;
+                    BusyCheck();
+                }
             }
             catch (Exception ex)
             {
+                IsFoldersLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
 
         protected override void FolderDeleteMethod(FolderVMBase folderVMBase)
         {
+            base.FolderDeleteMethod(folderVMBase);
+            FolderDeleteMethodAsync(folderVMBase);
+        }
+
+        public virtual async void FolderDeleteMethodAsync(FolderVMBase folderVMBase)
+        {
             try
             {
-                base.FolderDeleteMethod(folderVMBase);
-                folderMethodCommandsClass.FolderDeleteMethodAsync(folderVMBase);
+                IsFoldersLoadedFlag = false;
+                IsMemesLoadedFlag = false;
+                await model.DeleteFolderAsync(folderVMBase.CopyDTO());
             }
             catch (Exception ex)
             {
+                IsMemesLoadedFlag = true;
+                IsFoldersLoadedFlag = true;
+                BusyCheck();
                 OnException(ex);
             }
-            finally
-            {
-                IsBusy = false;
-            }
         }
-
-        //protected override void FolderAddMethod()
-        //{
-        //    try
-        //    {
-        //        base.FolderAddMethod();
-        //        folderMethodCommandsClass.FolderAddMethodAsync(null);
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        OnException(ex);
-        //    }
-        //    finally
-        //    {
-        //        IsBusy = false;
-        //    }
-        //}
-        
-        //protected override void FolderAddNonParametersMethod()
-        //{
-        //    try
-        //    {
-        //        base.FolderAddNonParametersMethod();
-        //        folderMethodCommandsClass.FolderAddNonParametersMethodAsync(null);
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        OnException(ex);
-        //    }
-        //    finally
-        //    {
-        //        IsBusy = false;
-        //    }
-        //}
     }
 }

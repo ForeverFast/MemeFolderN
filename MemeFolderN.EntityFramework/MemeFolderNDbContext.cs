@@ -1,6 +1,7 @@
 ﻿using MemeFolderN.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using Z.EntityFramework.Extensions;
 
 namespace MemeFolderN.EntityFramework
 {
@@ -20,15 +21,21 @@ namespace MemeFolderN.EntityFramework
                 entity.HasOne(f => f.ParentFolder)
                 .WithMany(f => f.Folders)
                 .IsRequired(false);
-               
-                entity.HasMany(f => f.Folders);
-                entity.HasMany(f => f.Memes);
+
+                entity.HasMany(f => f.Folders)
+                .WithOne(f => f.ParentFolder)
+                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany(f => f.Memes)
+                .WithOne(f => f.ParentFolder)
+                .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Meme>(entity =>
             {
                 entity.HasOne(m => m.ParentFolder);
-                entity.HasMany(m => m.TagNodes);
+                entity.HasMany(m => m.TagNodes)
+                .WithOne(tn => tn.Meme)
+                .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<MemeTagNode>(entity =>

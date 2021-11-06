@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:srd="clr-namespace:MemeFolderN.MFViews.Extentions.Data">
+    
+    <ResourceDictionary.MergedDictionaries>
+
+        <srd:SharedResourceDictionary 
+                    Source="Header/Buttons.xaml" />
+
+        <srd:SharedResourceDictionary 
+                    Source="Header/TextBoxStyles.xaml" />
+
+    </ResourceDictionary.MergedDictionaries>
+    
+</ResourceDictionary>

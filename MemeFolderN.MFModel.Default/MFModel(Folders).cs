@@ -4,37 +4,63 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace MemeFolderN.MFModelBase.Default
+namespace MemeFolderN.MFModelBase.Wpf
 {
-    public partial class MFModel : MFModelBase
+    public partial class MFModelWpf : MFModelBase
     {
-        protected override List<FolderDTO> GetFoldersByFolderId(Guid id)
+        protected override async Task<List<FolderDTO>> GetAllFolders()
         {
-            IEnumerable<FolderDTO> foldersDTO = folderDataService.GetFoldersByFolderID(id).Result;
-            return foldersDTO.ToList();
+            List<FolderDTO> foldersDTO = await folderDataService.GetAllFolders();
+            return foldersDTO;
         }
 
-        protected override List<FolderDTO> GetRootFolders()
+        protected override async Task<List<FolderDTO>> GetFoldersByFolderId(Guid id)
         {
-            IEnumerable<FolderDTO> foldersDTO = folderDataService.GetRootFolders().Result;
-            return foldersDTO.ToList();
+            List<FolderDTO> foldersDTO = await folderDataService.GetFoldersByFolderID(id);
+            return foldersDTO;
         }
 
-        protected override List<FolderDTO> GetAllFolders()
+        protected override async Task AddFolder(FolderDTO folderDTO)
         {
-            IEnumerable<FolderDTO> foldersDTO = folderDataService.GetAllFolders().Result;
-            return foldersDTO.ToList();
+            Guid? parentGuid = folderDTO.ParentFolderId;
+            string parentFolderPath = parentGuid != null ? await GetParentFolderPath(parentGuid) : userSettingsService.RootFolderPath;
+
+            FolderDTO proccesedFolderDTO = InitNewFolder(folderDTO, parentFolderPath) with
+            {
+                ParentFolderId = parentGuid
+            };
+
+            FolderDTO createdFolder = await folderDataService.Add(proccesedFolderDTO);
+            if (createdFolder != null)
+                OnAddFoldersEvent(new List<FolderDTO>() { createdFolder });
+            else
+                throw new MFModelException($"Экзмпляр {proccesedFolderDTO.Title} не удалось сохранить.", MFModelExceptionEnum.NotSaved);
         }
 
-        protected override void AddFolder(FolderDTO folderDTO)
+        protected override async Task ChangeFolder(FolderDTO folderDTO)
         {
-            FolderDTO parentFolder = folderDTO.ParentFolder;
-            string parentFolderPath = string.Empty;
-            if (parentFolder == null)
-                parentFolderPath = userSettingsService.RootFolderPath;
+            FolderDTO updatedFolder = await folderDataService.Update(folderDTO.Id, folderDTO);
+            if (updatedFolder != null)
+                OnChangedFoldersEvent(new List<FolderDTO>() { updatedFolder });
+            else
+                throw new MFModelException($"Экзмпляр {folderDTO.Title} не удалось обновить.", MFModelExceptionEnum.NotUpdated);
+        }
 
+        protected override async Task DeleteFolder(FolderDTO folderDTO)
+        {
+            List<FolderDTO> result = await folderDataService.Delete(folderDTO.Id);
+            if (result != null)
+                OnRemoveFoldersEvent(result);
+            else
+                throw new MFModelException($"Экзмпляр {folderDTO.Title} не удалось удалить.", MFModelExceptionEnum.NotDeleted);
+        }
 
+        #region Вспомогательные методы
+
+        protected FolderDTO InitNewFolder(FolderDTO folderDTO, string parentFolderPath)
+        {
             string newFolderPath = string.Empty;
             if (string.IsNullOrEmpty(folderDTO.Title))
             {
@@ -44,39 +70,19 @@ namespace MemeFolderN.MFModelBase.Default
             {
                 newFolderPath = @$"{parentFolderPath}\{folderDTO.Title}";
                 if (Directory.Exists(newFolderPath))
+                {
                     newFolderPath = GetFolderAnotherName(parentFolderPath, folderDTO.Title);
+                }    
             }
             Directory.CreateDirectory(newFolderPath);
 
-            FolderDTO proccesedFolderDTO = folderDTO with
+            folderDTO = folderDTO with
             {
                 Title = Path.GetFileName(newFolderPath),
-                ParentFolder = parentFolder,
                 FolderPath = newFolderPath
             };
 
-            FolderDTO createdFolder = folderDataService.Add(proccesedFolderDTO).Result;
-            if (createdFolder != null)
-                OnAddFoldersEvent(new List<FolderDTO>() { createdFolder });
-            else
-                throw new MFModelException($"Экзмпляр {proccesedFolderDTO.Title} не удалось сохранить.", MFModelExceptionEnum.NotSaved);
-        }
-
-        protected override void ChangeFolder(FolderDTO folderDTO)
-        {
-            FolderDTO updatedFolder = folderDataService.Update(folderDTO.Id, folderDTO).Result;
-            if (updatedFolder != null)
-                OnChangedFoldersEvent(new List<FolderDTO>() { updatedFolder });
-            else
-                throw new MFModelException($"Экзмпляр {folderDTO.Title} не удалось обновить.", MFModelExceptionEnum.NotUpdated);
-        }
-
-        protected override void DeleteFolder(FolderDTO folderDTO)
-        {
-            if (folderDataService.Delete(folderDTO.Id).Result)
-                OnRemoveFoldersEvent(new List<FolderDTO>() { folderDTO });
-            else
-                throw new MFModelException($"Экзмпляр {folderDTO.Title} не удалось удалить.", MFModelExceptionEnum.NotDeleted);
+            return folderDTO;
         }
 
         protected string GetFolderAnotherName(string rootPath, string title)
@@ -94,5 +100,7 @@ namespace MemeFolderN.MFModelBase.Default
                 }
             }
         }
+
+        #endregion
     }
 }

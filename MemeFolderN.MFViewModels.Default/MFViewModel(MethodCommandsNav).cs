@@ -1,19 +1,38 @@
 ﻿using MemeFolderN.MFViewModelsBase;
 using MemeFolderN.MFViewModelsBase.Abstractions;
-using MemeFolderN.Navigation;
+using MvvmNavigation.Abstractions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MemeFolderN.MFViewModels.Default
 {
     public partial class MFViewModel : MFViewModelBase
     {
+        private void NavigationService_Navigated(object sender, NavigationEventArgs e)
+        {
+            object vm = e.ViewModel;
+            if (vm is FolderVM folderVM)
+            {
+                SelectedFolder = folderVM;
+            }
+
+            if (vm is MemeTagVM memeTagVM)
+            {
+                SelectedMemeTag = memeTagVM;
+            }
+
+            BusyCheck();
+        }
+
         protected override void NavigationBackMethod()
         {
             try
             {
                 base.NavigationBackMethod();
-                navigationService.GoBack();
+                navigationManager.GoBack();
+               
             }
             catch (Exception ex)
             {
@@ -26,7 +45,7 @@ namespace MemeFolderN.MFViewModels.Default
             try
             {
                 base.NavigationForwardMethod();
-                navigationService.GoForward();
+                navigationManager.GoForward();
             }
             catch (Exception ex)
             {
@@ -39,7 +58,7 @@ namespace MemeFolderN.MFViewModels.Default
             try
             {
                 base.NavigationToExecute(parameter);
-                navigationService.Navigate(parameter, NavigationType.Default);
+                navigationManager.Navigate(parameter, NavigationType.Default);
             }
             catch (Exception ex)
             {
@@ -47,18 +66,19 @@ namespace MemeFolderN.MFViewModels.Default
             }
         }
 
-        protected override void NavigationByFolderMethod(IFolder folder)
+        protected override async void NavigationByFolderMethod(IFolder folder)
         {
             try
             {
                 base.NavigationByFolderMethod(folder);
-            
+                await Task.Delay(1);
+
                 FolderVM folderVM = (FolderVM)this.Folders.FirstOrDefault(rf => rf.Id == folder.Id);
-                
+
                 string navKey = folderVM.Id.ToString();
-                if (navigationService.CanNavigate(navKey))
+                if (navigationManager.CanNavigate(navKey))
                 {
-                    navigationService.Navigate(navKey, NavigationType.Default);
+                    navigationManager.Navigate(navKey, NavigationType.Default);
                 }
                 else
                 {
@@ -66,16 +86,17 @@ namespace MemeFolderN.MFViewModels.Default
                         .ToList()
                         .ForEach(m => folderVM.Memes.Add(m));
                     
-                    navigationService.NavigateByViewTypeKey(navKey, "folderPage", folderVM, null);
+                    navigationManager.NavigateByViewTypeKey(navKey, "folderPage", folderVM, null);
                 }
             }
             catch(Exception ex)
             {
+                BusyCheck();
                 OnException(ex);
             }
         }
 
-        protected override void NavigationByMemeTagMethod(IMemeTag memeTag)
+        protected override async void NavigationByMemeTagMethod(IMemeTag memeTag)
         {
             try
             {
@@ -83,12 +104,26 @@ namespace MemeFolderN.MFViewModels.Default
 
                 MemeTagVM memeTagVM = (MemeTagVM)this.MemeTags.FirstOrDefault(rf => rf.Id == memeTag.Id);
 
-                // todo
+                string navKey = memeTagVM.Id.ToString();
+                if (navigationManager.CanNavigate(navKey))
+                {
+                    navigationManager.Navigate(navKey, NavigationType.Default);
+                }
+                else
+                {
+                    List<Guid> memeIds = await model.GetAllMemeIdByMemeTagIdAsync(memeTagVM.Id);
+                    Memes.Where(m => memeIds.Any(x => x == m.Id))
+                        .ToList()
+                        .ForEach(m => memeTagVM.Memes.Add(m));
+
+                    //navigationService.NavigateByViewTypeKey(navKey, "folderPage", folderVM, null);
+                }
 
                 //navCommandsClass.NavigationByFolderMethod(memeTagVM);
             }
             catch (Exception ex)
             {
+                BusyCheck();
                 OnException(ex);
             }
         }

@@ -37,5 +37,10 @@ namespace MemeFolderN.Extentions
                 }
             }
         }
+
+        //public static T BuildTree<T>(this T root, Func<T, object> idFunc, Func<T, object> parentIdFunc, Func<T )
+        //{
+
+        //}
     }
 }

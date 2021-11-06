@@ -1,10 +1,11 @@
 ﻿using MemeFolderN.MFViewModelsBase.Abstractions;
+using MemeFolderN.MFViewModelsBase.BaseViewModels;
 using System;
 using System.Collections.ObjectModel;
 
 namespace MemeFolderN.MFViewModelsBase
 {
-    public abstract partial class FolderVMBase : OnPropertyChangedClass, IFolder
+    public abstract partial class FolderVMBase : BaseViewModel, IFolder
     {
         public ObservableCollection<IFolder> Folders { get; } = new ObservableCollection<IFolder>();
         public ObservableCollection<IMeme> Memes { get; } = new ObservableCollection<IMeme>();
