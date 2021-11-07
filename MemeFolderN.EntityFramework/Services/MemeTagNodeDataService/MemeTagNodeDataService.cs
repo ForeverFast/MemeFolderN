@@ -1,31 +1,32 @@
-﻿using MemeFolderN.Core.Models;
-using MemeFolderN.Core.Converters;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using NLog;
-using System;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using MemeFolderN.Core.DTOClasses;
+using MemeFolderN.Core.Models;
+using MemeFolderN.EntityFramework.AutoMapperProfiles;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MemeFolderN.EntityFramework.Services
 {
     public class MemeTagNodeDataService : IMemeTagNodeDataService
     {
         protected readonly MemeFolderNDbContextFactory _contextFactory;
-
+        protected readonly IMapper _mapper;
 
         public virtual async Task<MemeTagNodeDTO> GetById(Guid guid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                MemeTagNode entity = await context.MemeTagNodes
+                MemeTagNode memeTagNode = await context.MemeTagNodes
                     .Include(mtn => mtn.Meme)
                     .Include(mtn => mtn.MemeTag)
                     .FirstOrDefaultAsync(e => e.Id == guid);
-                return entity.ConvertMemeTagNode();
+
+                MemeTagNodeDTO dto = _mapper.Map<MemeTagNodeDTO>(memeTagNode);
+
+                return dto;
             }
         }
 
@@ -33,9 +34,14 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                MemeTagNode entity = await context.MemeTagNodes
+                MemeTagNode memeTagNode = await context.MemeTagNodes
+                    .Include(mtn => mtn.Meme)
+                    .Include(mtn => mtn.MemeTag)
                     .FirstOrDefaultAsync(mtn => mtn.MemeId == memeId && mtn.MemeTagId == memeTagId);
-                return entity.ConvertMemeTagNode();
+
+                MemeTagNodeDTO dto = _mapper.Map<MemeTagNodeDTO>(memeTagNode);
+
+                return dto;
             }
         }
 
@@ -44,70 +50,67 @@ namespace MemeFolderN.EntityFramework.Services
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
                 List<Guid> result = await context.MemeTagNodes
+                    .Include(mtn => mtn.Meme)
+                    .Include(mtn => mtn.MemeTag)
                     .Where(x => x.MemeTagId == memeTagId)
                     .Select(x => x.MemeId)
                     .ToListAsync();
+
                 return result;
             }
         }
 
-        public virtual async Task<MemeTagNodeDTO> Add(MemeTagNodeDTO memeTagNodeDTO)
+
+        public virtual async Task<MemeDTO> Add(Guid memeGuid, Guid tagGuid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                MemeTagNode memeTagNode = memeTagNodeDTO.ConvertMemeTagNodeDTO();
+                MemeTagNode memeTagNode = new MemeTagNode();
 
-                Meme meme = await context.Memes.FirstOrDefaultAsync(m => m.Id == memeTagNode.MemeId);
-                if (meme != null)
-                    memeTagNode.Meme = meme;
+                bool memeResult = context.Memes.Any(m => m.Id == memeGuid);
+                if (memeResult)
+                    memeTagNode.MemeId = memeGuid;
                 else
                     throw new ArgumentNullException("Meme can not be null");
 
-                MemeTag memeTag = await context.MemeTags.FirstOrDefaultAsync(mt => mt.Id == memeTagNode.MemeTagId);
-                if (memeTag != null)
-                    memeTagNode.MemeTag = memeTag;
+                bool memeTagResult = context.MemeTags.Any(mt => mt.Id == tagGuid);
+                if (memeTagResult)
+                    memeTagNode.MemeTagId = tagGuid;
                 else
                     throw new ArgumentNullException("MemeTag can not be null");
 
-                EntityEntry<MemeTagNode> createdResult = await context.MemeTagNodes.AddAsync(memeTagNode);
+                await context.MemeTagNodes.AddAsync(memeTagNode);
                 await context.SaveChangesAsync();
 
-                return createdResult.Entity.ConvertMemeTagNode();
+                MemeDTO dto = _mapper.Map<MemeDTO>(await context.Memes
+                   .AsNoTracking()
+                   .FirstOrDefaultAsync(m => m.Id == memeGuid));
+
+                return dto;
             }
         }
 
-        public virtual async Task<List<MemeTagNodeDTO>> AddRange(List<MemeTagNodeDTO> memeTagNodeDTOs)
+        public virtual async Task<MemeDTO> AddRange(Guid memeGuid, List<Guid> tags)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                List<MemeTagNode> memeTagNodes = memeTagNodeDTOs.Select(x => x.ConvertMemeTagNodeDTO()).ToList();
+                List<MemeTagNode> mtns = tags.Select(t => new MemeTagNode
+                { 
+                    MemeId = memeGuid,
+                    MemeTagId = t
+                }).ToList();
 
-                await context.BulkInsertAsync(memeTagNodes);
+                await context.BulkInsertAsync(mtns);
                 await context.SaveChangesAsync();
 
-                return memeTagNodes.Select(x => x.ConvertMemeTagNode()).ToList();
+                MemeDTO dto = _mapper.Map<MemeDTO>(await context.Memes
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(m => m.Id == memeGuid));
+
+                return dto;
             }
         }
 
-        public virtual async Task<MemeTagNodeDTO> Update(Guid guid, MemeTagNodeDTO memeTagNodeDTO)
-        {
-            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
-            {
-                MemeTagNode memeTagNode = memeTagNodeDTO.ConvertMemeTagNodeDTO();
-
-                var original = await context.MemeTagNodes.FirstOrDefaultAsync(e => e.Id == guid);
-
-                foreach (PropertyInfo propertyInfo in original.GetType().GetProperties())
-                {
-                    if (propertyInfo.GetValue(memeTagNode, null) == null)
-                        propertyInfo.SetValue(memeTagNode, propertyInfo.GetValue(original, null), null);
-                }
-                context.Entry(original).CurrentValues.SetValues(memeTagNode);
-                await context.SaveChangesAsync();
-
-                return memeTagNode.ConvertMemeTagNode();
-            }
-        }
 
         public virtual async Task<bool> Delete(Guid guid)
         {
@@ -122,19 +125,64 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
+        public virtual async Task<MemeDTO> Delete(Guid memeGuid, Guid tagGuid)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                MemeTagNode entity = await context.MemeTagNodes
+                    .Include(mtn => mtn.Meme)
+                    .FirstOrDefaultAsync(e => e.MemeId == memeGuid && e.MemeTagId == tagGuid);
+
+                context.MemeTagNodes.Remove(entity);
+
+                await context.SaveChangesAsync();
+
+                MemeDTO dto = _mapper.Map<MemeDTO>(await context.Memes
+                   .AsNoTracking()
+                   .FirstOrDefaultAsync(m => m.Id == memeGuid));
+
+                return dto;
+            }
+        }
+
+        public virtual async Task<MemeDTO> DeleteRange(Guid memeGuid, List<Guid> tags)
+        {
+            using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
+            {
+                List<MemeTagNode> mtns = await context.MemeTagNodes
+                    .Where(mtn => mtn.MemeId == memeGuid && tags.Any(t => t == mtn.MemeTagId))
+                    .ToListAsync();
+
+                context.BulkDelete(mtns);
+
+                await context.SaveChangesAsync();
+
+                MemeDTO dto = _mapper.Map<MemeDTO>(await context.Memes
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(m => m.Id == memeGuid));
+
+                return dto;
+            }
+        }
+
 
         #region Конструкторы
 
         public MemeTagNodeDataService()
         {
             _contextFactory = new MemeFolderNDbContextFactory();
+            _mapper = new Mapper(new MapperConfiguration(opt =>
+            {
+                opt.AddProfile(new MapperProfileDAL());
+            }));
         }
 
-        public MemeTagNodeDataService(MemeFolderNDbContextFactory contextFactory)
+        public MemeTagNodeDataService(MemeFolderNDbContextFactory contextFactory, IMapper mapper)
         {
             _contextFactory = contextFactory;
+            _mapper = mapper;
         }
-
+     
         #endregion
     }
 }

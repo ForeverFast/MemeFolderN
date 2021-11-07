@@ -172,10 +172,8 @@ namespace MemeFolderN.MFViewModels.Default
             /// Если в добавляемой коллекции есть элементы
             if (list.Count > 0)
             {
-                IFolder currentFolder = list.FirstOrDefault(x => x.Id == SelectedFolder.Id);
-                
                 /// Вызов метода добавления в коллекцию в потоке UI
-                dispatcher.BeginInvoke((Action<List<FolderVM>, List<MemeVM>, FolderVM>)FoldersRemoveUI, list, memes, currentFolder);
+                dispatcher.BeginInvoke((Action<List<FolderVM>, List<MemeVM>>)FoldersRemoveUI, list, memes);
             }
             else
             {
@@ -190,7 +188,7 @@ namespace MemeFolderN.MFViewModels.Default
         /// <summary>Метод удаляющий Папки в коллекции для представления</summary>
         /// <param name="folders">Удаляемые Папки</param>
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
-        private void FoldersRemoveUI(List<FolderVM> folders, List<MemeVM> memes, FolderVM currentFolder)
+        private void FoldersRemoveUI(List<FolderVM> folders, List<MemeVM> memes)
         {
             lock (Folders)
             {

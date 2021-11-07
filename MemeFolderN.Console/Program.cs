@@ -1,6 +1,5 @@
 ﻿using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.Core.Models;
-using MemeFolderN.Core.Converters;
 using MemeFolderN.EntityFramework;
 using MemeFolderN.EntityFramework.Services;
 using System;
@@ -15,6 +14,8 @@ using MemeFolderN.Extentions;
 using Z.EntityFramework.Extensions;
 using Z.BulkOperations;
 using System.IO;
+using AutoMapper;
+using MemeFolderN.EntityFramework.AutoMapperProfiles;
 
 namespace MemeFolderN.Console
 {
@@ -24,19 +25,23 @@ namespace MemeFolderN.Console
 
         static void Main(string[] args)
         {
-            Folder folder = new Folder { Title = "123" };
 
-            Func<object> func = () => folder;
+            var mc = new MapperConfiguration(c =>
+            {
+                c.AddProfile(new MapperProfileDAL());
+            });
 
-            object obj = func.Invoke();
+            mc.AssertConfigurationIsValid();
 
-            return;
-         
+            Mapper mapper = new Mapper(mc);
+
+            //return;
+
             try
             {
                 EntityFrameworkManager.ContextFactory = context => memeFolderNDbContextFactory.CreateDbContext(null);
 
-                var t = Path.GetExtension(@"D:\Пикчи\Картинки\Арты\10190.jpg");
+                //var t = Path.GetExtension(@"D:\Пикчи\Картинки\Арты\10190.jpg");
 
                 Folder folderR = new Folder()
                 {
@@ -112,9 +117,21 @@ namespace MemeFolderN.Console
                 }
                 };
 
+                FolderDTO folder = mapper.Map<FolderDTO>(folderR);
 
                 using (MemeFolderNDbContext context = memeFolderNDbContextFactory.CreateDbContext(null))
                 {
+                    
+                    Meme meme = context.Memes
+                        //.Include(m => m.ParentFolder)
+                        .Include(m => m.TagNodes)
+                            .ThenInclude(mtn => mtn.MemeTag)
+                        .FirstOrDefault(e => e.Id == Guid.Parse("E1418133-F8D7-4E23-BBBD-F18823D6F066"));
+
+                    MemeDTO dto = mapper.Map<MemeDTO>(meme);
+
+                    System.Console.WriteLine();
+
                     //Folder folder = context.Folders.FirstOrDefault(x => x.Title == "folderRoot");
 
                     //folder.Memes = new List<Meme>() { new Meme() { Title = "newRootMeme1" } };
@@ -159,7 +176,7 @@ namespace MemeFolderN.Console
                     //context.SaveChanges();
                 }
             }
-            catch (Exception ex)
+            catch (Exception /*ex*/)
             {
                 System.Console.ReadKey();
             }

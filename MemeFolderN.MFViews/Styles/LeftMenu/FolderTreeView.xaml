@@ -7,12 +7,14 @@
                     xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Default;assembly=MemeFolderN.MFViewModels.Default"
                     xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
                     >
+    
     <cn:BindingTagSourceCollectionConverter x:Key="BTS"/>
 
     <HierarchicalDataTemplate DataType="{x:Type vm:FolderVM}"
                               ItemsSource="{Binding Folders, UpdateSourceTrigger=PropertyChanged}">
 
-        <Border Height="25">
+        <Border Height="25"
+                HorizontalAlignment="Stretch">
 
             <Border.InputBindings>
                 <MouseBinding Gesture="LeftDoubleClick"
@@ -104,26 +106,24 @@
 
         <Setter Property="ItemsSource" Value="{Binding Tag.View, RelativeSource={RelativeSource Self}}"/>
 
-        <!--<Setter Property="ItemTemplate">
-            <Setter.Value>
-                
-            </Setter.Value>
-        </Setter>-->
-
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TreeViewItem}">
 
-                    <Grid Background="{DynamicResource GrayLVL4WithLowOpacity}">
+                    <Grid Background="{DynamicResource GrayLVL4WithLowOpacity}"
+                          HorizontalAlignment="Stretch">
+                        
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition MinWidth="19" Width="Auto" />
-                            <ColumnDefinition MinWidth="150" Width="Auto" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition MinWidth="150" Width="*" />
+                            <!--<ColumnDefinition Width="*" />-->
                         </Grid.ColumnDefinitions>
+                        
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
+                        
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="SelectionStates">
                                 <VisualState x:Name="Selected">
@@ -159,6 +159,7 @@
                                 <VisualState x:Name="Collapsed" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
+                        
                         <ToggleButton x:Name="Expander"
                                       Foreground="{DynamicResource StandartLightColor2}"
                                       Style="{DynamicResource ExpandCollapseToggleStyle}"
@@ -167,8 +168,7 @@
 
                         <Border x:Name="Bd"
                                 Grid.Column="1"
-                               
-                                Width="auto"
+                                HorizontalAlignment="Stretch"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -192,8 +192,8 @@
                         <ItemsPresenter x:Name="ItemsHost"
                                         Grid.Row="1"
                                         Grid.Column="1"
-                                        Grid.ColumnSpan="2"
                                         Visibility="Collapsed" />
+                        <!--Grid.ColumnSpan="2"-->
                     </Grid>
 
                     <ControlTemplate.Triggers>
@@ -267,4 +267,5 @@
         </Setter>
 
     </Style>
+    
 </ResourceDictionary>

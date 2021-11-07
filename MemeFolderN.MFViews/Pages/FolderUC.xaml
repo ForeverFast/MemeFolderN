@@ -66,14 +66,12 @@
             </Label>
 
             <ListView x:Name="MemeList" ItemsSource="{Binding Memes}"
-                     Style="{StaticResource DefLB}"
+                     Style="{StaticResource FolderUCMemeList}"
                      Background="{x:Null}"
                     
                      VirtualizingStackPanel.IsVirtualizing="True"
                      VirtualizingStackPanel.VirtualizationMode="Recycling"
                 
-                    
-                 
                      ScrollViewer.CanContentScroll="False"
                      ScrollViewer.IsDeferredScrollingEnabled="False"
                      
@@ -81,18 +79,6 @@
                          
                      dd:DragDrop.IsDropTarget="True"
                      dd:DragDrop.DropHandler="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext}">
-
-                <ListView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Создать мемчик"
-                                  CommandParameter="{Binding}"
-                                  Command="{x:Static routedCommands:MemeRoutedCommands.MemeAddNonParametersRoutedCommand}"/>
-                        <MenuItem Header="Создать мемчик с параметрами"
-                                  CommandParameter="{Binding}"
-                                  Command="{x:Static routedCommands:MemeRoutedCommands.MemeAddRoutedCommand}"/>
-                        <!--<MenuItem Header="Test" Command="{Binding TestCommand}" />-->
-                    </ContextMenu>
-                </ListView.ContextMenu>
             </ListView>
 
 

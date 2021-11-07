@@ -43,5 +43,8 @@ namespace MemeFolderN.MFModelBase
 
         public Task DeleteRangeMemesAsync(List<MemeDTO> memes) => Task.Run(() => DeleteRangeMemes(memes));
         protected abstract Task DeleteRangeMemes(List<MemeDTO> memes);
+
+        public Task DeleteMemeTagFromMemeAsync(Guid memeGuid, Guid tagGuid) => Task.Run(() => DeleteMemeTagFromMeme(memeGuid, tagGuid));
+        protected abstract Task DeleteMemeTagFromMeme(Guid memeGuid, Guid tagGuid);
     }
 }

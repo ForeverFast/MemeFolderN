@@ -12,5 +12,7 @@ namespace MemeFolderN.Core.DTOClasses
         public string MiniImagePath { get; init; }
 
         public List<MemeTagDTO> Tags { get; init; }
+
+        public List<Guid> TagGuids { get; init; }
     }
 }

@@ -54,6 +54,13 @@ namespace MemeFolderN.Extentions
             }
         }
 
+        public static string GetImageFolderPath(string imagePath)
+        {
+            FileInfo fInfo = new FileInfo(imagePath);
+
+            return fInfo.Directory.FullName;
+        }
+
         public static Image ResizeOrigImg(Image image, int nWidth, int nHeight)
         {
             int newWidth, newHeight;

@@ -67,6 +67,20 @@ namespace MemeFolderN.MFViewModelsBase
         }
 
 
+        public RelayCommand MemeDeleteTagCommand => _memeDeleteTagCommand ?? (_memeDeleteTagCommand =
+            new RelayCommandAction<object>(MemeDeleteTagMethod));
+
+        protected virtual void MemeDeleteTagMethod(object data)
+        {
+            object[] coll = (object[])data;
+            MemeVMBase memeVMBase = coll[0] as MemeVMBase;
+            MemeTagVMBase memeTagVMBase = coll[1] as MemeTagVMBase;
+            IsBusy = true;
+#if DEBUG
+            ShowMetod($"Вызвано удаление тега {memeTagVMBase.Id} / {memeTagVMBase.Title} из мема {memeVMBase.Id} / {memeVMBase.Title}");
+#endif
+        }
+
         public RelayCommand MemeOpenCommand => _memeOpenCommand ?? (_memeOpenCommand =
            new RelayCommandAction<MemeVMBase>(MemeOpenMethod, (mVm) => !string.IsNullOrEmpty(mVm.ImagePath)));
 
@@ -74,6 +88,16 @@ namespace MemeFolderN.MFViewModelsBase
         {
 #if DEBUG
             ShowMetod($"Вызвано открытие изображения мема {memeVMBase.Id} / {memeVMBase.Title}");
+#endif
+        }
+
+        public RelayCommand MemeOpenInExplorerCommand => _memeOpenInExplorerCommand ?? (_memeOpenInExplorerCommand =
+           new RelayCommandAction<MemeVMBase>(MemeOpenInExplorerMethod, (mVm) => !string.IsNullOrEmpty(mVm.ImagePath)));
+
+        protected virtual void MemeOpenInExplorerMethod(MemeVMBase memeVMBase)
+        {
+#if DEBUG
+            ShowMetod($"Вызвано открытие папки для мема {memeVMBase.Id} / {memeVMBase.Title}");
 #endif
         }
 
@@ -94,7 +118,9 @@ namespace MemeFolderN.MFViewModelsBase
         private RelayCommand _memeAddNonParametersCommand;
         private RelayCommand _memeChangeCommand;
         private RelayCommand _memeDeleteCommand;
+        private RelayCommand _memeDeleteTagCommand;
         private RelayCommand _memeOpenCommand;
+        private RelayCommand _memeOpenInExplorerCommand;
         private RelayCommand _memeCopyCommand;
         #endregion
     }

@@ -21,7 +21,7 @@ namespace MemeFolderN.EntityFramework.Services
         /// <returns></returns>
         Task<bool> Delete(Guid guid);
 
-        Task<bool> DeleteRangeMemes(List<MemeDTO> memes);
+        Task<List<MemeDTO>> DeleteRangeMemes(List<MemeDTO> memes);
 
         Task<bool> DeleteAllMemes();
     }

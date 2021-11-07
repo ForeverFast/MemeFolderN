@@ -227,6 +227,7 @@ namespace MvvmNavigation
             }
             catch (Exception ex)
             {
+                var t = ex.Message;
                 return false;
             }
         }

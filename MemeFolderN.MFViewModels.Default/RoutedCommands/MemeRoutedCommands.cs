@@ -13,8 +13,8 @@ namespace MemeFolderN.MFViewModels.Default.RoutedCommands
         public static RoutedCommand MemeOpenRoutedCommand { get; }
             = new RoutedUICommand("Открыть", nameof(MemeOpenRoutedCommand), typeof(MemeRoutedCommands));
 
-        public static RoutedCommand MemeOpenInExploerRoutedCommand { get; }
-            = new RoutedUICommand("Открыть в проводнике", nameof(MemeOpenInExploerRoutedCommand), typeof(MemeRoutedCommands));
+        public static RoutedCommand MemeOpenInExplorerRoutedCommand { get; }
+            = new RoutedUICommand("Открыть в проводнике", nameof(MemeOpenInExplorerRoutedCommand), typeof(MemeRoutedCommands));
 
         public static RoutedCommand MemeCopyRoutedCommand { get; }
             = new RoutedUICommand("Скорпировать в буфер", nameof(MemeCopyRoutedCommand), typeof(MemeRoutedCommands));
@@ -22,11 +22,10 @@ namespace MemeFolderN.MFViewModels.Default.RoutedCommands
         public static RoutedCommand MemeChangeRoutedCommand { get; }
             = new RoutedUICommand("Изменить", nameof(MemeChangeRoutedCommand), typeof(MemeRoutedCommands));
 
+        public static RoutedCommand MemeDeleteTagRoutedCommand { get; }
+          = new RoutedUICommand("Убрать текущий тег", nameof(MemeDeleteTagRoutedCommand), typeof(MemeRoutedCommands));
+
         public static RoutedCommand MemeDeleteRoutedCommand { get; }
            = new RoutedUICommand("Удалить", nameof(MemeDeleteRoutedCommand), typeof(MemeRoutedCommands));
-
-
-
-
     }
 }

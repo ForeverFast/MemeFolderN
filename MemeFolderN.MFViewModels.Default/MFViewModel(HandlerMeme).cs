@@ -59,16 +59,16 @@ namespace MemeFolderN.MFViewModels.Default
             /// Если в добавляемой коллекции есть элементы
             if (list.Count > 0)
             {
-                List<MemeVM> curMemes = new List<MemeVM>();
-                if (SelectedFolder != null)
-                {
-                    curMemes = list.Where(m => m.ParentFolderId == SelectedFolder.Id && !SelectedFolder.Memes.Any(x => x.Id == m.Id))
-                        .ToList();
-                         
-                }
+                List<MemeVM> folderMemeVMs = SelectedFolder == null ? null : folderMemeVMs = list
+                    .Where(m => m.ParentFolderId == SelectedFolder.Id && !SelectedFolder.Memes.Any(x => x.Id == m.Id))
+                    .ToList();
+
+                List<MemeVM> memeTagMemeVMs = SelectedMemeTag == null ? null : folderMemeVMs = list
+                    .Where(m => m.MemeTags.Any(mt => mt.Id == SelectedMemeTag.Id) && !SelectedMemeTag.Memes.Any(x => x.Id == m.Id))
+                    .ToList();
 
                 /// Вызов метода добавления в коллекцию в потоке UI
-                dispatcher.BeginInvoke((Action<List<MemeVM>, List<MemeVM>>)MemesAddUI, list, curMemes);
+                dispatcher.BeginInvoke((Action<List<MemeVM>, List<MemeVM>, List<MemeVM>>)MemesAddUI, list, folderMemeVMs, memeTagMemeVMs);
             }
             else
             {
@@ -80,13 +80,17 @@ namespace MemeFolderN.MFViewModels.Default
         /// <summary>Метод добавляющий Мемы в коллекцию для представления</summary>
         /// <param name="memes">Добавляемые Мемы</param>
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
-        private void MemesAddUI(List<MemeVM> memes, List<MemeVM> curMemes)
+        private void MemesAddUI(List<MemeVM> memes, List<MemeVM> folderMemeVMs, List<MemeVM> memeTagMemeVMs)
         {
             lock (Memes)
             {
-                foreach (MemeVM meme in memes)
-                    Memes.Add(meme);
-                curMemes.ForEach(m => SelectedFolder.Memes.Add(m));
+                memes.ForEach(m => Memes.Add(m));
+
+                if (folderMemeVMs != null)
+                    folderMemeVMs.ForEach(m => SelectedFolder.Memes.Add(m));
+                if (memeTagMemeVMs != null)
+                    memeTagMemeVMs.ForEach(m => SelectedMemeTag.Memes.Add(m));
+
                 IsMemesLoadedFlag = true;
                 BusyCheck();
             }
@@ -103,6 +107,12 @@ namespace MemeFolderN.MFViewModels.Default
             /// Создание коллекции изменяемых Мемов
             Dictionary<MemeDTO, MemeVM> list = new Dictionary<MemeDTO, MemeVM>(memes.Count);
 
+            List<MemeVM> folderMemeVMsForRemove = new List<MemeVM>();
+            List<MemeVM> folderMemeVMsForAdd = new List<MemeVM>();
+
+            List<MemeVM> memeTagMemeVMsForRemove = new List<MemeVM>();
+            List<MemeVM> memeTagMemeVMsForAdd = new List<MemeVM>();
+
             /// Цикл по полученной коллекции
             foreach (MemeDTO meme in memes.ToArray())
             {
@@ -112,6 +122,27 @@ namespace MemeFolderN.MFViewModels.Default
                 {
                     /// Создание новой пары Данные и Мем для изменения в коллекции
                     list.Add(meme, mvm);
+
+                    if (SelectedFolder != null)
+                        if (mvm.MemeTags.Any(mt => mt.Id == SelectedFolder.Id) && !meme.TagGuids.Any(tg => tg == SelectedFolder.Id))
+                        {
+                            folderMemeVMsForRemove.Add(mvm);
+                        }
+                        else if (!mvm.MemeTags.Any(mt => mt.Id == SelectedFolder.Id) && meme.TagGuids.Any(tg => tg == SelectedFolder.Id))
+                        {
+                            folderMemeVMsForAdd.Add(mvm);
+                        }
+
+                    if (SelectedMemeTag != null)
+                        if (mvm.MemeTags.Any(mt => mt.Id == SelectedMemeTag.Id) && !meme.TagGuids.Any(tg => tg == SelectedMemeTag.Id))
+                        {
+                            memeTagMemeVMsForRemove.Add(mvm);
+                        }
+                        else if (!mvm.MemeTags.Any(mt => mt.Id == SelectedMemeTag.Id) && meme.TagGuids.Any(tg => tg == SelectedMemeTag.Id))
+                        {
+                            memeTagMemeVMsForAdd.Add(mvm);
+                        }
+
                     /// Удаление Мема из полученной коллекции
                     memes.Remove(meme);
                 }
@@ -119,8 +150,19 @@ namespace MemeFolderN.MFViewModels.Default
 
             /// Если в добавляемой коллекции есть элементы
             if (list.Count > 0)
+            {
                 /// Вызов метода добавления в коллекцию в потоке UI
-                dispatcher.BeginInvoke((Action<Dictionary<MemeDTO, MemeVM>>)MemesChangedUI, list);
+                dispatcher.BeginInvoke((Action<Dictionary<MemeDTO, MemeVM>,
+                    List<MemeVM>,
+                    List<MemeVM>,
+                    List<MemeVM>,
+                    List<MemeVM>>)MemesChangedUI,
+                    list,
+                    folderMemeVMsForRemove,
+                    folderMemeVMsForAdd,
+                    memeTagMemeVMsForRemove,
+                    memeTagMemeVMsForAdd);
+            }
             else
             {
                 IsMemesLoadedFlag = true;
@@ -132,12 +174,29 @@ namespace MemeFolderN.MFViewModels.Default
         /// <summary>Метод изменяющий Мемы в коллекции для представления</summary>
         /// <param name="memes">DTO тип с новыми данными и Мемами</param>
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
-        private void MemesChangedUI(Dictionary<MemeDTO, MemeVM> memes)
+        private void MemesChangedUI(Dictionary<MemeDTO, MemeVM> memes,
+            List<MemeVM> folderMemeVMsForRemove,
+            List<MemeVM> folderMemeVMsForAdd,
+            List<MemeVM> memeTagMemeVMsForRemove,
+            List<MemeVM> memeTagMemeVMsForAdd)
         {
             lock (Memes)
             {
                 foreach (var meme in memes)
                     meme.Value.CopyFromDTO(meme.Key);
+
+                if (SelectedFolder != null)
+                {
+                    folderMemeVMsForRemove.ForEach(m => SelectedFolder.Memes.Remove(m));
+                    folderMemeVMsForAdd.ForEach(m => SelectedFolder.Memes.Add(m));
+                }
+
+                if (SelectedMemeTag != null)
+                {
+                    memeTagMemeVMsForRemove.ForEach(m => SelectedMemeTag.Memes.Remove(m));
+                    memeTagMemeVMsForAdd.ForEach(m => SelectedMemeTag.Memes.Add(m));
+                }
+
                 IsMemesLoadedFlag = true;
                 BusyCheck();
             }   
@@ -170,8 +229,13 @@ namespace MemeFolderN.MFViewModels.Default
 
             /// Если в добавляемой коллекции есть элементы
             if (list.Count > 0)
+            {
+                List<MemeVM> folderMemeVMs = SelectedFolder == null ? null : list.Where(x => x.ParentFolderId == SelectedFolder.Id).ToList();
+                List<MemeVM> memeTagMemeVMs = SelectedMemeTag == null ? null : list.Where(x => x.MemeTags.Any(mt => mt.Id == SelectedMemeTag.Id)).ToList();
+
                 /// Вызов метода добавления в коллекцию в потоке UI
-                dispatcher.BeginInvoke((Action<List<MemeVM>>)MemesRemoveUI, list);
+                dispatcher.BeginInvoke((Action<List<MemeVM>, List<MemeVM>, List<MemeVM>>)MemesRemoveUI, list, folderMemeVMs, memeTagMemeVMs);
+            }             
             else
             {
                 IsMemesLoadedFlag = true;
@@ -184,16 +248,21 @@ namespace MemeFolderN.MFViewModels.Default
         /// <summary>Метод удаляющий Мемы в коллекции для представления</summary>
         /// <param name="memes">Удаляемые Мемы</param>
         /// <remarks>Метод должен выполняться в UI потоке</remarks>
-        private void MemesRemoveUI(List<MemeVM> memes)
+        private void MemesRemoveUI(List<MemeVM> memes, List<MemeVM> folderMemeVMs, List<MemeVM> memeTagMemeVMs)
         {
             lock (Memes)
             {
-                foreach (MemeVM meme in memes)
-                {
-                    Memes.Remove(meme);
-                    meme.Dispose();
-                }
+                if (folderMemeVMs != null)
+                    folderMemeVMs.ForEach(m => SelectedFolder.Memes.Remove(m));
+                if (memeTagMemeVMs != null)
+                    memeTagMemeVMs.ForEach(m => SelectedMemeTag.Memes.Remove(m));
 
+                memes.ForEach(m =>
+                {
+                    Memes.Remove(m);
+                    m.Dispose();
+                });
+                
                 IsMemesLoadedFlag = true;
                 BusyCheck();
             }

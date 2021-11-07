@@ -1,32 +1,36 @@
-﻿using MemeFolderN.Core.DTOClasses;
+﻿using AutoMapper;
+using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.Core.Models;
+using MemeFolderN.EntityFramework.AutoMapperProfiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using MemeFolderN.Core.Converters;
 
 namespace MemeFolderN.EntityFramework.Services
 {
     public class MemeDataService : IMemeDataService
     {
         protected readonly MemeFolderNDbContextFactory _contextFactory;
-        
+        protected readonly IMapper _mapper;
+
         public virtual async Task<MemeDTO> GetById(Guid guid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                Meme entity = await context.Memes
-                    .Include(m => m.ParentFolder)
+                Meme meme = await context.Memes
                     .Include(m => m.TagNodes)
                         .ThenInclude(mtn => mtn.MemeTag)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(e => e.Id == guid);
-                return entity.ConvertMeme();
+
+                MemeDTO dto = _mapper.Map<MemeDTO>(meme);
+
+                return dto;
             }
         }
 
@@ -34,12 +38,16 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                IEnumerable<Meme> memes = await Task.FromResult(context.Memes
-                     .Include(m => m.ParentFolder)
-                     .Include(m => m.TagNodes)
-                         .ThenInclude(mtn => mtn.MemeTag)
-                     .Where(e => e.Id == guid).ToList());
-                return memes.Select(m => m.ConvertMeme()).ToList();
+                List<Meme> memes = await context.Memes
+                    .Include(m => m.TagNodes)
+                        .ThenInclude(mtn => mtn.MemeTag)
+                    .AsNoTracking()
+                    .Where(m => m.ParentFolderId == guid)
+                    .ToListAsync();
+
+                List<MemeDTO> dtos = memes.Select(m => _mapper.Map<MemeDTO>(m)).ToList();
+
+                return dtos;
             }
         }
 
@@ -47,13 +55,16 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                IEnumerable<Meme> memes = await Task.FromResult(context.Memes
-                 .Include(m => m.ParentFolder)
-                 .Include(m => m.TagNodes)
-                     .ThenInclude(mtn => mtn.MemeTag)
-                 .Where(e => e.Title == title).ToList());
+                List<Meme> memes = await context.Memes
+                    .Include(m => m.TagNodes)
+                        .ThenInclude(mtn => mtn.MemeTag)
+                    .AsNoTracking()
+                    .Where(e => e.Title == title)
+                    .ToListAsync();
 
-                return memes.Select(m => m.ConvertMeme()).ToList();
+                List<MemeDTO> dtos = memes.Select(m => _mapper.Map<MemeDTO>(m)).ToList();
+
+                return dtos;
             }
         }
 
@@ -61,8 +72,15 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                List<Meme> entities = await context.Memes.AsNoTracking().ToListAsync();
-                return entities.Select(f => f.ConvertMeme()).ToList();
+                List<Meme> memes = await context.Memes
+                    .Include(m => m.TagNodes)
+                        .ThenInclude(mtn => mtn.MemeTag)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                List<MemeDTO> dtos = memes.Select(m => _mapper.Map<MemeDTO>(m)).ToList();
+
+                return dtos;
             }
         }
 
@@ -70,27 +88,23 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                Meme meme = memeDTO.ConvertMemeDTO();
+                Meme meme = _mapper.Map<Meme>(memeDTO);
 
                 if (string.IsNullOrEmpty(meme.ImagePath))
-                    throw new ArgumentNullException("No image path");
+                    throw new ArgumentNullException("Нет пути к изображению");
 
                 if (string.IsNullOrEmpty(meme.Title))
                     meme.Title = Path.GetFileNameWithoutExtension(meme.ImagePath);
 
-
-                if (meme.ParentFolder != null)
-                {
-                    Folder parentFolderEntity = await context.Folders.FirstOrDefaultAsync(x => x.Id == meme.ParentFolder.Id);
-                    if (parentFolderEntity == null)
-                        throw new ArgumentException($"ParentFolder with Guid = '{meme.ParentFolder.Id}' does not exist");
-                    meme.ParentFolder = parentFolderEntity;
-                }
+                if (meme.ParentFolderId == null)
+                    throw new ArgumentNullException("Нет родительской папки.");
 
                 EntityEntry<Meme> createdResult = await context.Memes.AddAsync(meme);
                 await context.SaveChangesAsync();
 
-                return createdResult.Entity.ConvertMeme();
+                MemeDTO dto = _mapper.Map<MemeDTO>(createdResult.Entity);
+
+                return dto;
             }
         }
 
@@ -98,39 +112,41 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                IEnumerable<Meme> memes = memesDTO.Select(mDTO => mDTO.ConvertMemeDTO());
+                await Task.Delay(1);
 
-                List<MemeDTO> SavedMemes = new List<MemeDTO>();
-                List<MemeDTO> UnsavedMemes = new List<MemeDTO>();
-                foreach (Meme meme in memes)
-                {
-                    try
-                    {
-                        if (string.IsNullOrEmpty(meme.ImagePath))
-                            throw new ArgumentNullException("No image path");
+                //IEnumerable<Meme> memes = memesDTO.Select(mDTO => mDTO.ConvertMemeDTO());
 
-                        if (string.IsNullOrEmpty(meme.Title))
-                            meme.Title = Path.GetFileNameWithoutExtension(meme.ImagePath);
+                //List<MemeDTO> SavedMemes = new List<MemeDTO>();
+                //List<MemeDTO> UnsavedMemes = new List<MemeDTO>();
+                //foreach (Meme meme in memes)
+                //{
+                //    try
+                //    {
+                //        if (string.IsNullOrEmpty(meme.ImagePath))
+                //            throw new ArgumentNullException("No image path");
 
-                        Folder parentFolderEntity = null;
-                        if (meme.ParentFolder != null)
-                        {
-                            parentFolderEntity = await context.Folders.FirstOrDefaultAsync(x => x.Id == meme.ParentFolder.Id);
-                            if (parentFolderEntity == null)
-                                throw new ArgumentException($"ParentFolder with Guid = '{meme.ParentFolder.Id}' does not exist");
-                            meme.ParentFolder = parentFolderEntity;
-                        }
+                //        if (string.IsNullOrEmpty(meme.Title))
+                //            meme.Title = Path.GetFileNameWithoutExtension(meme.ImagePath);
 
-                        EntityEntry<Meme> createdResult = await context.Memes.AddAsync(meme);
-                        SavedMemes.Add(createdResult.Entity.ConvertMeme());
-                        await context.SaveChangesAsync();
-                    }
-                    catch (Exception)
-                    {
-                        UnsavedMemes.Add(meme.ConvertMeme());
-                    }
-                }
-                return SavedMemes;
+                //        Folder parentFolderEntity = null;
+                //        if (meme.ParentFolder != null)
+                //        {
+                //            parentFolderEntity = await context.Folders.FirstOrDefaultAsync(x => x.Id == meme.ParentFolder.Id);
+                //            if (parentFolderEntity == null)
+                //                throw new ArgumentException($"ParentFolder with Guid = '{meme.ParentFolder.Id}' does not exist");
+                //            meme.ParentFolder = parentFolderEntity;
+                //        }
+
+                //        EntityEntry<Meme> createdResult = await context.Memes.AddAsync(meme);
+                //        SavedMemes.Add(createdResult.Entity.ConvertMeme());
+                //        await context.SaveChangesAsync();
+                //    }
+                //    catch (Exception)
+                //    {
+                //        UnsavedMemes.Add(meme.ConvertMeme());
+                //    }
+                //}
+                return null;
             }
         }
 
@@ -139,7 +155,7 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                Meme meme = memeDTO.ConvertMemeDTO();
+                Meme meme = _mapper.Map<Meme>(memeDTO);
 
                 var original = await context.Memes.FirstOrDefaultAsync(e => e.Id == guid);
 
@@ -150,8 +166,8 @@ namespace MemeFolderN.EntityFramework.Services
                 }
                 context.Entry(original).CurrentValues.SetValues(meme);
                 await context.SaveChangesAsync();
-
-                return meme.ConvertMeme();
+                
+                return _mapper.Map<MemeDTO>(meme);
             }
         }
 
@@ -169,15 +185,19 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
-        public virtual async Task<bool> DeleteRangeMemes(List<MemeDTO> memesDTO)
+        public virtual async Task<List<MemeDTO>> DeleteRangeMemes(List<MemeDTO> memesDTO)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                IEnumerable<Meme> memes = memesDTO.Select(mDto => mDto.ConvertMemeDTO());
-                context.RemoveRange(memes);
+                IEnumerable<Meme> memes = context.Memes
+                    .Where(m => memesDTO.Any(x => x.Id == m.Id))
+                    .Select(x => _mapper.Map<Meme>(x));
+
+                context.BulkDelete(memes, opt => opt.IncludeGraph = true);
+
                 await context.SaveChangesAsync();
 
-                return true;
+                return memes.Select(m => _mapper.Map<MemeDTO>(m)).ToList();
             }
         }
 
@@ -185,24 +205,35 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                IEnumerable<Meme> memes = await Task.FromResult(context.Memes.ToList());
-                context.RemoveRange(memes);
+                IEnumerable<Meme> memes = await context.Memes
+                    .Include(m => m.TagNodes)
+                        .ThenInclude(mtn => mtn.MemeTag)
+                    .ToListAsync();
+
+                context.BulkDelete(memes, opt => opt.IncludeGraph = true);
                 await context.SaveChangesAsync();
 
                 return true;
             }
         }
 
+
+
         #region Конструкторы
 
         public MemeDataService()
         {
             _contextFactory = new MemeFolderNDbContextFactory();
+            _mapper = new Mapper(new MapperConfiguration(opt =>
+            {
+                opt.AddProfile(new MapperProfileDAL());
+            }));
         }
 
-        public MemeDataService(MemeFolderNDbContextFactory contextFactory)
+        public MemeDataService(MemeFolderNDbContextFactory contextFactory, IMapper mapper)
         {
             _contextFactory = contextFactory;
+            _mapper = mapper;
         }
 
         #endregion

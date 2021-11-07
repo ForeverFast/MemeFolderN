@@ -1,4 +1,5 @@
-﻿using MemeFolderN.EntityFramework;
+﻿using AutoMapper;
+using MemeFolderN.EntityFramework;
 using MemeFolderN.EntityFramework.Services;
 using MemeFolderN.Extentions.Services;
 using MemeFolderN.MFModel.Wpf.Abstractions;
@@ -85,6 +86,10 @@ namespace MemeFolderN
 
         private void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(typeof(AutoMapperConfigurationFactory));
+            services.AddSingleton(typeof(MapperConfiguration), s => s.GetRequiredService<AutoMapperConfigurationFactory>().GetMapperConfiguration());
+            services.AddSingleton(typeof(Mapper));
+
             services.AddSingleton<IMemeDataService, MemeDataService>();
             services.AddSingleton<IFolderDataService, FolderDataService>();
             services.AddSingleton<IMemeTagDataService, MemeTagDataService>();

@@ -75,7 +75,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border Background="{DynamicResource GrayLVL4WithLowOpacity}"
-                            BorderBrush="{DynamicResource StandartLightColor2}"
+                            BorderBrush="{DynamicResource GrayLVL0}"
                             BorderThickness="0,1,0,0"
                             HorizontalAlignment="Stretch">
                         <StackPanel Name="ButtonBorder" Orientation="Horizontal"

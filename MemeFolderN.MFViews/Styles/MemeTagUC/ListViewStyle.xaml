@@ -1,12 +1,11 @@
-﻿ <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
                     xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
                     xmlns:mBeh="clr-namespace:MemeFolderN.MFViews.Behaviors" 
                     xmlns:ib="http://schemas.microsoft.com/xaml/behaviors">
 
-
-    <Style x:Key="FolderUCMemeList" TargetType="{x:Type ListView}">
+    <Style x:Key="MemeTagUCMemeList" TargetType="{x:Type ListView}">
 
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
         <Setter Property="BorderThickness" Value="0,0,0,0"/>
@@ -49,10 +48,11 @@
 
                                     <StackPanel.ContextMenu>
                                         <ContextMenu>
+
                                             <MenuItem Header="Открыть"
                                                         CommandParameter="{Binding}"
                                                         Command="{x:Static routedCommands:MemeRoutedCommands.MemeOpenRoutedCommand}"/>
-                                            <MenuItem Header="Открыть в проводнике"
+                                            <MenuItem Header="Открыть"
                                                         CommandParameter="{Binding}"
                                                         Command="{x:Static routedCommands:MemeRoutedCommands.MemeOpenInExplorerRoutedCommand}"/>
                                             <MenuItem Header="Скопировать в буфер"
@@ -61,12 +61,11 @@
                                             <MenuItem Header="Изменить"
                                                         CommandParameter="{Binding}"
                                                         Command="{x:Static routedCommands:MemeRoutedCommands.MemeChangeRoutedCommand}"/>
-                                            <MenuItem Header="Убрать текущий тег" 
-                                                        CommandParameter="{Binding}"
-                                                        Command="{x:Static routedCommands:MemeRoutedCommands.MemeDeleteTagRoutedCommand}"/>
                                             <MenuItem Header="Удалить" 
                                                         CommandParameter="{Binding}"
                                                         Command="{x:Static routedCommands:MemeRoutedCommands.MemeDeleteRoutedCommand}"/>
+
+
                                         </ContextMenu>
                                     </StackPanel.ContextMenu>
 
@@ -88,20 +87,6 @@
             </Setter.Value>
         </Setter>
 
-        <Setter Property="ContextMenu">
-            <Setter.Value>
-                <ContextMenu>
-                    <MenuItem Header="Создать мемчик"
-                                CommandParameter="{Binding}"
-                                Command="{x:Static routedCommands:MemeRoutedCommands.MemeAddNonParametersRoutedCommand}"/>
-                    <MenuItem Header="Создать мемчик с параметрами"
-                                CommandParameter="{Binding}"
-                                Command="{x:Static routedCommands:MemeRoutedCommands.MemeAddRoutedCommand}"/>
-                </ContextMenu>
-            </Setter.Value>
-        </Setter>
-        
     </Style>
 
-    
 </ResourceDictionary>

@@ -1,32 +1,34 @@
-﻿using MemeFolderN.Core.Converters;
+﻿using AutoMapper;
 using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.Core.Models;
+using MemeFolderN.EntityFramework.AutoMapperProfiles;
 using MemeFolderN.Extentions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using Z.BulkOperations;
 
 namespace MemeFolderN.EntityFramework.Services
 {
     public class FolderDataService : IFolderDataService
     {
-        private readonly MemeFolderNDbContextFactory _contextFactory;
+        protected readonly MemeFolderNDbContextFactory _contextFactory;
+        protected readonly IMapper _mapper;
 
         public virtual async Task<FolderDTO> GetById(Guid guid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                Folder entity = await Task.FromResult(context.Folders
+                Folder entity = await context.Folders
                     .Include(f => f.Memes)
                     .Include(f => f.Folders)
-                    .FirstOrDefault(e => e.Id == guid));
+                    .FirstOrDefaultAsync(e => e.Id == guid);
 
-                return entity.ConvertFolder();
+                FolderDTO dto = _mapper.Map<FolderDTO>(entity);
+
+                return dto;
             }
         }
 
@@ -38,7 +40,9 @@ namespace MemeFolderN.EntityFramework.Services
                     .Include(f => f.Memes)
                     .ToListAsync();
 
-                return entities.Select(f => f.ConvertFolder()).ToList();
+                List<FolderDTO> dtos = entities.Select(f => _mapper.Map<FolderDTO>(f)).ToList();
+
+                return dtos;
             }
         }
 
@@ -52,7 +56,9 @@ namespace MemeFolderN.EntityFramework.Services
                     .Where(e => e.ParentFolder == null)
                     .ToListAsync();
 
-                return folders.Select(f => f.ConvertFolder()).ToList();
+                List<FolderDTO> dtos = folders.Select(f => _mapper.Map<FolderDTO>(f)).ToList();
+
+                return dtos;
             }
         }
 
@@ -65,7 +71,9 @@ namespace MemeFolderN.EntityFramework.Services
                     .Where(e => e.ParentFolder.Id == guid)
                     .ToListAsync();
 
-                return folders.Select(f => f.ConvertFolder()).ToList();
+                List<FolderDTO> dtos = folders.Select(f => _mapper.Map<FolderDTO>(f)).ToList();
+
+                return dtos;
             }
         }
 
@@ -73,13 +81,14 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                Folder folder = folderDTO.ConvertFolderDTO();
-                folder.ParentFolder = null;
+                Folder folder = _mapper.Map<Folder>(folderDTO);
 
                 EntityEntry<Folder> createdResult = await context.Folders.AddAsync(folder);
                 await context.SaveChangesAsync();
 
-                return createdResult.Entity.ConvertFolder();
+                FolderDTO dto = _mapper.Map<FolderDTO>(createdResult.Entity);
+
+                return dto;
             }
         }
 
@@ -87,19 +96,17 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                Folder folder = folderDTO.ConvertFolderDTO();
+                Folder folder = _mapper.Map<Folder>(folderDTO);
 
-                var original = await context.Folders.FirstOrDefaultAsync(e => e.Id == guid);
+                Folder dbFolder = await context.Folders.FirstOrDefaultAsync(e => e.Id == guid);
 
-                foreach (PropertyInfo propertyInfo in original.GetType().GetProperties())
-                {
-                    if (propertyInfo.GetValue(folder, null) == null)
-                        propertyInfo.SetValue(folder, propertyInfo.GetValue(original, null), null);
-                }
-                context.Entry(original).CurrentValues.SetValues(folder);
+                _mapper.Map<Folder, Folder>(folder, dbFolder);
+
                 await context.SaveChangesAsync();
 
-                return folder.ConvertFolder();
+                FolderDTO dto = _mapper.Map<FolderDTO>(folder);
+
+                return dto;
             }
         }
 
@@ -107,76 +114,27 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                try
+                await context.Folders.LoadAsync();
+                await context.Memes.LoadAsync();
+                Folder folder = await context.Folders
+                    .Include(f => f.Folders)
+                    .Include(f => f.Memes)
+                    .FirstOrDefaultAsync(x => x.Id == guid);
+
+                if (folder != null)
                 {
-                    await context.Folders.LoadAsync();
-                    await context.Memes.LoadAsync();
-                    Folder folder = await context.Folders
-                        .Include(f => f.Folders)
-                        .Include(f => f.Memes)
-                        .FirstOrDefaultAsync(x => x.Id == guid);
+                    await context.BulkDeleteAsync(new List<Folder> { folder }, opt => opt.IncludeGraph = true);
+                    await context.SaveChangesAsync();
 
-                    if (folder != null)
-                    {
-                        await context.BulkDeleteAsync(new List<Folder> { folder }, opt => opt.IncludeGraph = true);
-                        await context.SaveChangesAsync();
+                    List<FolderDTO> removedFolders = folder.Folders.SelectRecursive(f => f.Folders).Select(f => _mapper.Map<FolderDTO>(f)).ToList();
+                    removedFolders.Add(_mapper.Map<FolderDTO>(folder));
 
-                        List<FolderDTO> removedFolders = folder.Folders.SelectRecursive(x => x.Folders).Select(x => x.ConvertFolder()).ToList();
-                        removedFolders.Add(folder.ConvertFolder());
-                        return removedFolders;
-                    }
-                    else
-                        throw new ArgumentNullException($"Не существует папки с guid({guid})");
+                    return removedFolders;
                 }
-                catch (Exception ex)
-                {
-                    return null;
-                }
-
+                else
+                    throw new ArgumentNullException($"Не существует папки с guid({guid})");
             }
         }
-
-
-        #region Вспомогательные методы
-
-        private void RemoveAllData(Folder folder, MemeFolderNDbContext context)
-        {
-            folder = context.Folders
-                .Include(f => f.Folders)
-                .Include(f => f.Memes)
-                .FirstOrDefault(f => f.Id == folder.Id);
-
-            foreach (var item in folder.Folders)
-            {
-                RemoveAllData(item, context);
-            }
-
-            foreach (var meme in folder.Memes)
-            {
-                var memeEntity = context.Memes.FirstOrDefault(x => x.Id == meme.Id);
-                if (memeEntity != null)
-                {
-                    context.Memes.Remove(memeEntity);
-                }
-            }
-            folder.Memes.ToList().Clear();
-
-            context.SaveChanges();
-            foreach (var folder1 in folder.Folders)
-            {
-                var folderEntity = context.Folders.FirstOrDefault(x => x.Id == folder1.Id);
-                if (folderEntity != null)
-                {
-                    context.Folders.Remove(folderEntity);
-
-                }
-            }
-            folder.Folders.ToList().Clear();
-            context.SaveChanges();
-        }
-
-        #endregion
-
 
 
         #region Конструкторы
@@ -184,11 +142,16 @@ namespace MemeFolderN.EntityFramework.Services
         public FolderDataService()
         {
             _contextFactory = new MemeFolderNDbContextFactory();
+            _mapper = new Mapper(new MapperConfiguration(opt =>
+            {
+                opt.AddProfile(new MapperProfileDAL());
+            }));
         }
 
-        public FolderDataService(MemeFolderNDbContextFactory contextFactory)
+        public FolderDataService(MemeFolderNDbContextFactory contextFactory, IMapper mapper)
         {
             _contextFactory = contextFactory;
+            _mapper = mapper;
         }
 
         #endregion

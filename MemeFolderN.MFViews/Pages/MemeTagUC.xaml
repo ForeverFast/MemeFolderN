@@ -4,9 +4,74 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MemeFolderN.MFViews.Pages"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:MemeTagVM, IsDesignTimeCreatable=False}"
+             xmlns:ib="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             xmlns:ssc="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
+             xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
+             xmlns:dd="urn:gong-wpf-dragdrop"
+             xmlns:cn="clr-namespace:MemeFolderN.MFViews.Converters"
+             xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Default;assembly=MemeFolderN.MFViewModels.Default"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-       
-    </Grid>
+
+    <UserControl.Resources>
+        <cn:ItemsCountToVisibilityConverter x:Key="ICV"/>
+    </UserControl.Resources>
+
+    <ScrollViewer 
+            Style="{StaticResource ContentSV}"
+            Background="{DynamicResource GrayLVL3}">
+
+        <Grid Background="{StaticResource GrayLVL2}">
+
+            <Label VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Visibility="{Binding Memes.Count, Converter={StaticResource ICV}}">
+                <Label.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <md:PackIcon Kind="FolderOpen"
+                                     Width="100" Height="100"
+                                     Foreground="{DynamicResource StandartLightColor}"/>
+                        <Grid VerticalAlignment="Center"
+                              Margin="10,0,0,0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="60"/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Мемчиков нема" Grid.Row="0"
+                                       FontSize="50"
+                                       Foreground="{DynamicResource StandartLightColor}"/>
+                            <TextBlock Text="Наполни меня (͡° ͜ʖ ͡°)" Grid.Row="1"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource StandartLightColor}"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding Title}" Grid.Row="2"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource StandartLightColor}"
+                                       HorizontalAlignment="Center"/>
+                        </Grid>
+
+                    </StackPanel>
+                </Label.Content>
+            </Label>
+
+            <ListView x:Name="MemeList" ItemsSource="{Binding Memes}"
+                      Style="{DynamicResource MemeTagUCMemeList}"
+                      Background="{x:Null}"
+                      BorderThickness="0"
+                    
+                      VirtualizingStackPanel.IsVirtualizing="True"
+                      VirtualizingStackPanel.VirtualizationMode="Recycling"
+                
+                      ScrollViewer.CanContentScroll="False"
+                      ScrollViewer.IsDeferredScrollingEnabled="False">
+                <!--PreviewMouseWheel="empListBox_PreviewMouseWheel"-->
+            </ListView>
+        </Grid>
+
+    </ScrollViewer>
 </UserControl>

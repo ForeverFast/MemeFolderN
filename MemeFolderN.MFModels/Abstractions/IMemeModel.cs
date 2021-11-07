@@ -12,11 +12,15 @@ namespace MemeFolderN.MFModelBase.Abstractions
     {
         Task<List<MemeDTO>> GetMemesByFolderIdAsync(Guid id);
         Task<List<MemeDTO>> GetAllMemesAsync();
-        Task DeleteMemeAsync(MemeDTO meme);
 
         Task AddMemeAsync(MemeDTO meme);
 
         Task ChangeMemeAsync(MemeDTO meme);
+
+        Task DeleteMemeAsync(MemeDTO meme);
+        Task DeleteMemeTagFromMemeAsync(Guid memeGuid, Guid tagGuid);
+
+      
 
         event ChangedMemesHandler ChangedMemesEvent;
     }

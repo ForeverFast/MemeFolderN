@@ -41,21 +41,15 @@ namespace MemeFolderN.MFModelBase.Wpf
 
             memeDTO = InitNewMeme(memeDTO, parentFolderPath);
 
-            List<MemeTagDTO> memeTags = memeDTO.Tags != null ? memeDTO.Tags : new List<MemeTagDTO>();
+            List<Guid> memeTags = memeDTO.TagGuids != null ? memeDTO.TagGuids : new List<Guid>();
             
             MemeDTO proccesedMemeDTO = memeDTO with { Tags = null };
 
             MemeDTO createdMeme = await memeDataService.Add(proccesedMemeDTO);
             if (createdMeme != null)
             {
-                List<MemeTagNodeDTO> memeTagNodeDTOs = memeTags
-                    .Select(mt => new MemeTagNodeDTO
-                    {
-                        MemeTagId = mt.Id,
-                        MemeId = createdMeme.Id
-                    }).ToList();
 
-                await memeTagNodeDataService.AddRange(memeTagNodeDTOs);
+                await memeTagNodeDataService.AddRange(createdMeme.Id, memeTags);
                 
                 OnAddMemesEvent(new List<MemeDTO>() { createdMeme });
             }
@@ -86,27 +80,15 @@ namespace MemeFolderN.MFModelBase.Wpf
 
         protected override async Task ChangeMeme(MemeDTO memeDTO)
         {
-            MemeDTO oldMemeData = memeDataService.GetById(memeDTO.Id).Result;
+            MemeDTO oldMemeData = await memeDataService.GetById(memeDTO.Id);
 
-            List<MemeTagDTO> oldMemeTagForRemove = oldMemeData.Tags.Except(memeDTO.Tags).ToList();
-            foreach (MemeTagDTO memeTagDTO in oldMemeTagForRemove)
-            {
-                MemeTagNodeDTO memeTagNodeDTO = memeTagNodeDataService.GetByMemeIdAndMemeTagId(memeDTO.Id, memeTagDTO.Id).Result;
-                memeTagNodeDataService.Delete(memeTagNodeDTO.Id);
-            }
+            List<Guid> oldMemeTagForRemove = oldMemeData.TagGuids.Except(memeDTO.TagGuids).ToList();
+            await memeTagNodeDataService.DeleteRange(oldMemeData.Id, oldMemeTagForRemove);
+           
+            List<Guid> newMemeTagForAdd = memeDTO.TagGuids.Except(oldMemeData.TagGuids).ToList();
+            await memeTagNodeDataService.AddRange(oldMemeData.Id, newMemeTagForAdd);
 
-            List<MemeTagDTO> newMemeTagForAdd = memeDTO.Tags.Except(oldMemeData.Tags).ToList();
-            foreach (MemeTagDTO memeTagDTO in newMemeTagForAdd)
-            {
-                MemeTagNodeDTO memeTagNodeDTO = new MemeTagNodeDTO
-                {
-                    MemeTagId = memeTagDTO.Id,
-                    MemeId = memeDTO.Id
-                };
-                memeTagNodeDataService.Add(memeTagNodeDTO);
-            }
-
-            MemeDTO updatedMeme = memeDataService.Update(memeDTO.Id, memeDTO).Result;
+            MemeDTO updatedMeme = await memeDataService.Update(memeDTO.Id, memeDTO);
             if (updatedMeme != null)
             {
                 OnChangedMemesEvent(new List<MemeDTO>() { updatedMeme });
@@ -128,17 +110,32 @@ namespace MemeFolderN.MFModelBase.Wpf
 
         protected override async Task DeleteRangeMemes(List<MemeDTO> memesDTO)
         {
-            if (memeDataService.DeleteRangeMemes(memesDTO).Result)
+            List<MemeDTO> deletedMemes = await memeDataService.DeleteRangeMemes(memesDTO);
+            List<MemeDTO> notDeletedMemes = memesDTO.Except(deletedMemes).ToList();
+
+            if (deletedMemes.Count > 0)
             {
                 OnRemoveMemesEvent(memesDTO);
             }
-            else
+            
+            if (notDeletedMemes.Count > 0)
             {
                 string errorMessage = "Экзмпляры:\r\n";
                 memesDTO.ForEach(m => errorMessage += $"{m.Title}\r\n");
                 throw new MFModelException($"{errorMessage} не удалось удалить.", MFModelExceptionEnum.NotDeleted);
             }
 
+        }
+
+        protected override async Task DeleteMemeTagFromMeme(Guid memeGuid, Guid tagGuid)
+        {
+            MemeDTO memeDTO = await memeTagNodeDataService.Delete(memeGuid, tagGuid);
+            if (memeDTO != null)
+            {
+                OnChangedMemesEvent(new List<MemeDTO> { memeDTO });
+            }
+            else
+                throw new MFModelException($"Не удалось удалить тег.", MFModelExceptionEnum.NotDeleted);
         }
 
         #region Вспомогательные методы

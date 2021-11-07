@@ -1,29 +1,32 @@
-﻿using MemeFolderN.Core.DTOClasses;
+﻿using AutoMapper;
+using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.Core.Models;
+using MemeFolderN.EntityFramework.AutoMapperProfiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using MemeFolderN.Core.Converters;
 
 namespace MemeFolderN.EntityFramework.Services
 {
     public class MemeTagDataService : IMemeTagDataService
     {
         protected readonly MemeFolderNDbContextFactory _contextFactory;
-       
-       
+        protected readonly IMapper _mapper;
+
         public virtual async Task<MemeTagDTO> GetById(Guid guid)
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                MemeTag entity = await context.MemeTags.FirstOrDefaultAsync(e => e.Id == guid);
-                return entity.ConvertMemeTag();
+                MemeTag entity = await context.MemeTags
+                     .AsNoTracking()
+                     .FirstOrDefaultAsync(e => e.Id == guid);
+
+                MemeTagDTO dto = _mapper.Map<MemeTagDTO>(entity);
+
+                return dto;
             }
         }
 
@@ -31,8 +34,13 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                List<MemeTag> memeTags = await context.MemeTags.ToListAsync();
-                return memeTags.Select(mt => mt.ConvertMemeTag()).ToList();
+                List<MemeTag> memeTags = await context.MemeTags
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                List<MemeTagDTO> dtos = memeTags.Select(mt => _mapper.Map<MemeTagDTO>(mt)).ToList();
+
+                return dtos;
             }
         }
 
@@ -47,7 +55,9 @@ namespace MemeFolderN.EntityFramework.Services
                     .Select(mtn => mtn.MemeTag)
                     .ToListAsync();
 
-                return memeTags.Select(mt => mt.ConvertMemeTag()).ToList();
+                List<MemeTagDTO> dtos = memeTags.Select(mt => _mapper.Map<MemeTagDTO>(mt)).ToList();
+
+                return dtos;
             }
         }
 
@@ -55,12 +65,14 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                MemeTag memeTag = memeTagDTO.ConvertMemeTagDTO();
+                MemeTag memeTag = _mapper.Map<MemeTag>(memeTagDTO);
 
                 EntityEntry<MemeTag> createdResult = await context.MemeTags.AddAsync(memeTag);
                 await context.SaveChangesAsync();
 
-                return createdResult.Entity.ConvertMemeTag();
+                MemeTagDTO dto = _mapper.Map<MemeTagDTO>(createdResult.Entity);
+
+                return dto;
             }
         }
 
@@ -68,19 +80,17 @@ namespace MemeFolderN.EntityFramework.Services
         {
             using (MemeFolderNDbContext context = _contextFactory.CreateDbContext(null))
             {
-                MemeTag memeTag = memeTagDTO.ConvertMemeTagDTO();
+                MemeTag memeTag = _mapper.Map<MemeTag>(memeTagDTO);
 
-                var original = await context.MemeTags.FirstOrDefaultAsync(e => e.Id == guid);
+                MemeTag dbMemeTag = await context.MemeTags.FirstOrDefaultAsync(e => e.Id == guid);
 
-                foreach (PropertyInfo propertyInfo in original.GetType().GetProperties())
-                {
-                    if (propertyInfo.GetValue(memeTag, null) == null)
-                        propertyInfo.SetValue(memeTag, propertyInfo.GetValue(original, null), null);
-                }
-                context.Entry(original).CurrentValues.SetValues(memeTag);
+                _mapper.Map<MemeTag, MemeTag>(memeTag, dbMemeTag);
+
                 await context.SaveChangesAsync();
 
-                return memeTag.ConvertMemeTag();
+                MemeTagDTO dto = _mapper.Map<MemeTagDTO>(memeTag);
+
+                return dto;
             }
         }
      
@@ -97,16 +107,22 @@ namespace MemeFolderN.EntityFramework.Services
             }
         }
 
+
         #region Конструкторы
 
         public MemeTagDataService()
         {
             _contextFactory = new MemeFolderNDbContextFactory();
+            _mapper = new Mapper(new MapperConfiguration(opt =>
+            {
+                opt.AddProfile(new MapperProfileDAL());
+            }));
         }
 
-        public MemeTagDataService(MemeFolderNDbContextFactory contextFactory)
+        public MemeTagDataService(MemeFolderNDbContextFactory contextFactory, IMapper mapper)
         {
             _contextFactory = contextFactory;
+            _mapper = mapper;
         }
 
         #endregion

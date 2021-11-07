@@ -18,7 +18,7 @@ namespace MemeFolderN.MFViewModels.Default
         public MFViewModel(VmDIContainer vmDIContainer) : base(vmDIContainer.navigationManager)
         {
             this.model = vmDIContainer.model;
-            
+
             this.dispatcher = vmDIContainer.dispatcher;
             this.dialogService = vmDIContainer.dialogService;
 
@@ -26,6 +26,8 @@ namespace MemeFolderN.MFViewModels.Default
             model.ChangedMemesEvent += Model_ChangedMemesEvent;
             model.ChangedMemeTagsEvent += Model_ChangedMemeTagsEvent;
             navigationManager.Navigated += NavigationService_Navigated;
+
+            OnAllPropertyChanged();
         }
 
         // Только для Времени Разработки

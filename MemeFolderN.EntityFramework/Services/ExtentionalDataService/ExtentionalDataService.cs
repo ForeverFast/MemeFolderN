@@ -1,11 +1,11 @@
-﻿using MemeFolderN.Core.Converters;
+﻿using AutoMapper;
 using MemeFolderN.Core.DTOClasses;
 using MemeFolderN.Core.Models;
+using MemeFolderN.EntityFramework.AutoMapperProfiles;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Z.BulkOperations;
 
@@ -13,7 +13,8 @@ namespace MemeFolderN.EntityFramework.Services
 {
     public class ExtentionalDataService : IExtentionalDataService
     {
-        private readonly MemeFolderNDbContextFactory _contextFactory;
+        protected readonly MemeFolderNDbContextFactory _contextFactory;
+        protected readonly IMapper _mapper;
 
         public virtual async Task<List<FolderDTO>> BulkInsertAndUpdateFolder(FolderDTO parentFolder)
         {
@@ -23,9 +24,8 @@ namespace MemeFolderN.EntityFramework.Services
 
                 if (folder != null)
                 {
-                    //List<Folder> dbFolders = folders.Select(x => x.ConvertFolderDTO()).ToList();
-                    folder.Folders = parentFolder.Folders.Select(x => x.ConvertFolderDTO()).ToList();
-                    folder.Memes = parentFolder.Memes.Select(x => x.ConvertMemeDTO()).ToList();
+                    folder.Folders = parentFolder.Folders.Select(x => _mapper.Map<Folder>(x)).ToList();
+                    folder.Memes = parentFolder.Memes.Select(x => _mapper.Map<Meme>(x)).ToList();
                     List<Folder> dbFolders = new() { folder };
                     
                     context.BulkInsert(dbFolders, options =>
@@ -50,12 +50,12 @@ namespace MemeFolderN.EntityFramework.Services
 
                     await context.SaveChangesAsync();
 
-                    return dbFolders.Select(x => x.ConvertFolder()).ToList();
+                    return dbFolders.Select(x => _mapper.Map<FolderDTO>(x)).ToList();
                 }
                 else
                     throw new ArgumentNullException($"Не существует папки с guid({parentFolder?.Id})");
 
-            } //D:\\MemeFolder\Новая папка (3)\test1\test2\1.png
+            }
         }
 
         #region Конструкторы
@@ -63,11 +63,16 @@ namespace MemeFolderN.EntityFramework.Services
         public ExtentionalDataService()
         {
             _contextFactory = new MemeFolderNDbContextFactory();
+            _mapper = new Mapper(new MapperConfiguration(opt =>
+            {
+                opt.AddProfile(new MapperProfileDAL());
+            }));
         }
 
-        public ExtentionalDataService(MemeFolderNDbContextFactory contextFactory)
+        public ExtentionalDataService(MemeFolderNDbContextFactory contextFactory, IMapper mapper)
         {
             _contextFactory = contextFactory;
+            _mapper = mapper;
         }
 
         #endregion

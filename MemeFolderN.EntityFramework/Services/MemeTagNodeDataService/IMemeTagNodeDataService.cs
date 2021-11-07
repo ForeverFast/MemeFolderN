@@ -5,11 +5,24 @@ using System.Threading.Tasks;
 
 namespace MemeFolderN.EntityFramework.Services
 {
-    public interface IMemeTagNodeDataService : IDataService<MemeTagNodeDTO>
+    public interface IMemeTagNodeDataService
     {
+        /// <summary>
+        /// Получение сущности по Guid
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
+        Task<MemeTagNodeDTO> GetById(Guid guid);
         Task<MemeTagNodeDTO> GetByMemeIdAndMemeTagId(Guid memeId, Guid memeTagId);
         Task<List<Guid>> GetAllMemeIdByMemeTagId(Guid memeTagId);
-        Task<List<MemeTagNodeDTO>> AddRange(List<MemeTagNodeDTO> memeTagNodeDTOs);
+
+        /// <summary>
+        /// Создание сущности
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task<MemeDTO> Add(Guid memeId, Guid memeTagId);
+        Task<MemeDTO> AddRange(Guid memeGuid, List<Guid> tags);
 
         /// <summary>
         /// Удаление сущности по Guid
@@ -17,5 +30,7 @@ namespace MemeFolderN.EntityFramework.Services
         /// <param name="guid"></param>
         /// <returns></returns>
         Task<bool> Delete(Guid guid);
+        Task<MemeDTO> Delete(Guid memeGuid, Guid tagGuid);
+        Task<MemeDTO> DeleteRange(Guid memeGuid, List<Guid> tags);
     }
 }

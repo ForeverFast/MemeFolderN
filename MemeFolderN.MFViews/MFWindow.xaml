@@ -97,8 +97,12 @@
                                         RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeChangeRoutedCommand }"/>
             <propa:RoutedCommandBinding Command="{Binding MemeDeleteCommand}"
                                         RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeDeleteRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding MemeDeleteTagCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeDeleteTagRoutedCommand }"/>
             <propa:RoutedCommandBinding Command="{Binding MemeOpenCommand}"
                                         RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeOpenRoutedCommand }"/>
+            <propa:RoutedCommandBinding Command="{Binding MemeOpenInExplorerCommand}"
+                                        RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeOpenInExplorerRoutedCommand }"/>
             <propa:RoutedCommandBinding Command="{Binding MemeCopyCommand}"
                                         RoutedCommand="{x:Static routedCommands:MemeRoutedCommands.MemeCopyRoutedCommand }"/>
             <!-- MemeTags -->
@@ -218,6 +222,7 @@
                 <Grid Grid.Column="3" Background="{x:Null}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                         <Button x:Name="Debug"
+                                Visibility="Hidden"
                             WindowChrome.IsHitTestVisibleInChrome="True"
                             Command="{Binding ShowExecutableMethodCommand}"
                             Background="{StaticResource GrayLVL4}"
@@ -297,8 +302,7 @@
                         
                     </Grid>
                 </Border>
-                
-
+               
                 <TreeView Grid.Row="1" x:Name="FolderTreeView"
                           ItemsSource="{Binding Source={StaticResource root}}"
                           Foreground="{DynamicResource StandartLightColor2}"
@@ -314,16 +318,13 @@
                     </Grid.RowDefinitions>
                     
                     <ListBox Grid.Row="0"
-                            ItemsSource="{Binding MemeTags}"
-                            Style="{DynamicResource LeftMenuTagList}"/>
-
+                             ItemsSource="{Binding MemeTags}"
+                             Style="{DynamicResource LeftMenuTagList}"/>
+                    
                     <Button Style="{DynamicResource LeftMenuAddNewTagButton}" Grid.Row="1"
                             Command="{Binding MemeTagAddCommand}"/>
                 </Grid>
                
-
-
-
             </Grid>
 
         </Border>

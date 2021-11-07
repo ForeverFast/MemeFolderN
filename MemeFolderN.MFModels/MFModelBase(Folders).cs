@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MemeFolderN.MFModelBase
 {
-    public abstract partial class MFModelBase : IFolderModel    
+    public abstract partial class MFModelBase : IFolderModel
     {
         protected readonly IFolderDataService folderDataService;
 

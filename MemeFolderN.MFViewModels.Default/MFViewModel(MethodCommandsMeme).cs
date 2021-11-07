@@ -1,4 +1,5 @@
 ﻿using MemeFolderN.Core.DTOClasses;
+using MemeFolderN.Extentions;
 using MemeFolderN.MFViewModelsBase;
 using System;
 using System.Collections.Generic;
@@ -154,15 +155,60 @@ namespace MemeFolderN.MFViewModels.Default
             }
         }
 
+        protected override void MemeDeleteTagMethod(object data)
+        {
+            base.MemeDeleteTagMethod(data);
+            MemeDeleteTagMethodAsync(data);
+        }
+
+        public virtual async void MemeDeleteTagMethodAsync(object data)
+        {
+            try
+            {
+                object[] coll = (object[])data;
+                MemeVMBase memeVMBase = coll[0] as MemeVMBase;
+                MemeTagVMBase memeTagVMBase = coll[1] as MemeTagVMBase;
+
+                IsMemesLoadedFlag = false;
+                await model.DeleteMemeTagFromMemeAsync(memeVMBase.Id, memeTagVMBase.Id);
+            }   
+            catch(Exception ex)
+            {
+                BusyCheck();
+                OnException(ex);
+            }
+        }
+
+        protected override void MemeOpenInExplorerMethod(MemeVMBase memeVMBase)
+        {
+            try
+            {
+                base.MemeOpenInExplorerMethod(memeVMBase);
+
+                using (Process p = new Process())
+                {
+                    p.StartInfo = new ProcessStartInfo("explorer", ExplorerHelper.GetImageFolderPath(memeVMBase.ImagePath)) /*{ UseShellExecute = true }*/;
+                    p.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                BusyCheck();
+                OnException(ex);
+            }
+        }
+
         protected override void MemeOpenMethod(MemeVMBase memeVMBase)
         {
             try
             {
                 base.MemeOpenMethod(memeVMBase);
-                Process p = new Process();
-                p.StartInfo = new ProcessStartInfo(memeVMBase.ImagePath) { UseShellExecute = true };
-                p.Start();
-                p.Dispose();
+
+                using (Process p = new Process())
+                {
+                    p.StartInfo = new ProcessStartInfo(memeVMBase.ImagePath) { UseShellExecute = true };
+                    p.Start();
+                }
             }
             catch (Exception ex)
             {
