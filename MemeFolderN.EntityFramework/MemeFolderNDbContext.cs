@@ -49,7 +49,7 @@ namespace MemeFolderN.EntityFramework
 
         public MemeFolderNDbContext(DbContextOptions options) : base(options)
         {
-            //Database.EnsureCreated();
+            Database.EnsureCreated();
         }
     }
 }
