@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MemeFolderN.MFViewModelsBase.DialogViewModels
+namespace MemeFolderN.MFViewModels.Common.DialogViewModels
 {
     public record MemeTagDialogDto
     {

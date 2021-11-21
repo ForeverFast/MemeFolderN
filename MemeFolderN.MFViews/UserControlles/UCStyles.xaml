@@ -4,6 +4,8 @@
     <ResourceDictionary.MergedDictionaries>
         <srd:SharedResourceDictionary
                     Source="UIBlockerUC/UIBlockerGeneralStyle.xaml"/>
+        <srd:SharedResourceDictionary
+                    Source="MFButtonUC/MFButtonGeneralStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
    
 </ResourceDictionary>

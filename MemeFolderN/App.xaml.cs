@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using MemeFolderN.EntityFramework;
-using MemeFolderN.EntityFramework.Services;
-using MemeFolderN.Extentions.Services;
+using MemeFolderN.Data;
+using MemeFolderN.Data.Services;
 using MemeFolderN.MFModel.Wpf.Abstractions;
-using MemeFolderN.MFModelBase.Abstractions;
-using MemeFolderN.MFModelBase.Wpf;
-using MemeFolderN.MFViewModels.Default;
-using MemeFolderN.MFViewModels.Default.Extentions;
-using MemeFolderN.MFViewModels.Default.Services;
-using MemeFolderN.MFViewModelsBase.Services;
+using MemeFolderN.MFModel.Wpf;
+using MemeFolderN.MFViewModels.Wpf;
+using MemeFolderN.MFViewModels.Wpf.Extentions;
+using MemeFolderN.MFViewModels.Wpf.Services;
 using MemeFolderN.MFViews;
 using MemeFolderN.MFViews.Pages;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +23,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Z.EntityFramework.Extensions;
+using MemeFolderN.MFViewModels.Common.Services;
+using MemeFolderN.Common.Managers;
 
 namespace MemeFolderN
 {
@@ -98,7 +97,7 @@ namespace MemeFolderN
             services.AddSingleton(typeof(MemeFolderNDbContextFactory));
 
             services.AddSingleton<IDialogService, DialogService>();
-            services.AddSingleton<IUserSettingsService, UserSettingsService>();
+            services.AddSingleton<UserSettingsManager>();
             services.AddSingleton<INavigationManager, NavigationManager>();
 
             services.AddSingleton(typeof(VmDIContainer));

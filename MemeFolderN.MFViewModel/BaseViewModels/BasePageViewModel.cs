@@ -2,7 +2,7 @@
 
 using MvvmNavigation.Abstractions;
 
-namespace MemeFolderN.MFViewModelsBase.BaseViewModels
+namespace MemeFolderN.MFViewModels.Common.BaseViewModels
 {
     public abstract class BasePageViewModel : BaseNavigationViewModel
     {

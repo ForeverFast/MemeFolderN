@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
+                    xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Wpf.RoutedCommands;assembly=MemeFolderN.MFViewModels.Wpf"
                     >
 
     <Style x:Key="LeftMenuTagList" TargetType="{x:Type ListBox}">

@@ -1,4 +1,4 @@
-﻿namespace MemeFolderN.MFModelBase.Extentions
+﻿namespace MemeFolderN.MFModel.Common.Extentions
 {
     public enum MFModelExceptionEnum
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MemeFolderN.Core.Models
+namespace MemeFolderN.Common.Models
 {
     public abstract class FolderObject : DomainObject
     {

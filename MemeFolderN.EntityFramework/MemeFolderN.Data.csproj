@@ -21,8 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MemeFolderN.Core\MemeFolderN.Core.csproj" />
-    <ProjectReference Include="..\MemeFolderN.Extentions\MemeFolderN.Extentions.csproj" />
+    <ProjectReference Include="..\MemeFolderN.Core\MemeFolderN.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
-﻿using MemeFolderN.EntityFramework.Services;
-using MemeFolderN.MFModelBase.Abstractions;
+﻿using MemeFolderN.Data.Services;
+using MemeFolderN.MFModel.Common.Abstractions;
 
-namespace MemeFolderN.MFModelBase
+namespace MemeFolderN.MFModel.Common
 {
     public partial class MFModelBase : IMFModel, IFolderModel, IMemeModel, IMemeTagModel
     {

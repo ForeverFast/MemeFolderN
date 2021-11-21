@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFViewModelsBase.AutoMapperProfiles
+namespace MemeFolderN.MFViewModels.Common.AutoMapperProfiles
 {
     public class ProfileVMBase
     {

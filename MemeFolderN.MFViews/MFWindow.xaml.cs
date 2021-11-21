@@ -1,4 +1,4 @@
-﻿using MemeFolderN.MFViewModels.Default;
+﻿using MemeFolderN.MFViewModels.Wpf;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,9 +10,7 @@ namespace MemeFolderN.MFViews
     {
         private IServiceProvider _serviceProvider;
 
-        public ContentControl FrameContentControl => MFContent;
-
-        //public event RoutedEventHandler DataContextLoaded;
+        public ContentControl FrameContentControl => MFContent; 
 
         public MFWindow(IServiceProvider serviceProvider)
         {
@@ -24,7 +22,7 @@ namespace MemeFolderN.MFViews
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             DataContext = _serviceProvider.GetService(typeof(MFViewModel));
-            //DataContextLoaded?.Invoke(this, null);
+           
             ((MFViewModel)DataContext).FolderLoadCommand.Execute(null);
             ((MFViewModel)DataContext).MemeLoadCommand.Execute(null);
             ((MFViewModel)DataContext).MemeTagLoadCommand.Execute(null);

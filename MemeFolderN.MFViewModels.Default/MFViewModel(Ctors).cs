@@ -1,11 +1,11 @@
 ﻿using GongSolutions.Wpf.DragDrop;
 using MemeFolderN.MFModel.Wpf.Abstractions;
-using MemeFolderN.MFViewModels.Default.Extentions;
-using MemeFolderN.MFViewModels.Default.Services;
-using MemeFolderN.MFViewModelsBase;
+using MemeFolderN.MFViewModels.Wpf.Extentions;
+using MemeFolderN.MFViewModels.Wpf.Services;
+using MemeFolderN.MFViewModels.Common;
 using System.Windows.Threading;
 
-namespace MemeFolderN.MFViewModels.Default
+namespace MemeFolderN.MFViewModels.Wpf
 {
     public partial class MFViewModel : MFViewModelBase, IDropTarget
     {

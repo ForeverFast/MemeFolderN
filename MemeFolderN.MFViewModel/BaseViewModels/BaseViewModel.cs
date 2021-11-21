@@ -1,9 +1,9 @@
-﻿using MemeFolderN.MFViewModelsBase.Commands;
+﻿using MemeFolderN.MFViewModels.Common.Commands;
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-namespace MemeFolderN.MFViewModelsBase.BaseViewModels
+namespace MemeFolderN.MFViewModels.Common.BaseViewModels
 {
     public abstract class BaseViewModel : OnPropertyChangedClass, IDisposable
     {

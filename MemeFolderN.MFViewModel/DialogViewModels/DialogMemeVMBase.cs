@@ -1,13 +1,13 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFViewModelsBase.BaseViewModels;
-using MemeFolderN.MFViewModelsBase.Commands;
-using MemeFolderN.MFViewModelsBase.Services;
+﻿using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.MFViewModels.Common.BaseViewModels;
+using MemeFolderN.MFViewModels.Common.Commands;
+using MemeFolderN.MFViewModels.Common.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
-namespace MemeFolderN.MFViewModelsBase
+namespace MemeFolderN.MFViewModels.Common
 {
     public class DialogMemeVMBase : BaseDialogViewModel, IDisposable
     {

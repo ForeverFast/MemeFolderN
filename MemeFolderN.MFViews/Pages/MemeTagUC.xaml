@@ -9,10 +9,10 @@
              xmlns:ib="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
              xmlns:ssc="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
-             xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
+             xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Wpf.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
              xmlns:dd="urn:gong-wpf-dragdrop"
              xmlns:cn="clr-namespace:MemeFolderN.MFViews.Converters"
-             xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Default;assembly=MemeFolderN.MFViewModels.Default"
+             xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Wpf;assembly=MemeFolderN.MFViewModels.Default"
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>

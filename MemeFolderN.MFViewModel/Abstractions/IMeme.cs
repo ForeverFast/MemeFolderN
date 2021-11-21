@@ -1,8 +1,8 @@
-﻿using MemeFolderN.Core.DTOClasses;
+﻿using MemeFolderN.Common.DTOClasses;
 using System;
 using System.Collections.ObjectModel;
 
-namespace MemeFolderN.MFViewModelsBase.Abstractions
+namespace MemeFolderN.MFViewModels.Common.Abstractions
 {
     public interface IMeme : IFolderObject, ICopyDTO<MemeDTO>
     {

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace MemeFolderN.MFViewModelsBase.Commands
+namespace MemeFolderN.MFViewModels.Common.Commands
 {
     /// <summary>Class with Attachable Property for bound RoutedCommands</summary>
     public class RoutedCommandBindings : Freezable

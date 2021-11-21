@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MemeFolderN.EntityFramework.Migrations
+namespace MemeFolderN.Data.Migrations
 {
     public partial class Init : Migration
     {

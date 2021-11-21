@@ -7,13 +7,13 @@ namespace MvvmNavigation
 {
     public abstract partial class NavigationManagerBase : INavigationManager
     {
-        public void Register([NotNull] string navigationKey, [NotNull] Func<object> getViewModel, [NotNull] Func<object> getView)
+        public void Register([NotNull] string navigationKey, object getViewModel, [NotNull] object getView)
         {
             if (navigationKey == null)
                 throw new ArgumentNullException(nameof(navigationKey));
 
-            if (getViewModel == null)
-                throw new ArgumentNullException(nameof(getViewModel));
+            //if (getViewModel == null)
+            //    throw new ArgumentNullException(nameof(getViewModel));
 
             if (getView == null)
                 throw new ArgumentNullException(nameof(getView));
@@ -30,8 +30,7 @@ namespace MvvmNavigation
           where TView : class, new()
         {
             object viewInstance = Activator.CreateInstance<TView>();
-            Func<object> getView = () => viewInstance;
-            this.Register(navigationKey, () => viewModel, getView);
+            this.Register(navigationKey, viewModel, viewInstance);
         }
 
         public void RegisterViewType<TView>([NotNull] string viewTypeKey)
@@ -47,8 +46,7 @@ namespace MvvmNavigation
         {
             Type viewType = PageData[viewTypeKey];
             object viewInstance = Activator.CreateInstance(viewType);
-            Func<object> getView = () => viewInstance;
-            this.Register(navigationKey, () => viewModel, getView);
+            this.Register(navigationKey, viewModel, viewInstance);
         }
     }
 }

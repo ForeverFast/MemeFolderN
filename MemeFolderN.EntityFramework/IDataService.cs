@@ -1,8 +1,8 @@
-﻿using MemeFolderN.Core.DTOClasses;
+﻿using MemeFolderN.Common.DTOClasses;
 using System;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.EntityFramework
+namespace MemeFolderN.Data
 {
     public interface IDataService<T>
         where T : DomainObjectDTO

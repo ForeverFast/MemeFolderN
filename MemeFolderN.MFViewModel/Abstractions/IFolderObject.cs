@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MemeFolderN.MFViewModelsBase.Abstractions
+namespace MemeFolderN.MFViewModels.Common.Abstractions
 {
     public interface IFolderObject : IDomainObject
     {

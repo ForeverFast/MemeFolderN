@@ -1,12 +1,12 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.EntityFramework.Services;
-using MemeFolderN.MFModelBase.Abstractions;
-using MemeFolderN.MFModelBase.Extentions;
+﻿using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.Data.Services;
+using MemeFolderN.MFModel.Common.Abstractions;
+using MemeFolderN.MFModel.Common.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFModelBase
+namespace MemeFolderN.MFModel.Common
 {
     public abstract partial class MFModelBase : IFolderModel
     {

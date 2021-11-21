@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace MemeFolderN.MFViewModelsBase.Commands
+namespace MemeFolderN.MFViewModels.Common.Commands
 {
     public partial class RoutedCommandBinding
     {

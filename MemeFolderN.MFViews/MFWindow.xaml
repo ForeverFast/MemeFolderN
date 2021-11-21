@@ -9,13 +9,14 @@
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:ib="http://schemas.microsoft.com/xaml/behaviors"  
         xmlns:ssc="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
-        xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Default;assembly=MemeFolderN.MFViewModels.Default"
+        xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Wpf;assembly=MemeFolderN.MFViewModels.Default"
         xmlns:behaviours="clr-namespace:MemeFolderN.MFViews.Extentions"
         xmlns:proxy="clr-namespace:Proxy"
-        xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Default.RoutedCommands;assembly=MemeFolderN.MFViewModels.Default"
-        xmlns:propa="clr-namespace:MemeFolderN.MFViewModelsBase.Commands;assembly=MemeFolderN.MFViewModelsBase"
+        xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Wpf.RoutedCommands;assembly=MemeFolderN.MFViewModels.Wpf"
+        xmlns:propa="clr-namespace:MemeFolderN.MFViewModels.Common.Commands;assembly=MemeFolderN.MFViewModels.Common"
         xmlns:uib="clr-namespace:MemeFolderN.MFViews.UserControlles.UIBlockerUC"
-        xmlns:dd="urn:gong-wpf-dragdrop"
+        xmlns:dd="urn:gong-wpf-dragdrop" 
+        xmlns:mfbuttonuc="clr-namespace:MemeFolderN.MFViews.UserControlles.MFButtonUC"
         Title="MFWindow"
         x:Name="MFWindowElement"
         Height="800" Width="1500"
@@ -149,8 +150,8 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="300"/>
                     <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="500"/>
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="*" MinWidth="180"/>
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0" Background="{x:Null}">
@@ -192,13 +193,20 @@
                 </Grid>
 
                 <Grid Grid.Column="2">
-                    <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Left">
+                    <Grid >
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" MaxWidth="280" MinWidth="135"/>
+                            <ColumnDefinition Width="40" MinWidth="40"/>
+                            <ColumnDefinition Width="1*" MinWidth="0"/>
+                        </Grid.ColumnDefinitions>
+
                         <TextBox x:Name="SearchTB"
+                                 Grid.Column="0"
                                  Style="{StaticResource TB_Search}"
                                  Margin="10,0"
                                  WindowChrome.IsHitTestVisibleInChrome="True"   
-                                 Height="28" Width="280">
+                                 Height="28">
 
                             <!--<ib:Interaction.Triggers>
                                 <ib:EventTrigger EventName="TextChanged">
@@ -209,47 +217,50 @@
                             </ib:Interaction.Triggers>-->
 
                         </TextBox>
-                        <!--<Button Style="{DynamicResource SearchButton}"
-                            Command="{Binding SearchCommand}"
-                            CommandParameter="{Binding ElementName=SearchTB,
-                                                       Path=Text}"
-                            WindowChrome.IsHitTestVisibleInChrome="True"   />-->
-                    </StackPanel>
+                        <Button Grid.Column="1"
+                                Style="{DynamicResource SearchButton}"
+                                CommandParameter="{Binding ElementName=SearchTB,
+                                                           Path=Text}"
+                                WindowChrome.IsHitTestVisibleInChrome="True"   />
+                    </Grid>
 
 
                 </Grid>
                 
                 <Grid Grid.Column="3" Background="{x:Null}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <Button x:Name="Debug"
-                                Visibility="Hidden"
-                            WindowChrome.IsHitTestVisibleInChrome="True"
-                            Command="{Binding ShowExecutableMethodCommand}"
-                            Background="{StaticResource GrayLVL4}"
-                            Style="{StaticResource SettingsButton}"/>
-                        <Button x:Name="SettingsButton"
-                            WindowChrome.IsHitTestVisibleInChrome="True"      
-                            
-                            Background="{StaticResource GrayLVL4}"
-                            Style="{StaticResource SettingsButton}"/>
+                        <mfbuttonuc:MFButton x:Name="GcButton"
+                                             TextData="GC"
+                                             WindowChrome.IsHitTestVisibleInChrome="True"
+                                             Command="{Binding ShowExecutableMethodCommand}"
+                                             Background="{StaticResource GrayLVL4}"/>
+                        <mfbuttonuc:MFButton x:Name="DebugButton"
+                                             IconKind="MessageAlertOutline"
+                                             WindowChrome.IsHitTestVisibleInChrome="True"
+                                             Command="{Binding ShowExecutableMethodCommand}"
+                                             Background="{StaticResource GrayLVL4}"/>
+                        <mfbuttonuc:MFButton x:Name="SettingsButton"
+                                             IconKind="Menu"
+                                             WindowChrome.IsHitTestVisibleInChrome="True"
+                                             Background="{StaticResource GrayLVL4}"/>
                         <!--Command="{Binding OpenSettingsCommand}"-->
                         <Button x:Name="MinimizeButton"
-                            WindowChrome.IsHitTestVisibleInChrome="True"      
-                            Command="{Binding MinimizedWindowCommand}"
-                            Background="{StaticResource GrayLVL4}"
-                            Style="{StaticResource MinimizeWindowButton}"/>
+                                WindowChrome.IsHitTestVisibleInChrome="True"      
+                                Command="{Binding MinimizedWindowCommand}"
+                                Background="{StaticResource GrayLVL4}"
+                                Style="{StaticResource MinimizeWindowButton}"/>
 
                         <Button x:Name="ResizeButton"
-                            WindowChrome.IsHitTestVisibleInChrome="True"      
-                            Command="{Binding ResizeWindowCommand}"
-                            Background="{DynamicResource GrayLVL4}"
-                            Style="{StaticResource ResizeWindowButton}"/>
+                                WindowChrome.IsHitTestVisibleInChrome="True"      
+                                Command="{Binding ResizeWindowCommand}"
+                                Background="{DynamicResource GrayLVL4}"
+                                Style="{StaticResource ResizeWindowButton}"/>
 
                         <Button x:Name="CloseButton"
-                            WindowChrome.IsHitTestVisibleInChrome="True"      
-                            Command="{Binding CloseWindowCommand}"
-                            Background="{DynamicResource GrayLVL4}"
-                            Style="{StaticResource CloseWindowButton}"/>
+                                WindowChrome.IsHitTestVisibleInChrome="True"      
+                                Command="{Binding CloseWindowCommand}"
+                                Background="{DynamicResource GrayLVL4}"
+                                Style="{StaticResource CloseWindowButton}"/>
                     </StackPanel>
                 </Grid>
 

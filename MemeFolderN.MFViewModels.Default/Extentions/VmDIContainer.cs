@@ -1,9 +1,9 @@
 ﻿using MemeFolderN.MFModel.Wpf.Abstractions;
-using MemeFolderN.MFViewModels.Default.Services;
+using MemeFolderN.MFViewModels.Wpf.Services;
 using MvvmNavigation.Abstractions;
 using System.Windows.Threading;
 
-namespace MemeFolderN.MFViewModels.Default.Extentions
+namespace MemeFolderN.MFViewModels.Wpf.Extentions
 {
     public class VmDIContainer
     {

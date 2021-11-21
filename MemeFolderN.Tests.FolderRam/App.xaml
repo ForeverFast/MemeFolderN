@@ -1,0 +1,19 @@
+﻿<Application x:Class="MemeFolderN.Tests.FolderRam.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:MemeFolderN.Tests.FolderRam"
+             xmlns:srd="clr-namespace:MemeFolderN.MFViews.Extentions.Data;assembly=MemeFolderN.MFViews"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Styles/FolderUC.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Brushes.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        
+    </Application.Resources>
+</Application>

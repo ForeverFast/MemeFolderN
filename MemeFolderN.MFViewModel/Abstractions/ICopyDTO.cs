@@ -1,11 +1,11 @@
-﻿using MemeFolderN.Core.DTOClasses;
+﻿using MemeFolderN.Common.DTOClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFViewModelsBase.Abstractions
+namespace MemeFolderN.MFViewModels.Common.Abstractions
 {
     public interface ICopyDTO<T> where T : DomainObjectDTO
     {

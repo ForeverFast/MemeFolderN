@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace MemeFolderN.MFViewModels.Default.RoutedCommands
+namespace MemeFolderN.MFViewModels.Wpf.RoutedCommands
 {
     public static class FolderRoutedCommands
     {

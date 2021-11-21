@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace MemeFolderN.MFViewModelsBase
+namespace MemeFolderN.MFViewModels.Common
 {
     /// <summary>Базовый класс с реализацией INPC </summary>
     public abstract class OnPropertyChangedClass : INotifyPropertyChanged

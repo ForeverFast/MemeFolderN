@@ -1,8 +1,8 @@
-﻿using MemeFolderN.MFViewModelsBase.Commands;
+﻿using MemeFolderN.MFViewModels.Common.Commands;
 using System;
 using System.Collections.ObjectModel;
 
-namespace MemeFolderN.MFViewModelsBase.Abstractions
+namespace MemeFolderN.MFViewModels.Common.Abstractions
 {
     /// <summary>Делегат события возникновения исключения</summary>
     /// <param name="sender">Источник исключения</param>

@@ -1,4 +1,4 @@
-﻿using MemeFolderN.MFViewModels.Default;
+﻿using MemeFolderN.MFViewModels.Wpf;
 using MemeFolderN.MFViews.Extentions;
 using System;
 using System.Globalization;

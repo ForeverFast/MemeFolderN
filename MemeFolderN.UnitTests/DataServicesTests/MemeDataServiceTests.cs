@@ -1,12 +1,8 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.Core.Models;
-using MemeFolderN.EntityFramework.Services;
+﻿using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.Data.Services;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace MemeFolderN.UnitTests.DataServicesTests

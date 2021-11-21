@@ -1,6 +1,6 @@
-﻿using MemeFolderN.MFViewModelsBase.Commands;
+﻿using MemeFolderN.MFViewModels.Common.Commands;
 
-namespace MemeFolderN.MFViewModelsBase.Abstractions
+namespace MemeFolderN.MFViewModels.Common.Abstractions
 {
     public interface IFolderVM
     {

@@ -1,4 +1,4 @@
-﻿namespace MemeFolderN.MFViewModelsBase.Commands
+﻿namespace MemeFolderN.MFViewModels.Common.Commands
 {
     #region Делегаты для методов WPF команд
     /// <summary>Делегат исполняющего метода без параметров</summary>

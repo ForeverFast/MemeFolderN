@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MemeFolderN.EntityFramework\MemeFolderN.EntityFramework.csproj" />
+    <ProjectReference Include="..\MemeFolderN.EntityFramework\MemeFolderN.Data.csproj" />
   </ItemGroup>
 
 </Project>

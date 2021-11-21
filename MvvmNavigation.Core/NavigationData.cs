@@ -5,14 +5,14 @@ namespace MvvmNavigation
 {
     public sealed class NavigationData
     {
-        public NavigationData([NotNull] Func<object> viewModelFunc, [NotNull] Func<object> viewFunc)
+        public NavigationData(object viewModelFunc, [NotNull] object viewFunc)
         {
-            ViewModelFunc = viewModelFunc ?? throw new ArgumentNullException(nameof(viewModelFunc));
-            ViewFunc = viewFunc ?? throw new ArgumentNullException(nameof(viewFunc));
+            ViewModel = viewModelFunc;
+            View = viewFunc ?? throw new ArgumentNullException(nameof(viewFunc));
         }
 
-        public Func<object> ViewModelFunc { get; }
+        public object ViewModel { get; set; }
 
-        public Func<object> ViewFunc { get; }
+        public object View { get; set; }
     }
 }

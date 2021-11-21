@@ -1,7 +1,7 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFViewModelsBase;
+﻿using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.MFViewModels.Common;
 
-namespace MemeFolderN.MFViewModels.Default
+namespace MemeFolderN.MFViewModels.Wpf
 {
     public partial class FolderVM : FolderVMBase
     {

@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MemeFolderN.MFViewModelsBase.Commands
+namespace MemeFolderN.MFViewModels.Common.Commands
 {
     /// <summary>Collection for RoutedCommandBinding</summary>
     public class RoutedCommandBindingCollection : FreezableCollection<RoutedCommandBinding>

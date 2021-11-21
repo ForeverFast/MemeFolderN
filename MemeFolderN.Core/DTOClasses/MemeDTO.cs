@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MemeFolderN.Core.DTOClasses
+namespace MemeFolderN.Common.DTOClasses
 {
     public record MemeDTO : FolderObjectDTO
     {

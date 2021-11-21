@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MemeFolderN.MFViewModelsBase.Commands
+namespace MemeFolderN.MFViewModels.Common.Commands
 {
     /// <summary>Creating CommandBinding on Received RoutedCommand and ICommand</summary>
     public partial class RoutedCommandBinding : Freezable

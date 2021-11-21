@@ -1,9 +1,9 @@
-﻿using MemeFolderN.MFViewModelsBase.Abstractions;
-using MemeFolderN.MFViewModelsBase.BaseViewModels;
+﻿using MemeFolderN.MFViewModels.Common.Abstractions;
+using MemeFolderN.MFViewModels.Common.BaseViewModels;
 using System;
 using System.Collections.ObjectModel;
 
-namespace MemeFolderN.MFViewModelsBase
+namespace MemeFolderN.MFViewModels.Common
 {
     public abstract partial class FolderVMBase : BaseViewModel, IFolder
     {

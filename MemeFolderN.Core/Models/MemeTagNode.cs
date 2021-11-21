@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MemeFolderN.Core.Models
+namespace MemeFolderN.Common.Models
 {
     [Table("MemeTagNodes")]
     public class MemeTagNode : DomainObject

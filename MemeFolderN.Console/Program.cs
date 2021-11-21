@@ -1,21 +1,21 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.Core.Models;
-using MemeFolderN.EntityFramework;
-using MemeFolderN.EntityFramework.Services;
+﻿using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.Common.Models;
+using MemeFolderN.Data;
+using MemeFolderN.Data.Services;
 using System;
-using MemeFolderN.Extentions.Services;
+
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MemeFolderN.Extentions;
+
 using Z.EntityFramework.Extensions;
 using Z.BulkOperations;
 using System.IO;
 using AutoMapper;
-using MemeFolderN.EntityFramework.AutoMapperProfiles;
+using MemeFolderN.Data.AutoMapperProfiles;
 
 namespace MemeFolderN.Console
 {

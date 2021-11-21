@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFModelBase.Extentions
+namespace MemeFolderN.MFModel.Common.Extentions
 {
     [Serializable]
     public class MFModelException : Exception

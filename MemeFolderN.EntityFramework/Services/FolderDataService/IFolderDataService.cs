@@ -1,10 +1,10 @@
-﻿using MemeFolderN.Core.DTOClasses;
+﻿using MemeFolderN.Common.DTOClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.EntityFramework.Services
+namespace MemeFolderN.Data.Services
 {
     public interface IFolderDataService : IDataService<FolderDTO>
     {

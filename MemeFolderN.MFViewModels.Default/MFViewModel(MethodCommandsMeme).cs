@@ -1,6 +1,6 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.Extentions;
-using MemeFolderN.MFViewModelsBase;
+﻿using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.Common.Helpers;
+using MemeFolderN.MFViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace MemeFolderN.MFViewModels.Default
+namespace MemeFolderN.MFViewModels.Wpf
 {
     public partial class MFViewModel : MFViewModelBase
     {

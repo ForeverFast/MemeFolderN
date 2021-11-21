@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MemeFolderN.Extentions
+namespace MemeFolderN.Common.Extentions
 {
-    public static class DataExtentions
+    public static class LinqExtentions
     {
         public static void ReplaceReference<T>(IList<T> list, T newReference, Func<T, bool> predicate)
         {
@@ -37,10 +37,5 @@ namespace MemeFolderN.Extentions
                 }
             }
         }
-
-        //public static T BuildTree<T>(this T root, Func<T, object> idFunc, Func<T, object> parentIdFunc, Func<T )
-        //{
-
-        //}
     }
 }

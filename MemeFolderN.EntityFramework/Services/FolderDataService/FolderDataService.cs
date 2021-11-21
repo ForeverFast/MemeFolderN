@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.Core.Models;
-using MemeFolderN.EntityFramework.AutoMapperProfiles;
-using MemeFolderN.Extentions;
+using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.Common.Extentions;
+using MemeFolderN.Common.Models;
+using MemeFolderN.Data.AutoMapperProfiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.EntityFramework.Services
+namespace MemeFolderN.Data.Services
 {
     public class FolderDataService : IFolderDataService
     {

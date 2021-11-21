@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.Core.Models;
+using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.Common.Models;
 using System.Linq;
 
-namespace MemeFolderN.EntityFramework.AutoMapperProfiles
+namespace MemeFolderN.Data.AutoMapperProfiles
 {
     public class MapperProfileDAL : Profile
     {

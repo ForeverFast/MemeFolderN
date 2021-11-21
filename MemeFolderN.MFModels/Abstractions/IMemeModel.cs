@@ -1,10 +1,10 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFModelBase.Extentions;
+﻿using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.MFModel.Common.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFModelBase.Abstractions
+namespace MemeFolderN.MFModel.Common.Abstractions
 {
     public delegate void ChangedMemesHandler(object sender, ActionType action, List<MemeDTO> memesDTO);
 

@@ -48,7 +48,7 @@ namespace MvvmNavigation
         private object CreateView(string navigationKey, object viewModel)
         {
             var navigationData = _dataStorage.Get(navigationKey);
-            var view = navigationData.ViewFunc();
+            var view = navigationData.View;
             if (view != null)
             {
                 _viewInteractionStrategy.SetDataContext(view, viewModel);
@@ -60,7 +60,7 @@ namespace MvvmNavigation
         private object GetViewModel(string navigationKey)
         {
             var navigationData = _dataStorage.Get(navigationKey);
-            return navigationData.ViewModelFunc();
+            return navigationData.ViewModel;
         }
 
         private void InvokeNavigatedFrom()
@@ -198,11 +198,12 @@ namespace MvvmNavigation
                 if (nd != null)
                 {
 
-                    object vm = nd.ViewModelFunc.Invoke();
+                    object vm = nd.ViewModel;
                     if (vm is IDisposable disposable)
                     {
                         disposable.Dispose();
                     }
+                    nd.View = null;
 
                     if (_dataStorage.Remove(key))
                     {
@@ -214,6 +215,9 @@ namespace MvvmNavigation
                         {
                             this.GoToLast();
                         }
+
+                        GC.WaitForPendingFinalizers();
+                        GC.Collect();
 
                         return true;
                     }

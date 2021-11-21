@@ -19,8 +19,8 @@ namespace MvvmNavigation
                                            object viewModel)
             where TView : class, new()
         {
-            Func<object> getView = Activator.CreateInstance<TView>;
-            navigationManager.Register(navigationKey, () => viewModel, getView);
+            object viewInstance = Activator.CreateInstance<TView>();
+            navigationManager.Register(navigationKey, viewModel, viewInstance);
         }
     }
 }

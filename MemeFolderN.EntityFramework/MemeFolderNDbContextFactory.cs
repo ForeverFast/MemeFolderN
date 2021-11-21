@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.IO;
 
-namespace MemeFolderN.EntityFramework
+namespace MemeFolderN.Data
 {
     public class MemeFolderNDbContextFactory : IDesignTimeDbContextFactory<MemeFolderNDbContext>
     {

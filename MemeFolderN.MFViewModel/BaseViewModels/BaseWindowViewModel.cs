@@ -1,8 +1,8 @@
-﻿using MemeFolderN.MFViewModelsBase.Commands;
+﻿using MemeFolderN.MFViewModels.Common.Commands;
 using MvvmNavigation.Abstractions;
 using System.Windows.Input;
 
-namespace MemeFolderN.MFViewModelsBase.BaseViewModels
+namespace MemeFolderN.MFViewModels.Common.BaseViewModels
 {
     public abstract class BaseWindowViewModel : BaseNavigationViewModel
     {

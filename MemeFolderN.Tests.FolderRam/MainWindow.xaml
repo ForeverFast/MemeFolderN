@@ -1,0 +1,38 @@
+﻿<Window x:Class="MemeFolderN.Tests.FolderRam.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MemeFolderN.Tests.FolderRam"
+        mc:Ignorable="d"
+        xmlns:ss="clr-namespace:MemeFolderN.MFViews;assembly=MemeFolderN.MFViews"
+        xmlns:srd="clr-namespace:MemeFolderN.MFViews.Extentions.Data;assembly=MemeFolderN.MFViews"
+        Title="MainWindow" Height="450" Width="800">
+
+
+    
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button Click="Button_Click">
+            
+        </Button>
+        
+        <ListView x:Name="MemeList" Grid.Row="1"
+                    Style="{StaticResource FolderUCMemeList}"
+                    Background="{x:Null}"
+                    
+                    VirtualizingStackPanel.IsVirtualizing="True"
+                    VirtualizingStackPanel.VirtualizationMode="Recycling"
+                
+                    ScrollViewer.CanContentScroll="False"
+                    ScrollViewer.IsDeferredScrollingEnabled="False"
+                     
+                    >
+        </ListView>
+    </Grid>
+</Window>

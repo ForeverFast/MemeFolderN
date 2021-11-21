@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFViewModelsBase.BaseViewModels
+namespace MemeFolderN.MFViewModels.Common.BaseViewModels
 {
     public abstract class BaseDialogViewModel : OnPropertyChangedClass
     {

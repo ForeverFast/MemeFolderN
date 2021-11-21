@@ -1,11 +1,11 @@
-﻿using MemeFolderN.Core.DTOClasses;
+﻿using MemeFolderN.Common.DTOClasses;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MemeFolderN.MFViewModelsBase.Services
+namespace MemeFolderN.MFViewModels.Common.Services
 {
     public class DialogServiceBase : IDialogServiceBase
     {

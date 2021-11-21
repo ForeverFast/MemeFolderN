@@ -1,12 +1,12 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFModelBase.Extentions;
-using MemeFolderN.MFViewModelsBase;
+﻿using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.MFModel.Common.Extentions;
+using MemeFolderN.MFViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFViewModels.Default
+namespace MemeFolderN.MFViewModels.Wpf
 {
     public partial class MFViewModel : MFViewModelBase
     {

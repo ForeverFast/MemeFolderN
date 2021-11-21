@@ -2,7 +2,7 @@
 using System.Drawing.Drawing2D;
 using System.IO;
 
-namespace MemeFolderN.Extentions
+namespace MemeFolderN.Common.Helpers
 {
     public static class ExplorerHelper
     {
@@ -111,8 +111,6 @@ namespace MemeFolderN.Extentions
 
             foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
             {
-                //DirectoryInfo nextTargetSubDir =
-                //    target.CreateSubdirectory(diSourceSubDir.Name);
                 CopyAll(diSourceSubDir, target);
             }
         }

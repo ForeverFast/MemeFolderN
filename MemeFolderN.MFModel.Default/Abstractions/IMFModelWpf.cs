@@ -1,4 +1,4 @@
-﻿using MemeFolderN.MFModelBase.Abstractions;
+﻿using MemeFolderN.MFModel.Common.Abstractions;
 
 namespace MemeFolderN.MFModel.Wpf.Abstractions
 {

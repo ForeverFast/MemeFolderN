@@ -1,12 +1,12 @@
-﻿using MemeFolderN.MFViewModelsBase;
-using MemeFolderN.MFViewModelsBase.Abstractions;
+﻿using MemeFolderN.MFViewModels.Common;
+using MemeFolderN.MFViewModels.Common.Abstractions;
 using MvvmNavigation.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFViewModels.Default
+namespace MemeFolderN.MFViewModels.Wpf
 {
     public partial class MFViewModel : MFViewModelBase
     {

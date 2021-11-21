@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MemeFolderN.EntityFramework.Migrations
+namespace MemeFolderN.Data.Migrations
 {
     public partial class OnDeleteUp1 : Migration
     {

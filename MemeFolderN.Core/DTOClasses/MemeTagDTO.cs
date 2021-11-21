@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MemeFolderN.Core.DTOClasses
+namespace MemeFolderN.Common.DTOClasses
 {
     public record MemeTagDTO : DomainObjectDTO
     {

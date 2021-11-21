@@ -1,8 +1,8 @@
-﻿using MemeFolderN.Core.DTOClasses;
+﻿using MemeFolderN.Common.DTOClasses;
 using System;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFViewModelsBase.Services
+namespace MemeFolderN.MFViewModels.Common.Services
 {
 #nullable enable
     public delegate Task<object?> ShowDialogDelegete(object dialogFolderVM, object dialogId);

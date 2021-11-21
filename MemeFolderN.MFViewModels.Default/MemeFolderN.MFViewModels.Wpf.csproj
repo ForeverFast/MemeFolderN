@@ -10,9 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MemeFolderN.Extentions\MemeFolderN.Extentions.csproj" />
     <ProjectReference Include="..\MemeFolderN.MFModel.Default\MemeFolderN.MFModel.Wpf.csproj" />
-    <ProjectReference Include="..\MemeFolderN.MFViewModel\MemeFolderN.MFViewModelsBase.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFViewModel\MemeFolderN.MFViewModels.Common.csproj" />
     <ProjectReference Include="..\MvvmNavigation.Abstractions\MvvmNavigation.Abstractions.csproj" />
   </ItemGroup>
 

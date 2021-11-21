@@ -1,9 +1,9 @@
-﻿using MemeFolderN.Core.Models;
+﻿using MemeFolderN.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Z.EntityFramework.Extensions;
 
-namespace MemeFolderN.EntityFramework
+namespace MemeFolderN.Data
 {
     public class MemeFolderNDbContext : DbContext
     {

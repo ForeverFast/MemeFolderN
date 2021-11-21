@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MemeFolderN.MFViewModels.Default\MemeFolderN.MFViewModels.Default.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFViewModels.Default\MemeFolderN.MFViewModels.Wpf.csproj" />
   </ItemGroup>
 
   <ItemGroup>

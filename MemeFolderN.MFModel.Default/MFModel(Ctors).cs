@@ -1,23 +1,23 @@
-﻿using MemeFolderN.EntityFramework.Services;
-using MemeFolderN.Extentions.Services;
+﻿using MemeFolderN.Common.Managers;
+using MemeFolderN.Data.Services;
+using MemeFolderN.MFModel.Common;
+using MemeFolderN.MFModel.Common.Extentions;
 using MemeFolderN.MFModel.Wpf.Abstractions;
-using MemeFolderN.MFModelBase.Extentions;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MemeFolderN.MFModelBase.Wpf
+namespace MemeFolderN.MFModel.Wpf
 {
     public partial class MFModelWpf : MFModelBase, IMFModelWpf, IDragDtopLogic
     {
-        private readonly IUserSettingsService userSettingsService;
+        private readonly UserSettingsManager userSettingsService;
         private readonly IExtentionalDataService extentionalDataService;
 
         public MFModelWpf(IFolderDataService folderDataService,
             IMemeDataService memeDataService,
             IMemeTagDataService memeTagDataService,
             IMemeTagNodeDataService memeTagNodeDataService,
-            IUserSettingsService userSettingsService,
+            UserSettingsManager userSettingsService,
             IExtentionalDataService extentionalDataService) : base(folderDataService, memeDataService, memeTagDataService, memeTagNodeDataService)
         {
             this.userSettingsService = userSettingsService;

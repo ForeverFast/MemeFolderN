@@ -2,9 +2,9 @@
 using System.Configuration;
 using System.IO;
 
-namespace MemeFolderN.Extentions.Services
+namespace MemeFolderN.Common.Managers
 {
-    public class UserSettingsService : IUserSettingsService
+    public class UserSettingsManager
     {
         public string RootFolderPath
         {
@@ -12,7 +12,7 @@ namespace MemeFolderN.Extentions.Services
             set => ConfigurationManager.AppSettings["RootFolderPath"] = value;
         }
 
-        public UserSettingsService()
+        public UserSettingsManager()
         {
             string path = "D:\\";
             if (Directory.Exists(path))

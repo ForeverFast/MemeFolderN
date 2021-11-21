@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MemeFolderN.Core\MemeFolderN.Core.csproj" />
-    <ProjectReference Include="..\MemeFolderN.MFModels\MemeFolderN.MFModelBase.csproj" />
+    <ProjectReference Include="..\MemeFolderN.Core\MemeFolderN.Common.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFModels\MemeFolderN.MFModel.Common.csproj" />
     <ProjectReference Include="..\MvvmNavigation.Abstractions\MvvmNavigation.Abstractions.csproj" />
   </ItemGroup>
 

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 
-namespace MemeFolderN.MFViewModelsBase.Commands
+namespace MemeFolderN.MFViewModels.Common.Commands
 {
     #region Делегаты для методов WPF команд
     /// <summary>Делегат исполняющего метода с параметром типа object</summary>

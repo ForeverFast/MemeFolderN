@@ -1,10 +1,10 @@
-﻿using MemeFolderN.Core.DTOClasses;
-using MemeFolderN.MFViewModelsBase.Abstractions;
-using MemeFolderN.MFViewModelsBase.BaseViewModels;
+﻿using MemeFolderN.Common.DTOClasses;
+using MemeFolderN.MFViewModels.Common.Abstractions;
+using MemeFolderN.MFViewModels.Common.BaseViewModels;
 using System;
 using System.Collections.ObjectModel;
 
-namespace MemeFolderN.MFViewModelsBase
+namespace MemeFolderN.MFViewModels.Common
 {
     public abstract class MemeTagVMBase : BaseViewModel, IMemeTag
     {

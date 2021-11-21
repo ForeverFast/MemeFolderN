@@ -19,11 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MemeFolderN.Core\MemeFolderN.Core.csproj" />
-    <ProjectReference Include="..\MemeFolderN.EntityFramework\MemeFolderN.EntityFramework.csproj" />
+    <ProjectReference Include="..\MemeFolderN.Core\MemeFolderN.Common.csproj" />
+    <ProjectReference Include="..\MemeFolderN.EntityFramework\MemeFolderN.Data.csproj" />
     <ProjectReference Include="..\MemeFolderN.MFModel.Default\MemeFolderN.MFModel.Wpf.csproj" />
-    <ProjectReference Include="..\MemeFolderN.MFViewModels.Default\MemeFolderN.MFViewModels.Default.csproj" />
-    <ProjectReference Include="..\MemeFolderN.MFViewModel\MemeFolderN.MFViewModelsBase.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFViewModels.Default\MemeFolderN.MFViewModels.Wpf.csproj" />
+    <ProjectReference Include="..\MemeFolderN.MFViewModel\MemeFolderN.MFViewModels.Common.csproj" />
     <ProjectReference Include="..\MemeFolderN.MFViews\MemeFolderN.MFViews.csproj" />
     <ProjectReference Include="..\MvvmNavigation.Wpf\MvvmNavigation.Wpf.csproj" />
   </ItemGroup>
