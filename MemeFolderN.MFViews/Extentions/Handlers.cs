@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Data;
 
-namespace MemeFolderN.MFViews.Extentions
+namespace MemeFolderN.MFViews.Wpf.Extentions
 {
     public static class Handlers
     {

@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MemeFolderN.MFViews.UserControlles.MFButtonUC
+namespace MemeFolderN.MFViews.Wpf.UserControlles.MFButtonUC
 {
     /// <summary>
     /// Логика взаимодействия для MFButton.xaml

@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace MemeFolderN.MFViews.Extentions
+namespace MemeFolderN.MFViews.Wpf.Extentions
 {
     /// <summary>
     ///     Behavior that makes the <see cref="System.Windows.Controls.TreeView.SelectedItem" /> bindable.

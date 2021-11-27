@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
-namespace MemeFolderN.MFViews.Extentions
+namespace MemeFolderN.MFViews.Wpf.Extentions
 {
     /// <summary>
     ///     Extension methods for the <see cref="DependencyObject" /> type.

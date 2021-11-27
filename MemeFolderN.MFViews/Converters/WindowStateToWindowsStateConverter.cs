@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace MemeFolderN.MFViews.Converters
+namespace MemeFolderN.MFViews.Wpf.Converters
 {
     public class WindowStateToWindowsStateConverter : IValueConverter
     {

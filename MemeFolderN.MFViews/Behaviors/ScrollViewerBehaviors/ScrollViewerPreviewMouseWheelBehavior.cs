@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace MemeFolderN.MFViews.Behaviors
+namespace MemeFolderN.MFViews.Wpf.Behaviors
 {
     public class ScrollViewerPreviewMouseWheelBehavior : Behavior<ScrollViewer>
     {

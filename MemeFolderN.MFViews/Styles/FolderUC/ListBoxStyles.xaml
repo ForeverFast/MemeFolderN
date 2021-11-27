@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
                     xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Wpf.RoutedCommands;assembly=MemeFolderN.MFViewModels.Wpf"
-                    xmlns:mBeh="clr-namespace:MemeFolderN.MFViews.Behaviors" 
+                    xmlns:mBeh="clr-namespace:MemeFolderN.MFViews.Wpf.Behaviors" 
                     xmlns:ib="http://schemas.microsoft.com/xaml/behaviors">
 
 

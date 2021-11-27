@@ -1,12 +1,11 @@
-﻿using MemeFolderN.MFViewModels.Wpf;
-using MemeFolderN.MFViews.Extentions;
+﻿using MemeFolderN.MFViews.Wpf.Extentions;
 using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace MemeFolderN.MFViews.Converters
+namespace MemeFolderN.MFViews.Wpf.Converters
 {
     public class BindingTagSourceCollectionConverter : IMultiValueConverter
     {

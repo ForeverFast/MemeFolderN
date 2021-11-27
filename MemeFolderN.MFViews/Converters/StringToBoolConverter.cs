@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace MemeFolderN.MFViews.Converters
+namespace MemeFolderN.MFViews.Wpf.Converters
 {
     public class StringToBoolConverter : IValueConverter
     {

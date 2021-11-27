@@ -2,11 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:ib="http://schemas.microsoft.com/xaml/behaviors"
-                    xmlns:cn="clr-namespace:MemeFolderN.MFViews.Converters"
-                    xmlns:ext="clr-namespace:MemeFolderN.MFViews.Extentions"
+                    xmlns:ext="clr-namespace:MemeFolderN.MFViews.Wpf.Extentions"
                     xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Wpf;assembly=MemeFolderN.MFViewModels.Wpf"
                     xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Wpf.RoutedCommands;assembly=MemeFolderN.MFViewModels.Wpf"
-                    >
+                    xmlns:cn="clr-namespace:MemeFolderN.MFViews.Wpf.Converters">
     
     <cn:BindingTagSourceCollectionConverter x:Key="BTS"/>
 

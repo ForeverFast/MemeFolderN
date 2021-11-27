@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Data;
 
-namespace MemeFolderN.MFViews.Extentions
+namespace MemeFolderN.MFViews.Wpf.Extentions
 {
     public delegate void PropertyChangedHandler<T>(T sender, DependencyPropertyChangedEventArgs e)
       where T : DependencyObject;

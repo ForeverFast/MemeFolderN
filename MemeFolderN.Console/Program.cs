@@ -16,7 +16,6 @@ using Z.BulkOperations;
 using System.IO;
 using AutoMapper;
 using MemeFolderN.Data.AutoMapperProfiles;
-using MemeFolderN.MFModel.Common.Extentions;
 
 namespace MemeFolderN.Console
 {

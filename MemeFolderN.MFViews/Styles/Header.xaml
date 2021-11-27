@@ -1,5 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:srd="clr-namespace:MemeFolderN.MFViews.Extentions.Data">
+                    xmlns:srd="clr-namespace:MemeFolderN.MFViews.Wpf.Extentions.Data">
     
     <ResourceDictionary.MergedDictionaries>
 

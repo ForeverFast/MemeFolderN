@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MemeFolderN.MFViews.Pages
+namespace MemeFolderN.MFViews.Wpf.Pages
 {
     /// <summary>
     /// Логика взаимодействия для MemeTagUC.xaml

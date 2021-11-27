@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace MemeFolderN.MFViews
+namespace MemeFolderN.MFViews.Wpf
 {
     public partial class MFWindow : Window
     {

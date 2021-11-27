@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:dVm="clr-namespace:MemeFolderN.MFViewModels.Common;assembly=MemeFolderN.MFViewModels.Common"
-                    xmlns:cn="clr-namespace:MemeFolderN.MFViews.Converters"
+                    xmlns:cn="clr-namespace:MemeFolderN.MFViews.Wpf.Converters"
                     xmlns:ib="http://schemas.microsoft.com/xaml/behaviors">
 
     <cn:StringToBoolConverter x:Key="StringToBoolConverter"/>

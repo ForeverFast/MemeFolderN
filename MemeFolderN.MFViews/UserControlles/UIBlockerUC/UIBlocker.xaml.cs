@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MemeFolderN.MFViews.UserControlles.UIBlockerUC
+namespace MemeFolderN.MFViews.Wpf.UserControlles.UIBlockerUC
 {
     /// <summary>
     /// Логика взаимодействия для UIBlocker.xaml
