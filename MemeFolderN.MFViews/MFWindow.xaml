@@ -9,7 +9,7 @@
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:ib="http://schemas.microsoft.com/xaml/behaviors"  
         xmlns:ssc="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
-        xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Wpf;assembly=MemeFolderN.MFViewModels.Default"
+        xmlns:vm="clr-namespace:MemeFolderN.MFViewModels.Wpf;assembly=MemeFolderN.MFViewModels.Wpf"
         xmlns:behaviours="clr-namespace:MemeFolderN.MFViews.Wpf.Extentions"
         xmlns:routedCommands="clr-namespace:MemeFolderN.MFViewModels.Wpf.RoutedCommands;assembly=MemeFolderN.MFViewModels.Wpf"
         xmlns:propa="clr-namespace:MemeFolderN.MFViewModels.Common.Commands;assembly=MemeFolderN.MFViewModels.Common"
