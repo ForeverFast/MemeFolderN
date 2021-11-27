@@ -2,29 +2,29 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:MemeFolderN"
-             xmlns:srd="clr-namespace:MemeFolderN.MFViews.Extentions.Data;assembly=MemeFolderN.MFViews">
+             xmlns:srd="clr-namespace:MemeFolderN.MFViews.Extentions.Data;assembly=MemeFolderN.MFViews.Wpf">
     
     <Application.Resources>
         <srd:SharedResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
 
                 <srd:SharedResourceDictionary 
-                    Source="pack://application:,,,/MemeFolderN.MFViews;component/UserControlles/UCStyles.xaml" />
+                    Source="pack://application:,,,/MemeFolderN.MFViews.Wpf;component/UserControlles/UCStyles.xaml" />
 
                 <srd:SharedResourceDictionary 
-                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Styles/Base.xaml" />
+                    Source="pack://application:,,,/MemeFolderN.MFViews.Wpf;component/Styles/Base.xaml" />
                 <srd:SharedResourceDictionary 
-                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Styles/DataTemplates.xaml" />
+                    Source="pack://application:,,,/MemeFolderN.MFViews.Wpf;component/Styles/DataTemplates.xaml" />
                 <srd:SharedResourceDictionary 
-                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Styles/FolderUC.xaml" />
+                    Source="pack://application:,,,/MemeFolderN.MFViews.Wpf;component/Styles/FolderUC.xaml" />
                 <srd:SharedResourceDictionary 
-                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Styles/Footer.xaml" />
+                    Source="pack://application:,,,/MemeFolderN.MFViews.Wpf;component/Styles/Footer.xaml" />
                 <srd:SharedResourceDictionary 
-                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Styles/Header.xaml" />
+                    Source="pack://application:,,,/MemeFolderN.MFViews.Wpf;component/Styles/Header.xaml" />
                 <srd:SharedResourceDictionary 
-                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Styles/LeftMenu.xaml" />
+                    Source="pack://application:,,,/MemeFolderN.MFViews.Wpf;component/Styles/LeftMenu.xaml" />
                 <srd:SharedResourceDictionary 
-                    Source="pack://application:,,,/MemeFolderN.MFViews;component/Brushes.xaml" />
+                    Source="pack://application:,,,/MemeFolderN.MFViews.Wpf;component/Brushes.xaml" />
                 
             </ResourceDictionary.MergedDictionaries>
         </srd:SharedResourceDictionary>
